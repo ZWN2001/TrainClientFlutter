@@ -10,7 +10,6 @@ class HomePage extends StatefulWidget{
 }
 
 class _HomePageState extends State<HomePage>{
-  final Image _background = Image.asset("images/home_background.jpg");
 
   @override
   Widget build(BuildContext context) {
@@ -25,31 +24,7 @@ class _HomePageState extends State<HomePage>{
           children: [
             Stack(
               children: <Widget>[
-                _background,
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.lerp(
-                          Alignment.topCenter, Alignment.center, 0.55)!,
-                      end: Alignment.lerp(
-                          Alignment.topCenter, Alignment.center, 0.7)!,
-                      colors: [
-                        Colors.transparent,
-                        Colors.white.withOpacity(0.1),
-                        Colors.white.withOpacity(0.1),
-                        Colors.white.withOpacity(0.2),
-                        Colors.white.withOpacity(0.6),
-                        Colors.white.withOpacity(0.7),
-                        Colors.white.withOpacity(0.8),
-                        Colors.white.withOpacity(0.9),
-                        Colors.white.withOpacity(1.0),
-                        Colors.white.withOpacity(1.0),
-                        Colors.white.withOpacity(1.0),
-                        Colors.white.withOpacity(1.0),
-                      ],
-                    ),
-                  ),
-                ),
+                Image.asset("images/home_background.png"),
               ],
             ),
             Column(
@@ -70,7 +45,21 @@ class _HomePageState extends State<HomePage>{
                       Text('去领券，享更多优惠', style: TextStyle(color: Colors.grey),),
                       Icon(Icons.keyboard_arrow_right, color: Colors.grey,)
                     ],),),
-
+                Padding(padding: const EdgeInsets.fromLTRB(8, 6, 8, 0),
+                    child: SizedBox(height: 840, child: _hohtelsGridView())),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    shape:  const StadiumBorder(),
+                  ),
+                  onPressed: () {},
+                  child: const Text(
+                    "查看更多酒店",
+                    textAlign: TextAlign.center,
+                  ),
+                ),],),
+                const SizedBox(height: 20,)
               ],
             ),
           ],
@@ -105,6 +94,25 @@ class _HomePageState extends State<HomePage>{
         IconButton(onPressed: () {}, icon: Icon(data, color: Colors.blue,), ),
         Text(name)
       ],
+    );
+  }
+
+  Widget _hohtelsGridView(){
+    return GridView(
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+        children:const <Widget>[
+          HotelCard(num: 1),
+          HotelCard(num: 2),
+          HotelCard(num: 3),
+          HotelCard(num: 4),
+          HotelCard(num: 5),
+          HotelCard(num: 6),
+          HotelCard(num: 7),
+          HotelCard(num: 8),
+        ]
     );
   }
 }

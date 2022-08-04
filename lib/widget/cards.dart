@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:train_client_flutter/Constant.dart';
 
 class RouteCard extends StatefulWidget{
   const RouteCard({Key? key}) : super(key: key);
@@ -161,12 +162,76 @@ class RouteCardState extends State<RouteCard>{
 }
 
 class HotelCard extends StatelessWidget{
-  const HotelCard({Key? key}) : super(key: key);
+  const HotelCard({Key? key, required this.num}) : super(key: key);
+  final int num;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-
+    return SizedBox(
+      height: 200,
+      child: Card(
+        elevation: 2,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(6.0)),),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+                flex: 2,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: Image.asset(
+                    'images/hotel$num.jpg',
+                    fit: BoxFit.fitHeight,
+                  ),
+                )),
+            Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(6, 2, 6, 4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(Constant.hotelNameList[num - 1], maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+                      const SizedBox(height: 6,),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: [
+                          Text('${Constant.hotelMarks[num - 1]}',
+                            style: const TextStyle(fontSize: 17, color: Colors
+                                .blue, fontWeight: FontWeight.bold),),
+                          const Text(
+                            "分", style: TextStyle(fontSize: 11, color: Colors
+                              .blue),),
+                          const SizedBox(width: 12,),
+                          const Text(
+                            '￥', style: TextStyle(fontSize: 11, color: Colors
+                              .red, fontWeight: FontWeight.bold),),
+                          Text("${Constant.price[num - 1]}",
+                            style: const TextStyle(fontSize: 19, color: Colors
+                                .red, fontWeight: FontWeight.bold),),
+                          const SizedBox(width: 2,),
+                          const Text(
+                            '起', style: TextStyle(fontSize: 11, color: Colors
+                              .grey, fontWeight: FontWeight.bold),),
+                          const SizedBox(width: 6,),
+                          Text('￥${Constant.originPrice[num - 1]}',
+                            style: const TextStyle(fontSize: 13,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.lineThrough,
+                                decorationColor: Colors.grey),),
+                        ],),
+                    ],
+                  ),
+                )
+            )
+          ],
+        ),
+      ),
     );
   }
 
