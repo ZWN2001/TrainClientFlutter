@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:train_client_flutter/ui/home_page.dart';
+import 'package:train_client_flutter/ui/order_page.dart';
+import 'package:train_client_flutter/ui/travel_service.dart';
 
 class MainPage extends StatefulWidget{
   const MainPage({Key? key}) : super(key: key);
@@ -31,7 +33,7 @@ class _MainPageState extends State<MainPage>{
 
   int currentIndex = 0;
 
-  final pages = [const HomePage(),const HomePage(),const HomePage(),const HomePage()];
+  final pages = [const HomePage(),const TravelService(),const OrderPage(),const HomePage()];
 
   @override
   Widget build(BuildContext context) {
