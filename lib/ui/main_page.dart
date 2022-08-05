@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:train_client_flutter/ui/home_page.dart';
+import 'package:train_client_flutter/ui/mine_page.dart';
 import 'package:train_client_flutter/ui/order_page.dart';
 import 'package:train_client_flutter/ui/travel_service.dart';
 
@@ -33,7 +34,7 @@ class _MainPageState extends State<MainPage>{
 
   int currentIndex = 0;
 
-  final pages = [const HomePage(),const TravelService(),const OrderPage(),const HomePage()];
+  final pages = [const HomePage(),const TravelService(),const OrderPage(),const MinePage()];
 
   @override
   Widget build(BuildContext context) {

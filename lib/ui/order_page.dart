@@ -6,43 +6,38 @@ class OrderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('首页'),),
+      appBar: AppBar(title: const Text('订单'),),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Card(
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(0)),),
-              elevation: 1,
-              child: Column(
-                children: [
-                  const SizedBox(height: 8,),
-                  Row(
-                    children: const [
-                      SizedBox(width: 20,),
-                      Text('火车票订单', style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 20,),),
-                      Expanded(child: SizedBox()),
-                      Text('温馨提示', style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          fontSize: 12,
-                          color: Colors.blue),),
-                      SizedBox(width: 18,),
-                    ],
-                  ),
-                  const Divider(),
-                  const SizedBox(height: 8,),
-                  Row(
-                    children: [
-                      Expanded(child: _buttonsItem(Icons.account_balance_wallet_outlined, '待支付', 'route')),
-                      Expanded(child: _buttonsItem(Icons.assignment_outlined, '已支付', 'route')),
-                      Expanded(child: _buttonsItem(Icons.assignment_turned_in_outlined, '全部订单', 'route')),
-                      Expanded(child: _buttonsItem(Icons.local_mall_outlined, '我的车票', 'route')),
-                    ],
-                  ),
-                  const SizedBox(height: 16,)
-                ],
-              ),
+            Column(
+              children: [
+                const SizedBox(height: 8,),
+                Row(
+                  children: const [
+                    SizedBox(width: 20,),
+                    Text('火车票订单', style: TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20,),),
+                    Expanded(child: SizedBox()),
+                    Text('温馨提示', style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        fontSize: 12,
+                        color: Colors.blue),),
+                    SizedBox(width: 18,),
+                  ],
+                ),
+                const Divider(),
+                const SizedBox(height: 8,),
+                Row(
+                  children: [
+                    Expanded(child: _buttonsItem(Icons.account_balance_wallet_outlined, '待支付', 'route')),
+                    Expanded(child: _buttonsItem(Icons.assignment_outlined, '已支付', 'route')),
+                    Expanded(child: _buttonsItem(Icons.assignment_turned_in_outlined, '全部订单', 'route')),
+                    Expanded(child: _buttonsItem(Icons.local_mall_outlined, '我的车票', 'route')),
+                  ],
+                ),
+                const SizedBox(height: 16,)
+              ],
             ),
             const SizedBox(height: 10,),
             Image.asset('images/orders_background.jpg'),

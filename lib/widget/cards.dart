@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:train_client_flutter/Constant.dart';
+import 'package:train_client_flutter/constant.dart';
 
 class RouteCard extends StatefulWidget{
   const RouteCard({Key? key}) : super(key: key);
@@ -52,6 +52,7 @@ class RouteCardState extends State<RouteCard>{
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               const SizedBox(width: 16,),
+              //TODO:日期处理
               GestureDetector(
                 child: Text(
                   _timeFormat(_date),
@@ -238,6 +239,194 @@ class HotelCard extends StatelessWidget{
           Fluttertoast.showToast(msg: '待开发');
         },
       )
+    );
+  }
+
+}
+
+class UserCard extends StatelessWidget{
+  const UserCard({Key? key, required this.userName}) : super(key: key);
+  final String userName;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.blue,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 8,),
+          Row(
+            children: [
+              const SizedBox(width: 14,),
+              SizedBox(width: 64,
+                  child: ClipOval(
+                    child: Image.asset('images/default_head.jpg'),)),
+              const SizedBox(width: 14,),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 6,),
+                  Text(
+                    userName,
+                    style: const TextStyle(fontSize: 24, color: Colors.white),
+                    textAlign: TextAlign.start,),
+                  const SizedBox(height: 4,),
+                  Row(
+                    children: [
+                    SizedBox(height: 22, child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(25)),
+                      child: Container(
+                          color: Colors.white,
+                          child: Padding(padding: const EdgeInsets.fromLTRB(
+                              8, 0, 4, 0),
+                            child: Row(children: const [
+                              Text('手机核验成功', style: TextStyle(fontSize: 12),),
+                              Icon(Icons.check_circle, color: Colors.green,
+                                size: 18,)
+                            ]
+                            ),
+                          )
+                      ),
+                    )),
+                    const SizedBox(width: 8,),
+                    SizedBox(height: 22, child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(25)),
+                      child: Container(
+                          color: Colors.white,
+                          child: Padding(padding: const EdgeInsets.fromLTRB(
+                              8, 0, 4, 0),
+                            child: Row(
+                                children: const [
+                                  Text(
+                                    '已实名认证', style: TextStyle(fontSize: 12),),
+                                  Icon(Icons.check_circle, color: Colors.green,
+                                    size: 18,)
+                                ]
+                            ),
+                          )
+                      ),
+                    )),
+                  ],),
+                  const SizedBox(height: 18,)
+                ],
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class UserButtonCard extends StatelessWidget{
+  const UserButtonCard({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+      child: Row(
+        children: [
+          Expanded(child: _imageButtonsItem(const ImageIcon(AssetImage('icons/passenger.png')), '乘车人', 'route')),
+          Expanded(child: _buttonsItem(const Icon(Icons.pending_actions_outlined, size: 28,), '时刻表', 'route')),
+          Expanded(child: _buttonsItem(const Icon(Icons.confirmation_num_outlined, size: 28,), '优惠券', 'route'))
+        ],
+      ),),
+    );
+  }
+
+  Widget _buttonsItem(Icon icon, String name, String route) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        OutlinedButton(
+            onPressed: () {
+              //TODO
+            },
+            style: OutlinedButton.styleFrom(
+              side: const BorderSide(width: 0, color: Colors.transparent),
+            ),
+            child: Column(
+              children: [
+                const SizedBox(height: 4,),
+                icon,
+                // Icon(data, color: Colors.blue,size: 34,),
+                const SizedBox(height: 4,),
+                Text(name,style: const TextStyle(color: Colors.black,fontSize: 16),),
+                const SizedBox(height: 4,),
+              ],
+            )
+        )
+      ],
+    );
+  }
+
+  Widget _imageButtonsItem(ImageIcon icon, String name, String route) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        OutlinedButton(
+            onPressed: () {
+              //TODO
+            },
+            style: OutlinedButton.styleFrom(
+              side: const BorderSide(width: 0, color: Colors.transparent),
+            ),
+            child: Column(
+              children: [
+                const SizedBox(height: 4,),
+                icon,
+                // Icon(data, color: Colors.blue,size: 34,),
+                const SizedBox(height: 4,),
+                Text(name,style: const TextStyle(color: Colors.black,fontSize: 16),),
+                const SizedBox(height: 4,),
+              ],
+            )
+        )
+      ],
+    );
+  }
+}
+
+class UserServicesCard extends StatelessWidget{
+  const UserServicesCard({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('温馨服务',style: TextStyle(fontSize: 20),),
+            const Divider(color: Colors.grey,),
+            userServicesItem('列车查询',''),
+            const Divider(color: Colors.grey,),
+            userServicesItem('列车查询',''),
+            const Divider(color: Colors.grey,),
+            userServicesItem('列车查询',''),
+
+          ],
+        ),
+      )
+    );
+  }
+
+  Widget userServicesItem(String name,String route){
+    return  GestureDetector(
+      child: Row(
+        children: [
+          Text(name,style: const TextStyle(fontSize: 16),),
+          const Expanded(child: SizedBox()),
+          const Icon(Icons.keyboard_arrow_right)
+        ],
+
+      ),
+      onTap: (){
+        //TODO
+      },
     );
   }
 
