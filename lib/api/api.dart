@@ -69,11 +69,44 @@ class Service{
   static String hostTicket = "/ticket";
   static String hostUser = "/user";
   static String hostTrainRoute = "/trainRoute";
-
+  static String hostStation = "/station";
 }
 
-
+class UserApi{
+  String urlostRegister = "${Service.hostUser}/register";
+  String urlPostLogin = "${Service.hostUser}/login";
+  String urlPostLogout = "${Service.hostUser}/logout";
+  String urlPostRefresh = "${Service.hostUser}/refresh";
+}
 
 class PayApi{
+  String urlGetPay = "${Service.hostPay}/pay";
+}
 
+class PassengerApi{
+  String urlPostAdd = "${Service.hostPassenger}${Service.command}/add";
+  String urlPostModify = "${Service.hostPassenger}${Service.command}/modify";
+  String urlPostDelete = "${Service.hostPassenger}${Service.command}/delete";
+  String urlGetQueryAll = "${Service.hostPassenger}${Service.query}/all";
+  String urlGetQuerySingle = "${Service.hostPassenger}${Service.query}/single";
+}
+
+class TicketApi{
+  ///订票
+  String urlPostBooking = "${Service.hostTicket}${Service.command}/booking";
+  ///退票
+  String urlPostRefund = "${Service.hostTicket}${Service.command}/refund";
+  ///改签
+  String urlPostRebook = "${Service.hostTicket}${Service.command}/rebook";
+  ///取票
+  String urlPostGet = "${Service.hostTicket}${Service.command}/booking";
+  ///余票
+  String urlGetTicketRemain = "${Service.hostTicket}${Service.query}/ticketRemain";
+  ///票价
+  String urlGetTicketPrice = "${Service.hostTicket}${Service.query}/ticketPrice";
+}
+
+class TrainRouteApi{
+  String urlGetQueryTrainRoute = "${Service.hostTrainRoute}${Service.query}/trainRoute";
+  String urlGetQueryDetail = "${Service.hostTrainRoute}${Service.query}/trainRouteDetail";
 }
