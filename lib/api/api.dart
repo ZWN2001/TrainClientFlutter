@@ -114,6 +114,7 @@ class TicketAndOrderApi{
   String urlGetSelfOrder = "${Service.hostTicket}${Service.query}/selfOrder";
   String urlGetTicketInfo = "${Service.hostTicket}${Service.query}/ticketInfo";
   String urlGetTicketSeatInfo = "${Service.hostTicket}${Service.query}/ticketSeatInfo";
+  String urlGetTicketToPayDetail = "${Service.hostTicket}${Service.query}/ticketToPayDetail";
 }
 
 class TrainRouteApi{

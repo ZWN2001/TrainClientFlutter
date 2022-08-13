@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:train_client_flutter/constant.dart';
 
+import '../bean/bean.dart';
+
 class RouteCard extends StatefulWidget{
   const RouteCard({Key? key}) : super(key: key);
 
@@ -13,6 +15,7 @@ class RouteCardState extends State<RouteCard>{
    String _fromStation = '未知1';
    String _toStation = '未知2';
    final DateTime _date = DateTime.now();
+   double sideMargin = 12;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,7 @@ class RouteCardState extends State<RouteCard>{
           const SizedBox(height: 12,),
           Row(
             children: [
-              const SizedBox(width: 8,),
+              const SizedBox(width: 16,),
               _stationButton(_fromStation),
               const Expanded(child: SizedBox()),
               IconButton(
@@ -43,7 +46,7 @@ class RouteCardState extends State<RouteCard>{
               ),
               const Expanded(child: SizedBox()),
               _stationButton(_toStation),
-              const SizedBox(width: 8,),
+              const SizedBox(width: 16,),
             ],
           ),
           const Divider(),
@@ -51,7 +54,7 @@ class RouteCardState extends State<RouteCard>{
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              const SizedBox(width: 16,),
+              const SizedBox(width: 24,),
               //TODO:日期处理
               GestureDetector(
                 child: Text(
@@ -110,7 +113,7 @@ class RouteCardState extends State<RouteCard>{
           const SizedBox(height: 20,),
           Row(
             children: [
-              const SizedBox(width: 16,),
+              const SizedBox(width: 24,),
               Expanded(
                 child: SizedBox(
                   height: 44,
@@ -122,7 +125,7 @@ class RouteCardState extends State<RouteCard>{
                   ),
                 )
               ),
-              const SizedBox(width: 16,),
+              const SizedBox(width: 24,),
             ],
           ),
           const SizedBox(height: 12,),
@@ -135,7 +138,7 @@ class RouteCardState extends State<RouteCard>{
      return TextButton(
         child: Text(station,
           style: const TextStyle(
-              fontSize: 28,
+              fontSize: 25,
               color: Colors.black,
               fontWeight: FontWeight.bold),),
         onPressed: (){
@@ -430,4 +433,56 @@ class UserServicesCard extends StatelessWidget{
     );
   }
 
+}
+
+class PassengerCard extends StatelessWidget{
+  const PassengerCard({Key? key, required this.passenger}) : super(key: key);
+  final PassengerToPay passenger;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+        child: Card(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(passenger.passengerName,
+                        style: const TextStyle(fontSize: 18),),
+                      const SizedBox(width: 8,),
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blue, width: 1),
+                          borderRadius: BorderRadius.circular(3), // 圆角
+                        ),
+                        child: Padding(padding: const EdgeInsets.only(
+                            left: 4, right: 4, bottom: 2),
+                          child: Text(
+                            passenger.role == 'common' ? '成人票' : '学生票',
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.blue),),
+                        ),
+                      ),
+                      const Expanded(child: SizedBox()),
+                      Text('￥${passenger.price}',style: const TextStyle(color: Colors.deepOrange,fontSize: 18),)
+                    ],
+                  ),
+                  const SizedBox(height: 8,),
+                  Row(
+                    children: [
+                      const Text('中国居民身份证', style: TextStyle(color: Colors.grey,fontSize: 16),),
+                      const Expanded(child: SizedBox()),
+                      Padding(padding: const EdgeInsets.only(top: 4),
+                        child: Text(passenger.passengerId, style: const TextStyle(fontSize: 16),),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            )
+        )
+    );
+  }
 }

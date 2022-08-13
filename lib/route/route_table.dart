@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:train_client_flutter/ui/ticket_unpaid.dart';
 
 import '../ui/main_page.dart';
 import '../ui/splash.dart';
@@ -11,6 +12,7 @@ class RouteTable {
     '/': (context) =>  const Splash(),
     // 主界面
     '/main_page': (context) => const MainPage(),
+    '/ticket_unpaid':(context) => const TicketUnpaiedPage(),
   };
 
   //鉴权拦截表

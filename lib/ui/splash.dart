@@ -59,6 +59,8 @@ class _SplashState extends State<Splash>{
      Future.delayed(duration, newHomePage);
   }
   void newHomePage() {
-    Navigator.pushReplacementNamed(context, '/main_page');
+    if(mounted){
+      Navigator.pushReplacementNamed(context, '/main_page');
+    }
   }
 }

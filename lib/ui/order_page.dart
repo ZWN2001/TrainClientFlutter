@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import 'order_tips.dart';
 
 class OrderPage extends StatelessWidget {
   const OrderPage({Key? key}) : super(key: key);
@@ -14,46 +17,60 @@ class OrderPage extends StatelessWidget {
               children: [
                 const SizedBox(height: 8,),
                 Row(
-                  children: const [
-                    SizedBox(width: 20,),
-                    Text('火车票订单', style: TextStyle(
+                  children:  [
+                    const SizedBox(width: 20,),
+                    const Text('火车票订单', style: TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 20,),),
-                    Expanded(child: SizedBox()),
-                    Text('温馨提示', style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        fontSize: 12,
-                        color: Colors.blue),),
-                    SizedBox(width: 18,),
+                    const Expanded(child: SizedBox()),
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.of(context)
+                            .push( MaterialPageRoute(builder: (_) {
+                          return const OrderTipsPage();
+                        }));
+                      },
+                      child:  const Text('温馨提示', style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontSize: 12,
+                          color: Colors.blue),
+                    )
+                   ,),
+                    const SizedBox(width: 18,),
                   ],
                 ),
                 const Divider(),
                 const SizedBox(height: 8,),
                 Row(
                   children: [
-                    Expanded(child: _buttonsItem(Icons.account_balance_wallet_outlined, '待支付', 'route')),
-                    Expanded(child: _buttonsItem(Icons.assignment_outlined, '已支付', 'route')),
-                    Expanded(child: _buttonsItem(Icons.assignment_turned_in_outlined, '全部订单', 'route')),
-                    Expanded(child: _buttonsItem(Icons.local_mall_outlined, '我的车票', 'route')),
+                    Expanded(child: _buttonsItem(context,Icons.account_balance_wallet_outlined, '待支付', '/ticket_unpaid')),
+                    Expanded(child: _buttonsItem(context,Icons.assignment_outlined, '已支付', 'route')),
+                    Expanded(child: _buttonsItem(context,Icons.assignment_turned_in_outlined, '全部订单', 'route')),
+                    Expanded(child: _buttonsItem(context,Icons.local_mall_outlined, '我的车票', 'route')),
                   ],
                 ),
                 const SizedBox(height: 16,)
               ],
             ),
             const SizedBox(height: 10,),
-            Image.asset('images/orders_background.jpg'),
+            GestureDetector(
+              onTap: (){
+                Fluttertoast.showToast(msg: "待开发");
+              },
+              child: Image.asset('images/orders_background.jpg'),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buttonsItem(IconData data, String name, String route) {
+  Widget _buttonsItem(BuildContext context, IconData data, String name, String route) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         OutlinedButton(
             onPressed: () {
-              //TODO
+              Navigator.pushNamed(context, route);
         },
             style: OutlinedButton.styleFrom(
               side: const BorderSide(width: 0, color: Colors.transparent),

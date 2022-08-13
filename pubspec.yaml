@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   fluttertoast: ^8.0.9
   dio: ^4.0.0
+  webview_flutter: ^3.0.4
 
 dev_dependencies:
   flutter_test:
