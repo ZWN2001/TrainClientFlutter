@@ -105,13 +105,15 @@ class TicketAndOrderApi{
   ///改签
   String urlPostRebook = "${Service.hostTicket}${Service.command}/rebook";
   ///取票
-  String urlPostGet = "${Service.hostTicket}${Service.command}/booking";
+  String urlPostGet = "${Service.hostTicket}${Service.command}/get";
+  String urlPostBookingCancel = "${Service.hostTicket}${Service.command}/bookingCancel";
   ///余票
   String urlGetTicketRemain = "${Service.hostTicket}${Service.query}/ticketRemain";
   ///票价
   String urlGetTicketPrice = "${Service.hostTicket}${Service.query}/ticketPrice";
   String urlGetSelfTicket = "${Service.hostTicket}${Service.query}/selfTicket";
   String urlGetSelfOrder = "${Service.hostTicket}${Service.query}/selfOrder";
+  String urlGetSelfPaiedOrder = "${Service.hostTicket}${Service.query}/selfPaiedOrder";
   String urlGetTicketInfo = "${Service.hostTicket}${Service.query}/ticketInfo";
   String urlGetTicketSeatInfo = "${Service.hostTicket}${Service.query}/ticketSeatInfo";
   String urlGetTicketToPayDetail = "${Service.hostTicket}${Service.query}/ticketToPayDetail";

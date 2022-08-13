@@ -486,3 +486,76 @@ class PassengerCard extends StatelessWidget{
     );
   }
 }
+
+class TicketPaiedCard extends StatelessWidget{
+  const TicketPaiedCard({Key? key, required this.orderGeneral}) : super(key: key);
+
+  final OrderGeneral orderGeneral;
+  
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('订单号:  ${orderGeneral.orderId}'),
+              const Divider(),
+              const SizedBox(height: 8,),
+              Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('出发站',
+                        style: TextStyle(fontSize: 18),),
+                      const SizedBox(height: 4,),
+                      Text(orderGeneral.fromStationId,
+                        style: const TextStyle(fontSize: 24),),
+                    ],
+                  ),
+                  const Expanded(child: SizedBox()),
+                  Column(
+                    children: [
+                      Text(orderGeneral.trainRouteId, style: const TextStyle(fontSize: 18)),
+                      const ImageIcon(AssetImage('icons/arrow.png'),size: 26,color: Colors.blue,),
+                      Text('发车时间：${orderGeneral.departureDate}',style: const TextStyle(color: Colors.grey),),
+                    ],
+                  ),
+                  const Expanded(child: SizedBox()),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('目的站',
+                        style: TextStyle(fontSize: 18),),
+                      const SizedBox(height: 4,),
+                      Text(orderGeneral.toStationId,
+                        style: const TextStyle(fontSize: 24),),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12,),
+              Row(
+                children: [
+                  Expanded(
+                      child: ElevatedButton(
+                        child: const Text('详细信息'),
+                        onPressed: (){
+
+                        },
+                      ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  
+}

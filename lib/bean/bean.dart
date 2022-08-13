@@ -12,3 +12,21 @@ class PassengerToPay {
 }
 
 }
+
+class OrderGeneral {
+  late final String orderId;
+  late final String trainRouteId;
+  late final String fromStationId;
+  late final String toStationId;
+  late final String departureDate;
+  late final String orderStatus;
+
+  OrderGeneral.fromJson(jsonMap) {
+    orderId = jsonMap['orderId'] ?? '0';
+    trainRouteId = jsonMap['trainRouteId'] ?? '0';
+    fromStationId = jsonMap['fromStationId'] ?? '0';
+    toStationId = jsonMap['toStationId'] ?? '0';
+    departureDate = jsonMap['departureDate'] ?? '0';
+    orderStatus = jsonMap['orderStatus'] ?? '';
+  }
+}
