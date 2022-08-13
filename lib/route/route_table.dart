@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:train_client_flutter/ui/ticket_unpaied.dart';
+import 'package:train_client_flutter/ui/order_all.dart';
+import 'package:train_client_flutter/ui/order_unpaied.dart';
 
 import '../ui/main_page.dart';
 import '../ui/splash.dart';
-import '../ui/ticket_paied.dart';
+import '../ui/order_paied.dart';
 
 /// 路由表
 class RouteTable {
@@ -13,8 +14,9 @@ class RouteTable {
     '/': (context) =>  const Splash(),
     // 主界面
     '/main_page': (context) => const MainPage(),
-    '/ticket_unpaid':(context) => const TicketUnpaiedPage(),
-    '/ticket_paid':(context) => const TicketPaiedPage(),
+    '/order_unpaid':(context) => const OrderUnpaiedPage(),
+    '/order_paid':(context) => const OrderPaiedPage(),
+    '/order_all':(context) => const OrderAllPage(),
   };
 
   //鉴权拦截表

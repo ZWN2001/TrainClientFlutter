@@ -3,14 +3,14 @@ import 'package:train_client_flutter/bean/bean.dart';
 
 import '../widget/cards.dart';
 
-class TicketPaiedPage extends StatefulWidget{
-  const TicketPaiedPage({Key? key}) : super(key: key);
+class OrderPaiedPage extends StatefulWidget{
+  const OrderPaiedPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() =>TicketPaiedState();
+  State<StatefulWidget> createState() =>OrderPaiedState();
 }
 
-class TicketPaiedState extends State<TicketPaiedPage>{
+class OrderPaiedState extends State<OrderPaiedPage>{
   OrderGeneral o = OrderGeneral.fromJson({});
   late List<OrderGeneral> list = [];
 
@@ -29,10 +29,12 @@ class TicketPaiedState extends State<TicketPaiedPage>{
   }
 
   Widget _ticketsWidget(){
-    return Column(
-      children: [
-        TicketPaiedCard(orderGeneral: list.first,)
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          TicketPaiedCard(orderGeneral: list.first,)
+        ],
+      ),
     );
   }
 

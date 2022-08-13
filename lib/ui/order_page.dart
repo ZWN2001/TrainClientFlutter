@@ -42,9 +42,9 @@ class OrderPage extends StatelessWidget {
                 const SizedBox(height: 8,),
                 Row(
                   children: [
-                    Expanded(child: _buttonsItem(context,Icons.account_balance_wallet_outlined, '待支付', '/ticket_unpaid')),
-                    Expanded(child: _buttonsItem(context,Icons.assignment_outlined, '已支付', '/ticket_paid')),
-                    Expanded(child: _buttonsItem(context,Icons.assignment_turned_in_outlined, '全部订单', 'route')),
+                    Expanded(child: _buttonsItem(context,Icons.account_balance_wallet_outlined, '待支付', '/order_unpaid')),
+                    Expanded(child: _buttonsItem(context,Icons.assignment_outlined, '已支付', '/order_paid')),
+                    Expanded(child: _buttonsItem(context,Icons.assignment_turned_in_outlined, '全部订单', '/order_all')),
                     Expanded(child: _buttonsItem(context,Icons.local_mall_outlined, '我的车票', 'route')),
                   ],
                 ),

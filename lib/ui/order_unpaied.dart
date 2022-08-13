@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import '../bean/bean.dart';
 import '../widget/cards.dart';
 
-class TicketUnpaiedPage extends StatefulWidget{
-  const TicketUnpaiedPage({Key? key}) : super(key: key);
+class OrderUnpaiedPage extends StatefulWidget{
+  const OrderUnpaiedPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() =>_TicketUnpaiedState();
+  State<StatefulWidget> createState() =>_OrderUnpaiedState();
 }
 
-class _TicketUnpaiedState extends State<TicketUnpaiedPage>{
+class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
   late Timer _timer;
   int _countdownTime = 150;
   String fromStation = '潍坊';
