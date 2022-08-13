@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import '../bean/bean.dart';
 import '../widget/cards.dart';
 
-class OrderAllPage extends StatefulWidget{
-  const OrderAllPage({Key? key}) : super(key: key);
+class MyTicketPage extends StatefulWidget{
+  const MyTicketPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() =>OrderAllState();
+  State<StatefulWidget> createState() => MyTicketState();
 
 }
 
-class OrderAllState extends State<OrderAllPage>{
+class MyTicketState extends State<MyTicketPage>{
   OrderGeneral o = OrderGeneral.fromJson({});
   late List<OrderGeneral> list = [o];
 
@@ -19,13 +19,13 @@ class OrderAllState extends State<OrderAllPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("全部订单"),),
+      appBar: AppBar(title: const Text("我的车票"),),
       body: list.isEmpty?_noTicketWidget():_ticketsWidget(),
     );
   }
   Widget _noTicketWidget(){
     return const Center(
-      child: Text("暂无订单",style: TextStyle(fontSize: 20),),
+      child: Text("暂无车票",style: TextStyle(fontSize: 20),),
     );
   }
 
