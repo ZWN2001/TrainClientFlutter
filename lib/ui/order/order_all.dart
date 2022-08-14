@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../bean/bean.dart';
-import '../widget/cards.dart';
+import '../../bean/bean.dart';
+import '../../widget/cards.dart';
 
 class OrderAllPage extends StatefulWidget{
   const OrderAllPage({Key? key}) : super(key: key);

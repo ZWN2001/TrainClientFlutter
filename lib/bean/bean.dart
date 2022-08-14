@@ -30,3 +30,19 @@ class OrderGeneral {
     orderStatus = jsonMap['orderStatus'] ?? '';
   }
 }
+
+class Passenger {
+  late final int userId;
+  late final String passengerId;
+  late final String passengerName;
+  late final String phoneNum;
+  late final String role;
+
+  Passenger.fromJson(jsonMap) {
+    userId = jsonMap['userId'] ?? 0;
+    passengerId = jsonMap['passengerId'] ?? '37078220011221551X';
+    passengerName = jsonMap['passengerName'] ?? '赵炜宁';
+    phoneNum = jsonMap['phoneNum'] ?? '15866554038';
+    role = jsonMap['role'] ?? 'common';
+  }
+}

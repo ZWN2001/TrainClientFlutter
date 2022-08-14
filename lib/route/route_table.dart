@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:train_client_flutter/ui/order_all.dart';
-import 'package:train_client_flutter/ui/order_unpaied.dart';
+import 'package:train_client_flutter/ui/passenger/my_passengers.dart';
+import 'package:train_client_flutter/ui/my_tickets.dart';
+import 'package:train_client_flutter/ui/order/order_all.dart';
 
 import '../ui/main_page.dart';
+import '../ui/order/order_paied.dart';
+import '../ui/order/order_unpaied.dart';
 import '../ui/splash.dart';
-import '../ui/order_paied.dart';
 
 /// 路由表
 class RouteTable {
@@ -17,6 +19,8 @@ class RouteTable {
     '/order_unpaid':(context) => const OrderUnpaiedPage(),
     '/order_paid':(context) => const OrderPaiedPage(),
     '/order_all':(context) => const OrderAllPage(),
+    'my_ticket':(context) => const MyTicketPage(),
+    'my_passenger':(context) => const MyPassengerPage(),
   };
 
   //鉴权拦截表

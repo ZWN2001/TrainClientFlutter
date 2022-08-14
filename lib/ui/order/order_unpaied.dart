@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../bean/bean.dart';
-import '../widget/cards.dart';
+import '../../bean/bean.dart';
+import '../../widget/cards.dart';
 
 class OrderUnpaiedPage extends StatefulWidget{
   const OrderUnpaiedPage({Key? key}) : super(key: key);
@@ -160,7 +160,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
     return Column(
         // children: allGrades.map((g) => GradeCard(g)).toList(),
       children: [
-        PassengerCard(passenger: p,)
+        OrderPassengerCard(passenger: p,)
       ],
     );
   }

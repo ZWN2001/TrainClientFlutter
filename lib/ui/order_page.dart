@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import 'order_tips.dart';
+import 'order/order_tips.dart';
 
 class OrderPage extends StatelessWidget {
   const OrderPage({Key? key}) : super(key: key);
@@ -45,7 +45,7 @@ class OrderPage extends StatelessWidget {
                     Expanded(child: _buttonsItem(context,Icons.account_balance_wallet_outlined, '待支付', '/order_unpaid')),
                     Expanded(child: _buttonsItem(context,Icons.assignment_outlined, '已支付', '/order_paid')),
                     Expanded(child: _buttonsItem(context,Icons.assignment_turned_in_outlined, '全部订单', '/order_all')),
-                    Expanded(child: _buttonsItem(context,Icons.local_mall_outlined, '我的车票', 'route')),
+                    Expanded(child: _buttonsItem(context,Icons.local_mall_outlined, '我的车票', '/my_ticket')),
                   ],
                 ),
                 const SizedBox(height: 16,)

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:train_client_flutter/constant.dart';
+import 'package:train_client_flutter/ui/passenger/passenger_edit.dart';
+import 'package:train_client_flutter/util/utils.dart';
 
 import '../bean/bean.dart';
 
@@ -331,21 +333,21 @@ class UserButtonCard extends StatelessWidget{
       child: Padding(padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
       child: Row(
         children: [
-          Expanded(child: _imageButtonsItem(const ImageIcon(AssetImage('icons/passenger.png')), '乘车人', 'route')),
-          Expanded(child: _buttonsItem(const Icon(Icons.pending_actions_outlined, size: 28,), '时刻表', 'route')),
-          Expanded(child: _buttonsItem(const Icon(Icons.confirmation_num_outlined, size: 28,), '优惠券', 'route'))
+          Expanded(child: _imageButtonsItem(context, const ImageIcon(AssetImage('icons/passenger.png')), '乘员列表', 'my_passenger')),
+          Expanded(child: _buttonsItem(context, const Icon(Icons.pending_actions_outlined, size: 28,), '时刻表', 'route')),
+          Expanded(child: _buttonsItem(context, const Icon(Icons.confirmation_num_outlined, size: 28,), '优惠券', 'route'))
         ],
       ),),
     );
   }
 
-  Widget _buttonsItem(Icon icon, String name, String route) {
+  Widget _buttonsItem(BuildContext context, Icon icon, String name, String route) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         OutlinedButton(
             onPressed: () {
-              //TODO
+              Navigator.pushNamed(context, route);
             },
             style: OutlinedButton.styleFrom(
               side: const BorderSide(width: 0, color: Colors.transparent),
@@ -365,13 +367,13 @@ class UserButtonCard extends StatelessWidget{
     );
   }
 
-  Widget _imageButtonsItem(ImageIcon icon, String name, String route) {
+  Widget _imageButtonsItem(BuildContext context, ImageIcon icon, String name, String route) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         OutlinedButton(
             onPressed: () {
-              //TODO
+              Navigator.pushNamed(context, route);
             },
             style: OutlinedButton.styleFrom(
               side: const BorderSide(width: 0, color: Colors.transparent),
@@ -435,8 +437,8 @@ class UserServicesCard extends StatelessWidget{
 
 }
 
-class PassengerCard extends StatelessWidget{
-  const PassengerCard({Key? key, required this.passenger}) : super(key: key);
+class OrderPassengerCard extends StatelessWidget{
+  const OrderPassengerCard({Key? key, required this.passenger}) : super(key: key);
   final PassengerToPay passenger;
   @override
   Widget build(BuildContext context) {
@@ -558,4 +560,64 @@ class TicketPaiedCard extends StatelessWidget{
     );
   }
   
+}
+
+class PassengerInfoCard extends StatelessWidget{
+  const PassengerInfoCard({Key? key, required this.passenger}) : super(key: key);
+  final Passenger passenger;
+
+  @override
+  Widget build(BuildContext context) {
+    return  GestureDetector(
+      child: Container(
+          color: Colors.white,
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+              child: Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(passenger.passengerName, style: const TextStyle(
+                              color: Colors.green, fontSize: 18),),
+                          const SizedBox(width: 16,),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey, width: 1),
+                              borderRadius: BorderRadius.circular(3), // 圆角
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 4, right: 4, bottom: 2),
+                              child: Text(
+                                passenger.role == 'common' ? '成人' : '学生',
+                                style: const TextStyle(
+                                    fontSize: 12, color: Colors.grey),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height:12,),
+                      Text(IDUtil.getObscureID(passenger.passengerId,),
+                          style: const TextStyle(color: Colors.grey))
+                    ],
+                  ),
+                  const Expanded(child: SizedBox()),
+                  const Icon(Icons.edit)
+                ],
+              )
+          ),
+        ),
+      onTap: (){
+        Navigator.of(context)
+            .push( MaterialPageRoute(builder: (_) {
+          return PassengerEditPage(passenger: passenger);
+        }));
+      },
+    );
+  }
 }

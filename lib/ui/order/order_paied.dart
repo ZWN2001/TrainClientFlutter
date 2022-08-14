@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:train_client_flutter/bean/bean.dart';
 
-import '../widget/cards.dart';
+import '../../widget/cards.dart';
+
 
 class OrderPaiedPage extends StatefulWidget{
   const OrderPaiedPage({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class OrderPaiedPage extends StatefulWidget{
 
 class OrderPaiedState extends State<OrderPaiedPage>{
   OrderGeneral o = OrderGeneral.fromJson({});
-  late List<OrderGeneral> list = [];
+  late List<OrderGeneral> list = [o];
 
 
   @override
@@ -22,6 +23,7 @@ class OrderPaiedState extends State<OrderPaiedPage>{
       body: list.isEmpty?_noTicketWidget():_ticketsWidget(),
     );
   }
+
   Widget _noTicketWidget(){
     return const Center(
       child: Text("暂无已支付订单",style: TextStyle(fontSize: 20),),
