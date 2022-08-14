@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:train_client_flutter/bean/bean.dart';
-class PassengerEditPage extends StatefulWidget{
-  const PassengerEditPage({Key? key, required this.passenger}) : super(key: key);
-  final Passenger passenger;
+
+class AddPassengerPage extends StatefulWidget{
+  const AddPassengerPage({Key? key}) : super(key: key);
   @override
-  State<StatefulWidget> createState() => PassengerEditState();
+  State<StatefulWidget> createState() => AddPassengerState();
 }
 
-class PassengerEditState extends State<PassengerEditPage>{
+class AddPassengerState extends State<AddPassengerPage>{
 
   List<String> certificateTypes = ["中国居民身份证"];
   List<String> passengerRoles = ['成人','学生'];
@@ -30,56 +29,53 @@ class PassengerEditState extends State<PassengerEditPage>{
     _selectedCertificateType = certificateTypes[0];
     _selectedRole = passengerRoles[0];
     _updateSubrouteMenuItems();
-    nameController.text = widget.passenger.passengerName;
-    certificateController.text = widget.passenger.passengerId;
-    phoneNumController.text = widget.passenger.phoneNum;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('编辑乘员信息'),),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
-              child: Row(
-                children: const [
-                  Text('基本信息', style: TextStyle(fontSize: 20),),
-                  SizedBox(width: 8,),
-                  Text('(用于身份核验，请务必正确填写)', style: TextStyle(fontSize: 14),),
-                ],
+        appBar: AppBar(title: const Text('编辑乘员信息'),),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                child: Row(
+                  children: const [
+                    Text('基本信息', style: TextStyle(fontSize: 20),),
+                    SizedBox(width: 8,),
+                    Text('(用于身份核验，请务必正确填写)', style: TextStyle(fontSize: 14),),
+                  ],
+                ),
               ),
-            ),
-            basicInfo(),
-            const Padding(padding: EdgeInsets.all(12),
-              child: Text('联系方式', style: TextStyle(fontSize: 20),),),
-            Container(
-              color: Colors.white,
-              child: _phoneNumRow(),
-            ),
-            const SizedBox(height: 32,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(width: 32,),
-                Expanded(child: ElevatedButton(onPressed: (){},
-                    child: const Padding(padding: EdgeInsets.fromLTRB(24, 10, 24, 10),
-                      child: Text('提交',style: TextStyle(fontSize: 18),),))),
-                const SizedBox(width: 32,),
-              ],),
-            const SizedBox(height: 16,),
-            const Padding(padding: EdgeInsets.all(12),
-            child: Text('温馨提示：',style: TextStyle(fontSize: 15),),
+              basicInfo(),
+              const Padding(padding: EdgeInsets.all(12),
+                child: Text('联系方式', style: TextStyle(fontSize: 20),),),
+              Container(
+                color: Colors.white,
+                child: _phoneNumRow(),
               ),
-            Padding(padding: const EdgeInsets.fromLTRB(12, 0, 12, 32),
-              child: Text(tips,style: const TextStyle(fontSize: 15, color: Colors.grey),),
-            ),
-          ],
-        ),
-      )
+              const SizedBox(height: 32,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(width: 32,),
+                  Expanded(child: ElevatedButton(onPressed: (){},
+                      child: const Padding(padding: EdgeInsets.fromLTRB(24, 10, 24, 10),
+                        child: Text('提交',style: TextStyle(fontSize: 18),),))),
+                  const SizedBox(width: 32,),
+                ],),
+              const SizedBox(height: 16,),
+              const Padding(padding: EdgeInsets.all(12),
+                child: Text('温馨提示：',style: TextStyle(fontSize: 15),),
+              ),
+              Padding(padding: const EdgeInsets.fromLTRB(12, 0, 12, 32),
+                child: Text(tips,style: const TextStyle(fontSize: 15, color: Colors.grey),),
+              ),
+            ],
+          ),
+        )
     );
   }
 
@@ -298,8 +294,8 @@ class PassengerEditState extends State<PassengerEditPage>{
       '变更信息，购票时需登记每名乘车旅客中国大陆手机号码，请惩提前填报并通知乘车人协'
       '助完戌手机号码核验。对于未成年人、老年人等重点旅客以及无手机的旅客，可提供监护'
       '人或能及时联系的亲友手机号码。铁路部门将依法保护旅客个人信息安全。\n'
-  '2．互联网售票实行实名制，请准确填写乘车人基本信息。\n3如旅客身份信息未能在添加后的24'
+      '2．互联网售票实行实名制，请准确填写乘车人基本信息。\n3如旅客身份信息未能在添加后的24'
       '小时内通过核验，请乘车人持有效身份证件原件到车站办理身份核验。\n'
-  '4．联系方式仅用于配合疫情常态化防控工作及通知到车运行变更信息，铁貉部门将采取相应措'
+      '4．联系方式仅用于配合疫情常态化防控工作及通知到车运行变更信息，铁貉部门将采取相应措'
       '施保护您的个人隐私信息安全。';
 }

@@ -20,14 +20,17 @@ class MyPassengerState extends State<MyPassengerPage>{
     return Scaffold(
       appBar: AppBar(title: const Text("乘员列表"),
         actions: [
-        TextButton(onPressed: (){}, child: const Text('添加',
-          style: TextStyle(fontSize:16, color: Colors.white),))
-      ],),
+          TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/passenger_add');
+              }, child: const Text('添加',
+            style: TextStyle(fontSize: 16, color: Colors.white),))
+        ],),
       body: Column(
         children: [
           tipsCard(),
           const SizedBox(height: 24,),
-          list.isEmpty? _noTicketWidget() : _ticketsWidget()
+          list.isEmpty ? _noTicketWidget() : _ticketsWidget()
         ],
       ),
     );

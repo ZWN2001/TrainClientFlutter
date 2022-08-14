@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:train_client_flutter/ui/passenger/add_passenger.dart';
 import 'package:train_client_flutter/ui/passenger/my_passengers.dart';
 import 'package:train_client_flutter/ui/my_tickets.dart';
 import 'package:train_client_flutter/ui/order/order_all.dart';
@@ -19,8 +20,10 @@ class RouteTable {
     '/order_unpaid':(context) => const OrderUnpaiedPage(),
     '/order_paid':(context) => const OrderPaiedPage(),
     '/order_all':(context) => const OrderAllPage(),
-    'my_ticket':(context) => const MyTicketPage(),
-    'my_passenger':(context) => const MyPassengerPage(),
+    '/my_ticket':(context) => const MyTicketPage(),
+    '/my_passenger':(context) => const MyPassengerPage(),
+    '/passenger_add':(context) => const AddPassengerPage(),
+
   };
 
   //鉴权拦截表
