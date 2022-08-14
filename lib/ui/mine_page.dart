@@ -22,15 +22,48 @@ class MinePageState extends State<MinePage>{
               end: Alignment.center,
             )),
         child: Column(
-          children: const [
-            // SizedBox(height: 12,)
-            UserCard(userName: '赵炜宁',),
-            UserButtonCard(),
-            UserServicesCard()
+          children:  [
+            unLoginCard(),
+            const UserButtonCard(),
+            const UserServicesCard()
           ],
         ),
       )
 
+    );
+  }
+
+  Widget unLoginCard(){
+    return Container(
+      color: Colors.blue,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 8,),
+          Row(
+            children: [
+              const SizedBox(width: 14,),
+              SizedBox(width: 64,
+                  child: ClipOval(
+                    child: Image.asset('images/default_head.jpg'),)),
+              const SizedBox(width: 14,),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  SizedBox(height: 6,),
+                  Text(
+                    '未登录',
+                    style: TextStyle(fontSize: 24, color: Colors.white),
+                    textAlign: TextAlign.start,),
+                  SizedBox(height: 6,),
+                  Text('便捷出行就在12306',style: TextStyle( color: Colors.white),),
+                  SizedBox(height: 18,)
+                ],
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 
