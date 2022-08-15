@@ -38,6 +38,9 @@ dependencies:
   dio: ^4.0.0
   webview_flutter: ^3.0.4
   shared_preferences: ^2.0.5
+  flutter_login: ^2.2.1
+  get: ^4.3.8
+  font_awesome_flutter: ^9.2.0
 
 dev_dependencies:
   flutter_test:

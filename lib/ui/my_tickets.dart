@@ -5,6 +5,7 @@ import '../widget/cards.dart';
 
 class MyTicketPage extends StatefulWidget{
   const MyTicketPage({Key? key}) : super(key: key);
+  static const routeName = '/my_ticket';
 
   @override
   State<StatefulWidget> createState() => MyTicketState();

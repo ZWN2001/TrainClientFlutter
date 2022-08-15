@@ -16,13 +16,13 @@ class RouteTable {
     // 开屏界面
     '/': (context) =>  const Splash(),
     // 主界面
-    '/main_page': (context) => const MainPage(),
-    '/order_unpaid':(context) => const OrderUnpaiedPage(),
-    '/order_paid':(context) => const OrderPaiedPage(),
-    '/order_all':(context) => const OrderAllPage(),
-    '/my_ticket':(context) => const MyTicketPage(),
-    '/my_passenger':(context) => const MyPassengerPage(),
-    '/passenger_add':(context) => const AddPassengerPage(),
+    MainPage.routeName: (context) => const MainPage(),
+    OrderUnpaiedPage.routeName: (context) => const OrderUnpaiedPage(),
+    OrderPaiedPage.routeName: (context) => const OrderPaiedPage(),
+    OrderAllPage.routeName: (context) => const OrderAllPage(),
+    MyTicketPage.routeName: (context) => const MyTicketPage(),
+    MyPassengerPage.routeName: (context) => const MyPassengerPage(),
+    AddPassengerPage.routeName: (context) => const AddPassengerPage(),
 
   };
 

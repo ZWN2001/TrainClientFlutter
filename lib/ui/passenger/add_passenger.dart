@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 class AddPassengerPage extends StatefulWidget{
   const AddPassengerPage({Key? key}) : super(key: key);
+  static const routeName = '/passenger_add';
+
   @override
   State<StatefulWidget> createState() => AddPassengerState();
 }

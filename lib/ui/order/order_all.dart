@@ -5,6 +5,7 @@ import '../../widget/cards.dart';
 
 class OrderAllPage extends StatefulWidget{
   const OrderAllPage({Key? key}) : super(key: key);
+  static const routeName = '/order_all';
 
   @override
   State<StatefulWidget> createState() =>OrderAllState();

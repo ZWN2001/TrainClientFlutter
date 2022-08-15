@@ -7,6 +7,7 @@ import '../../widget/cards.dart';
 
 class OrderUnpaiedPage extends StatefulWidget{
   const OrderUnpaiedPage({Key? key}) : super(key: key);
+  static const routeName = '/order_unpaid';
 
   @override
   State<StatefulWidget> createState() =>_OrderUnpaiedState();

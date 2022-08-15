@@ -84,6 +84,8 @@ class UserApi{
   String urlPostLogin = "${Server.hostUser}/login";
   String urlPostLogout = "${Server.hostUser}/logout";
   String urlPostRefresh = "${Server.hostUser}/refresh";
+
+
 }
 
 class PayApi{

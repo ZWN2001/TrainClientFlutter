@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferenceUtil {
   static const USER_ID = 'userId';
+  static const TOKEN = 'token';
 
 
   static SharedPreferences? _instance;

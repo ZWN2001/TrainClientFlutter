@@ -6,6 +6,7 @@ import 'package:train_client_flutter/ui/travel_service.dart';
 
 class MainPage extends StatefulWidget{
   const MainPage({Key? key}) : super(key: key);
+  static const routeName = '/main_page';
 
   @override
   State<StatefulWidget> createState() =>_MainPageState();
