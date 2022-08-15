@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:get/get.dart';
+import 'package:train_client_flutter/ui/main_page.dart';
+
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);
 
@@ -60,7 +63,7 @@ class _SplashState extends State<Splash>{
   }
   void newHomePage() {
     if(mounted){
-      Navigator.pushReplacementNamed(context, '/main_page');
+      Get.to(const MainPage());
     }
   }
 }
