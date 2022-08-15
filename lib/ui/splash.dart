@@ -62,7 +62,8 @@ class _SplashState extends State<Splash>{
      Future.delayed(duration, newHomePage);
   }
   void newHomePage() {
-    if(mounted){
+    var routePath = Get.currentRoute;
+    if(routePath != MainPage.routeName){
       Get.to(const MainPage());
     }
   }
