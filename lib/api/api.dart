@@ -1,7 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+
+import '../bean/bean.dart';
+import '../util/store.dart';
 
 class Http{
-  static  Dio? _dio;
+  static Dio? _dio;
   static Dio? get dio {
     if (_dio == null) {
       BaseOptions options = BaseOptions();
@@ -24,7 +28,7 @@ class Http{
 
   static Future<Response> get<T>(
       String path, {
-        required Map<String, dynamic> params,
+        Map<String, dynamic>? params,
         required Options options ,
         bool refresh = false,
         String cacheKey = '',
@@ -52,15 +56,14 @@ class Http{
   static Future<Response<T>> post<T>(
       String path, {
         data,
-        required Map<String, dynamic> params,
-        required Options options,
+        Map<String, dynamic>? params,
+        Options? options,
       }) async {
-    Options requestOptions = options;
     var response = await dio!.post<T>(
       path,
       data: data,
       queryParameters: params,
-      options: requestOptions,
+      options: options,
     );
     return response;
   }
@@ -80,10 +83,76 @@ class Server{
 }
 
 class UserApi{
-  String urlostRegister = "${Server.hostUser}/register";
-  String urlPostLogin = "${Server.hostUser}/login";
-  String urlPostLogout = "${Server.hostUser}/logout";
-  String urlPostRefresh = "${Server.hostUser}/refresh";
+  static String urlostRegister = "${Server.hostUser}/register";
+  static String urlPostLogin = "${Server.hostUser}/login";
+  static String urlPostLogout = "${Server.hostUser}/logout";
+  static String urlPostRefresh = "${Server.hostUser}/refresh";
+  static String urlGetUserInfo = "${Server.hostUser}/getUserInfo";
+
+  static bool get isLogin => _curUser == null;
+
+
+  static User? _curUser;
+
+  static User? get curUser => _curUser;
+
+  static Future<ResultEntity> login(String userId, String pwd) async {
+    String token;
+    try{
+      Response response = await Http.post(urlPostLogin, data: FormData.fromMap(
+          {'userId': userId, 'loginKey': pwd}));
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常',null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '登录失败,请稍后重试',null);
+        }
+      }else{
+        token = response.data['data'];
+        await _getUserInformationAndStore(token);
+        return ResultEntity.name( true, 0, "登录成功",null);
+      }
+    }catch(e){
+      return ResultEntity.name(false, -2, '登录失败,请检查网络或到设置中切换线路重试',null);
+    }
+  }
+
+  static Future _getUserInformationAndStore(String token) async {
+    Map<String, dynamic> info = await _getUserInfo(token);
+    try {
+      await _storeUserLoginCache(User.fromJson(info), token);
+    } catch (e) {debugPrint(e.toString());}
+  }
+
+  static Future<Map<String, dynamic>> _getUserInfo(String token) async {
+    try {
+      Response response = await Http.get(urlGetUserInfo,options: Options(headers: {'Token': token}));
+      if (response.data == null || response.data['code'] != 0) {
+        return {};
+      } else {
+        return response.data['data'];
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return {};
+    }
+  }
+
+  /// 储存用户登录信息
+  static Future _storeUserLoginCache(User userInfo,
+      [String? token]) async {
+    //使用sp存储用户role，用于在原生的桌面小组件处调用
+    // SharedPreferences s = SharedPreferenceUtil.instance;
+    if (token != null) {
+      await Store.set('token', token);
+    }
+    await Store.set('user_userId', userInfo.userId);
+    await Store.set('user_userName', userInfo.userName);
+    await Store.set('user_role', userInfo.role);
+    await Store.set('user_gender', userInfo.gender);
+    await Store.set('user_email', userInfo.email);
+    _curUser = userInfo;
+  }
 
 
 }

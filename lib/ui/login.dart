@@ -4,8 +4,10 @@ import 'package:flutter_login/flutter_login.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:train_client_flutter/util/string_util.dart';
 
 import '../api/api.dart';
+import '../bean/bean.dart';
 import 'main_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -16,14 +18,15 @@ class LoginPage extends StatelessWidget {
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
 
   Future<String?> _loginUser(LoginData data) async {
-    // String s = await UserApi.login(data.name, data.password);
-    String s = '';
-    if (s == '登录成功') {
+    ResultEntity requestMap = await UserApi.login(data.name, data.password);
+    if (requestMap.result) {
       Fluttertoast.showToast( msg: '登录成功');
       Get.offAll(() => const MainPage());
       return null;
+    }else{
+      Fluttertoast.showToast( msg: requestMap.message);
     }
-    return s;
+    return null;
   }
 
   Future<String?> _registerUser(LoginData data) async {
@@ -55,7 +58,7 @@ class LoginPage extends StatelessWidget {
       // hideSignUpButton: true,
       // disableCustomPageTransformer: true,
       messages: LoginMessages(
-        userHint: '用户名',
+        userHint: '账号',
         passwordHint: '密码',
         confirmPasswordHint: '确认密码',
         loginButton: '登录',
@@ -86,6 +89,11 @@ class LoginPage extends StatelessWidget {
         ),
       ],
       userValidator: (value) {
+        if (value!.isEmpty) {
+          return '密码为空';
+        } else if(StringUtil.isNumber(value) || value.length != 11){
+          return '请输入手机号';
+        }
         return null;
       },
       passwordValidator: (value) {
