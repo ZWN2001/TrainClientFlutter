@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -70,7 +72,7 @@ class Http{
 }
 
 class Server{
-  static String baseHost = "http://localhost:8080";
+  static String baseHost = "http://10.0.2.2:8081";
   static String query = "/query";
   static String command = "/command";
   static String hostPay = "/alipay";
@@ -83,7 +85,7 @@ class Server{
 }
 
 class UserApi{
-  static String urlostRegister = "${Server.hostUser}/register";
+  static String urlPostRegister = "${Server.hostUser}/register";
   static String urlPostLogin = "${Server.hostUser}/login";
   static String urlPostLogout = "${Server.hostUser}/logout";
   static String urlPostRefresh = "${Server.hostUser}/refresh";
@@ -101,19 +103,38 @@ class UserApi{
     try{
       Response response = await Http.post(urlPostLogin, data: FormData.fromMap(
           {'userId': userId, 'loginKey': pwd}));
+      Map<String, dynamic> data = json.decode(response.data);
+      if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }else{
+          token = data['data'];
+          await _getUserInformationAndStore(token);
+          return ResultEntity.name( true, 0, "登录成功",null);
+        }
+    }catch(e){
+      return ResultEntity.name(false, -2, '登录失败',null);
+    }
+  }
+
+  static Future<ResultEntity> register(User user) async {
+    try{
+      Response response = await Http.post(urlPostRegister, data: FormData.fromMap(
+          {'userId': user.userId, 'password':user.pwd}));
+      Map<String, dynamic> data = json.decode(response.data);
       if (response.statusCode != 200) {
         if (response.statusCode! >= 500) {
           return ResultEntity.name(false, response.statusCode!, '服务器异常',null);
         } else {
-          return ResultEntity.name(false,  response.statusCode!,  '登录失败,请稍后重试',null);
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试',null);
         }
       }else{
-        token = response.data['data'];
-        await _getUserInformationAndStore(token);
-        return ResultEntity.name( true, 0, "登录成功",null);
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'],null);
+        }
+        return ResultEntity.name( true, 0, "注册成功",null);
       }
     }catch(e){
-      return ResultEntity.name(false, -2, '登录失败,请检查网络或到设置中切换线路重试',null);
+      return ResultEntity.name(false, -2, '注册失败,请检查网络或重试',null);
     }
   }
 
@@ -146,11 +167,11 @@ class UserApi{
     if (token != null) {
       await Store.set('token', token);
     }
-    await Store.set('user_userId', userInfo.userId);
-    await Store.set('user_userName', userInfo.userName);
-    await Store.set('user_role', userInfo.role);
-    await Store.set('user_gender', userInfo.gender);
-    await Store.set('user_email', userInfo.email);
+    await Store.set('user_userId', userInfo.userId!);
+    await Store.set('user_userName', userInfo.userName ?? 'unKnown');
+    await Store.set('user_role', userInfo.role!);
+    await Store.set('user_gender', userInfo.gender ?? false);
+    await Store.set('user_email', userInfo.email ?? 'unKnown');
     _curUser = userInfo;
   }
 

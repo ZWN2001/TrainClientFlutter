@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:train_client_flutter/route/route_table.dart';
 import 'package:train_client_flutter/ui/splash.dart';
 import 'package:train_client_flutter/util/sharedpreference_util.dart';
@@ -6,6 +7,7 @@ import 'package:train_client_flutter/util/sharedpreference_util.dart';
 import 'api/api.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await initialize();
   runApp(const MyApp());
 }
@@ -24,7 +26,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       onGenerateRoute: RouteTable.generateRoute,
       theme: ThemeData(
         primarySwatch: Colors.blue,

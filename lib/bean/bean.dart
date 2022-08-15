@@ -1,13 +1,13 @@
-import 'package:get/get.dart';
 
 class User {
-  late final int userId;
-  late final String userName;
-  late final String role;
-  late final bool gender;
-  late final String email;
+  late final String? userId;
+  late final String? userName;
+  late final String? role;
+  late final bool? gender;
+  late final String? pwd;
+  late final String? email;
 
-  User.name(this.userId,this.userName,this.role,this.gender,this.email);
+  User.name({this.userId,this.userName,this.role,this.gender,this.pwd,this.email});
 
   User.fromJson(jsonMap){
     userId = jsonMap['userId'] ?? 0 ;

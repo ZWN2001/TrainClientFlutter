@@ -24,19 +24,20 @@ class LoginPage extends StatelessWidget {
       Get.offAll(() => const MainPage());
       return null;
     }else{
-      Fluttertoast.showToast( msg: requestMap.message);
+      return requestMap.message;
     }
     return null;
   }
 
   Future<String?> _registerUser(LoginData data) async {
-    // String s = await UserApi.register(data.name, data.password);
-    String s = '';
-    if (s == '注册成功') {
+    User user = User.name(userId: data.name, pwd: data.password);
+    ResultEntity requestMap = await UserApi.register(user);
+    if (requestMap.result) {
       Fluttertoast.showToast( msg: '注册成功');
       return null;
+    }else{
+      return requestMap.message;
     }
-    return s;
   }
 
   Future<String> _recoverPassword(String name) async {
@@ -48,7 +49,7 @@ class LoginPage extends StatelessWidget {
     return FlutterLogin(
       loginAfterSignUp: false,
       title: 'Train 12306',
-      logo: 'assets/icon/icon.png',
+      logo: 'icons/app_icon.png',
       logoTag: 'near.huscarl.loginsample.logo',
       titleTag: 'near.huscarl.loginsample.title',
       navigateBackAfterRecovery: true,
@@ -91,7 +92,7 @@ class LoginPage extends StatelessWidget {
       userValidator: (value) {
         if (value!.isEmpty) {
           return '密码为空';
-        } else if(StringUtil.isNumber(value) || value.length != 11){
+        } else if(!StringUtil.isNumber(value) || value.length != 11){
           return '请输入手机号';
         }
         return null;

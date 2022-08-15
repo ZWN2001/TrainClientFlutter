@@ -25,7 +25,7 @@ class RouteTable {
     MyTicketPage.routeName: (context) => const MyTicketPage(),
     MyPassengerPage.routeName: (context) => const MyPassengerPage(),
     AddPassengerPage.routeName: (context) => const AddPassengerPage(),
-
+    LoginPage.routeName: (context) => const LoginPage(),
   };
 
 //  鉴权拦截表
