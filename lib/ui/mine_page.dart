@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:train_client_flutter/api/api.dart';
 import 'package:train_client_flutter/ui/login.dart';
 import 'package:train_client_flutter/widget/cards.dart';
 class MinePage extends StatefulWidget{
@@ -25,7 +26,7 @@ class MinePageState extends State<MinePage>{
             )),
         child: Column(
           children:  [
-            unLoginCard(),
+            UserApi.isLogin ? UserCard(user: UserApi.curUser!):unLoginCard(),
             const UserButtonCard(),
             const UserServicesCard()
           ],
@@ -69,7 +70,7 @@ class MinePageState extends State<MinePage>{
         ),
       ),
       onTap: (){
-        Get.to(const LoginPage());
+        Get.to(() => const LoginPage());
       },
     );
   }

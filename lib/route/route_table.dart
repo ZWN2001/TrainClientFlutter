@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:train_client_flutter/ui/passenger/add_passenger.dart';
 import 'package:train_client_flutter/ui/passenger/my_passengers.dart';
 import 'package:train_client_flutter/ui/my_tickets.dart';
@@ -30,12 +31,11 @@ class RouteTable {
 
 //  鉴权拦截表
   static final Map<String, bool> _needLogin = {
-    //主界面
-    '/': false,
-    //教务
-    'academic_page': true,
-    //近期活动
-    'activity_page': false,
+    OrderUnpaiedPage.routeName: true,
+    OrderPaiedPage.routeName: true,
+    OrderAllPage.routeName: true,
+    MyTicketPage.routeName: true,
+    MyPassengerPage.routeName: true,
   };
 
   static Route generateRoute(RouteSettings settings) {

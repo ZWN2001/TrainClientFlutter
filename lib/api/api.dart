@@ -91,7 +91,7 @@ class UserApi{
   static String urlPostRefresh = "${Server.hostUser}/refresh";
   static String urlGetUserInfo = "${Server.hostUser}/getUserInfo";
 
-  static bool get isLogin => _curUser == null;
+  static bool get isLogin => _curUser != null;
 
 
   static User? _curUser;
@@ -147,11 +147,12 @@ class UserApi{
 
   static Future<Map<String, dynamic>> _getUserInfo(String token) async {
     try {
-      Response response = await Http.get(urlGetUserInfo,options: Options(headers: {'Token': token}));
-      if (response.data == null || response.data['code'] != 0) {
+      Response response = await Http.get(urlGetUserInfo,options: Options(headers: {'Token': 'Bearer:$token'}));
+      Map<String, dynamic> data = json.decode(response.data);
+      if (data['code'] != 200) {
         return {};
       } else {
-        return response.data['data'];
+        return data['data'];
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -162,8 +163,6 @@ class UserApi{
   /// 储存用户登录信息
   static Future _storeUserLoginCache(User userInfo,
       [String? token]) async {
-    //使用sp存储用户role，用于在原生的桌面小组件处调用
-    // SharedPreferences s = SharedPreferenceUtil.instance;
     if (token != null) {
       await Store.set('token', token);
     }

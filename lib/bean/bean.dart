@@ -10,11 +10,17 @@ class User {
   User.name({this.userId,this.userName,this.role,this.gender,this.pwd,this.email});
 
   User.fromJson(jsonMap){
-    userId = jsonMap['userId'] ?? 0 ;
-    userName = jsonMap['userName'] ?? 'unKnown';
-    role = jsonMap['role'] ?? 'unKnown';
-    gender = jsonMap['gender'] ?? 'unKnown';
-    email = jsonMap['email'] ?? 'unKnown';
+    userId = jsonMap['userId'].toString() ;
+    userName = jsonMap['userName'] ?? '未设置用户名';
+    role = jsonMap['role'].toString();
+    gender = jsonMap['gender'] ?? false;
+    email = jsonMap['email'] ?? '未设置邮箱';
+    pwd = jsonMap['pwd'] ?? '';
+  }
+
+  @override
+  String toString() {
+    return 'User{userId: $userId, userName: $userName, role: $role, gender: $gender, pwd: $pwd, email: $email}';
   }
 }
 

@@ -250,8 +250,8 @@ class HotelCard extends StatelessWidget{
 }
 
 class UserCard extends StatelessWidget{
-  const UserCard({Key? key, required this.userName}) : super(key: key);
-  final String userName;
+  const UserCard({Key? key, required this.user}) : super(key: key);
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -273,7 +273,7 @@ class UserCard extends StatelessWidget{
                 children: [
                   const SizedBox(height: 6,),
                   Text(
-                    userName,
+                    user.userName!,
                     style: const TextStyle(fontSize: 24, color: Colors.white),
                     textAlign: TextAlign.start,),
                   const SizedBox(height: 4,),
