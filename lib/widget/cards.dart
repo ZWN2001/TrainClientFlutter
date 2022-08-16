@@ -279,12 +279,24 @@ class UserCard extends StatelessWidget{
                   const SizedBox(height: 4,),
                   Row(
                     children: [
+                      SizedBox(height: 22, child: ClipRRect(
+                        borderRadius: const BorderRadius.all(Radius.circular(25)),
+                        child: Container(
+                            color: Colors.white,
+                            child: Padding(padding: const EdgeInsets.fromLTRB(
+                                8, 1, 8, 0),
+                              child: Text(user.role == 'common'?'普通会员':'VIP会员',
+                                style: const TextStyle(fontSize: 12),),
+                            )
+                        ),
+                      )),
+                      const SizedBox(width: 8,),
                     SizedBox(height: 22, child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(25)),
                       child: Container(
                           color: Colors.white,
                           child: Padding(padding: const EdgeInsets.fromLTRB(
-                              8, 0, 4, 0),
+                              8, 0, 4, 1),
                             child: Row(children: const [
                               Text('手机核验成功', style: TextStyle(fontSize: 12),),
                               Icon(Icons.check_circle, color: Colors.green,
@@ -300,7 +312,7 @@ class UserCard extends StatelessWidget{
                       child: Container(
                           color: Colors.white,
                           child: Padding(padding: const EdgeInsets.fromLTRB(
-                              8, 0, 4, 0),
+                              8, 0, 4, 1),
                             child: Row(
                                 children: const [
                                   Text(
@@ -407,31 +419,27 @@ class UserServicesCard extends StatelessWidget{
           children: [
             const Text('温馨服务',style: TextStyle(fontSize: 20),),
             const Divider(color: Colors.grey,),
-            userServicesItem('列车查询',''),
+            userServicesItem('开通会员',(){}),
             const Divider(color: Colors.grey,),
-            userServicesItem('列车查询',''),
+            userServicesItem('列车查询',(){}),
             const Divider(color: Colors.grey,),
-            userServicesItem('列车查询',''),
-
+            userServicesItem('退出登录',(){}),
           ],
         ),
       )
     );
   }
 
-  Widget userServicesItem(String name,String route){
+  Widget userServicesItem(String name, void Function()? ontap){
     return  GestureDetector(
+      onTap: ontap,
       child: Row(
         children: [
           Text(name,style: const TextStyle(fontSize: 16),),
           const Expanded(child: SizedBox()),
           const Icon(Icons.keyboard_arrow_right)
         ],
-
       ),
-      onTap: (){
-        //TODO
-      },
     );
   }
 
