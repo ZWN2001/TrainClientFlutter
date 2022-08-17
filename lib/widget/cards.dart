@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:train_client_flutter/constant.dart';
 import 'package:train_client_flutter/ui/passenger/passenger_edit.dart';
 import 'package:train_client_flutter/util/utils.dart';
 
 import '../bean/bean.dart';
+import '../ui/station_page.dart';
 
 class RouteCard extends StatefulWidget{
   const RouteCard({Key? key}) : super(key: key);
@@ -14,9 +16,9 @@ class RouteCard extends StatefulWidget{
 }
 
 class RouteCardState extends State<RouteCard>{
-   String _fromStation = '未知1';
-   String _toStation = '未知2';
-   final DateTime _date = DateTime.now();
+   Station _fromStation = Station.name(stationName: '未选择');
+   Station _toStation = Station.name(stationName: '未选择');
+   DateTime _date = DateTime.now();
    double sideMargin = 12;
 
   @override
@@ -31,14 +33,14 @@ class RouteCardState extends State<RouteCard>{
           Row(
             children: [
               const SizedBox(width: 16,),
-              _stationButton(_fromStation),
+              _stationButton(isFromStation: true),
               const Expanded(child: SizedBox()),
               IconButton(
                 color:Colors.blue,
                 iconSize: 28,
                 icon: const Icon(Icons.published_with_changes),
                 onPressed: () {
-                  String t = _fromStation;
+                  Station t = _fromStation;
                   _fromStation = _toStation;
                   _toStation = t;
                   if (mounted) {
@@ -47,7 +49,7 @@ class RouteCardState extends State<RouteCard>{
                 },
               ),
               const Expanded(child: SizedBox()),
-              _stationButton(_toStation),
+              _stationButton(isFromStation: false),
               const SizedBox(width: 16,),
             ],
           ),
@@ -57,54 +59,47 @@ class RouteCardState extends State<RouteCard>{
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               const SizedBox(width: 24,),
-              //TODO:日期处理
               GestureDetector(
                 child: Text(
                   _timeFormat(_date),
                   style: const TextStyle(fontSize: 22, color: Colors.black),),
-                onTap: () {
-                  showDatePicker(
+                onTap: () async {
+                   var res =  await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now(),
+                    initialDate: _date,
                     // 初始化选中日期
-                    firstDate: DateTime(2020, 6),
+                    firstDate: DateTime.now(),
                     // 开始日期
-                    lastDate: DateTime(2021, 6),
+                    lastDate: DateTime(2022,10,1),
                     // 结束日期
                     textDirection: TextDirection.ltr,
                     // 文字方向
-                    currentDate: DateTime(2020, 10, 20),
+                    currentDate: DateTime.now(),
                     // 当前日期
-                    helpText: "helpText",
+                    // helpText: "helpText",
                     // 左上方提示
-                    cancelText: "cancelText",
+                    cancelText: "取消",
                     // 取消按钮文案
-                    confirmText: "confirmText",
+                    confirmText: "确认",
                     // 确认按钮文案
-                    errorFormatText: "errorFormatText",
+                    errorFormatText: "格式错误",
                     // 格式错误提示
-                    errorInvalidText: "errorInvalidText",
+                    errorInvalidText: "超出允许日期范围",
                     // 输入不在 first 与 last 之间日期提示
 
-                    fieldLabelText: "fieldLabelText",
+                    fieldLabelText: "日期输入",
                     // 输入框上方提示
-                    fieldHintText: "fieldHintText",
+                    fieldHintText: "输入为空",
                     // 输入框为空时内部提示
-
                     initialDatePickerMode: DatePickerMode.day,
                     // 日期选择模式，默认为天数选择
                     useRootNavigator: true,
-                    // 是否为根导航器
-                    // 设置不可选日期，这里将 2020-10-15，2020-10-16，2020-10-17 三天设置不可选
-                    // selectableDayPredicate: (dayTime) {
-                    //   if (dayTime == DateTime(2020, 10, 15) ||
-                    //       dayTime == DateTime(2020, 10, 16) ||
-                    //       dayTime == DateTime(2020, 10, 17)) {
-                    //     return false;
-                    //   }
-                    //   return true;
-                    // },
                   );
+                   if(res != null){
+                     if(mounted){
+                       setState((){_date = res;});
+                     }
+                   }
                 }
               ),
               const SizedBox(width: 4,),
@@ -122,7 +117,12 @@ class RouteCardState extends State<RouteCard>{
                   child: ElevatedButton(
                     child: const Text('查询车票',style: TextStyle(fontSize: 20),),
                     onPressed: () {
-                      //TODO:查询
+                      if(_fromStation.stationName == '未选择'
+                          || _toStation.stationName == '未选择'){
+                        Fluttertoast.showToast(msg: '请选择出发地及目的地');
+                      }else{
+
+                      }
                     },
                   ),
                 )
@@ -136,15 +136,26 @@ class RouteCardState extends State<RouteCard>{
     );
   }
 
-  Widget _stationButton(String station){
+  Widget _stationButton({required bool isFromStation}){
      return TextButton(
-        child: Text(station,
+        child: Text(isFromStation? _fromStation.stationName : _toStation.stationName,
           style: const TextStyle(
               fontSize: 25,
               color: Colors.black,
               fontWeight: FontWeight.bold),),
-        onPressed: (){
-           //TODO:跳转并处理返回值
+        onPressed: () async {
+          Station? stationResult = await Get.to(() => const StationPage());
+          if (stationResult != null) {
+            if(isFromStation){
+              setState(() {
+                _fromStation = stationResult;
+              });
+            }else{
+              setState(() {
+                _toStation = stationResult;
+              });
+            }
+          }
         },
      );
   }

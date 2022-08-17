@@ -43,6 +43,10 @@ dependencies:
   hive: ^2.1.0
   hive_flutter: ^1.1.0
   font_awesome_flutter: ^9.2.0
+  lpinyin: ^2.0.3
+  azlistview: #latest version
+  material_floating_search_bar: ^0.3.7
+  json_annotation: ^4.1.0
 
 dev_dependencies:
   flutter_test:

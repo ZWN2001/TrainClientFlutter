@@ -31,13 +31,18 @@ class Http{
   static Future<Response> get<T>(
       String path, {
         Map<String, dynamic>? params,
-        required Options options ,
+        Options? options ,
         bool refresh = false,
         String cacheKey = '',
         bool cacheDisk = false,
         bool needRetry = false,
       }) async {
-    Options requestOptions = options;
+    Options requestOptions;
+    if(options != null){
+      requestOptions = options;
+    }else{
+      requestOptions = Options();
+    }
     requestOptions = requestOptions.copyWith(
       extra: {
         "refresh": refresh,
@@ -173,8 +178,6 @@ class UserApi{
     await Store.set('user_email', userInfo.email ?? 'unKnown');
     _curUser = userInfo;
   }
-
-
 }
 
 class PayApi{
@@ -182,8 +185,25 @@ class PayApi{
 }
 
 class DataApi{
-  String urlGetAllStationDetail = "${Server.hostStation}${Server.query}/allStationDetail";
-  String urlGetAllSeatType = "${Server.hostSeatType}${Server.query}/allSeatType";
+  static final String _urlGetAllStationDetail = "${Server.hostStation}${Server.query}/allStationDetail";
+  static final String _urlGetAllSeatType = "${Server.hostSeatType}${Server.query}/allSeatType";
+
+  static Future<List<Station>> getAllStationList() async {
+    try{
+      Response response = await Http.get(_urlGetAllStationDetail);
+      Map<String, dynamic> data = json.decode(response.data);
+      if(data['code'] != 200){
+        return [];
+      }else{
+        List list = data['data'];
+        return list.map((e) => Station.fromJson(e)).toList();
+      }
+    }catch(e){
+      debugPrint(e.toString());
+      return [];
+    }
+
+  }
 }
 
 class PassengerApi{

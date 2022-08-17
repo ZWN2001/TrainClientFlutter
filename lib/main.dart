@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:train_client_flutter/constant.dart';
 import 'package:train_client_flutter/route/route_table.dart';
 import 'package:train_client_flutter/ui/splash.dart';
 import 'package:train_client_flutter/util/sharedpreference_util.dart';
@@ -15,12 +16,13 @@ Future<void> main() async {
 
 ///初始化启动服务
 Future<void> initialize() async {
+  Http.init(baseUrl: Server.baseHost, connectTimeout: 7500, receiveTimeout: 7500);
   //并行初始化
   await Future.wait([
     SharedPreferenceUtil.initialize(),
-    Store.initialize()
+    Store.initialize(),
+    Constant.initStationInfo(),
   ]);
-  Http.init(baseUrl: Server.baseHost, connectTimeout: 7500, receiveTimeout: 7500);
 }
 
 class MyApp extends StatelessWidget {

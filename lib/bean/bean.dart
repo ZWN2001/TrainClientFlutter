@@ -1,4 +1,8 @@
 
+import 'package:azlistview/azlistview.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:lpinyin/lpinyin.dart';
+
 class User {
   late final String? userId;
   late final String? userName;
@@ -73,6 +77,44 @@ class PassengerToPay {
   }
 
 }
+
+@JsonSerializable()
+class Station  extends ISuspensionBean{
+  late final String stationId;
+  late final String stationName;
+  late final String city;
+  late String tagIndex;
+  late String abbr;
+
+  Station.fromJson(jsonMap){
+    stationId = jsonMap['stationId'] ?? 'unKnown';
+    stationName = jsonMap['stationName'] ?? 'unKnown';
+    city = jsonMap['city'] ?? 'unKnown';
+    tagIndex = PinyinHelper.getFirstWordPinyin(jsonMap['stationName'] ?? 'unKnown').substring(0,1).toUpperCase();
+    abbr = PinyinHelper.getShortPinyin(jsonMap['stationName'] ?? 'unKnown');
+  }
+
+  Station.name({required this.stationName});
+
+
+  Map<String, dynamic> toJson() => _$StationToJson(this);
+
+  Map<String, dynamic> _$StationToJson(Station instance) => <String, dynamic>{
+    'stationId': instance.stationId,
+    'stationName': instance.stationName,
+    'city': instance.city,
+    'tagIndex': instance.tagIndex,
+  };
+
+  @override
+  String getSuspensionTag() {
+    if(tagIndex == ''){
+      tagIndex = PinyinHelper.getFirstWordPinyin(stationName).substring(0,1).toUpperCase();
+    }
+    return tagIndex;
+  }
+}
+
 
 //模版类仅用来标识
 class ResultEntity<T> {

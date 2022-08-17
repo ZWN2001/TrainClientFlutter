@@ -1,4 +1,28 @@
+import 'package:train_client_flutter/api/api.dart';
+import 'package:train_client_flutter/bean/bean.dart';
+
 class Constant {
+
+  static Map<String, Station> stationIdToNameMap = {};
+  static Map<String, Station> stationNameToIdMap = {};
+  static List<Station> allStationList = [];
+
+  static Future<void> initStationInfo() async {
+    allStationList = await DataApi.getAllStationList();
+    if(allStationList.isNotEmpty){
+      _initMap(allStationList);
+    }
+  }
+
+  static void _initMap(List<Station> stationList){
+    for (var element in stationList) {
+      stationIdToNameMap[element.stationId] = element;
+      stationNameToIdMap[element.stationName] = element;
+    }
+  }
+
+  static List hotStationIdList = ['BJP','CCT','CDW','CQW','CSQ','HBB','HZH','SHH','TJP'];
+
   static List<String> hotelNameList = [
     "宝利精品酒店（北京首都三里屯店）",
     "喆·啡酒店（北京小红门店）",
