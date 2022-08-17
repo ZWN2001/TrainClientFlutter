@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get_utils/get_utils.dart';
 
 import '../bean/bean.dart';
 import '../util/store.dart';
@@ -250,7 +251,7 @@ class PassengerApi{
   static Future<ResultEntity> modifyassenger(Passenger passenger) async {
     try{
       Response response = await Http.post( _urlPostModify,
-          params: {'passenger' : passenger},
+          params: {'passengerJSON' : jsonEncode(passenger)},
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
       Map<String, dynamic> data = json.decode(response.data);
       if (response.statusCode != 200) {
@@ -266,7 +267,8 @@ class PassengerApi{
         return ResultEntity.name( true, 0, "修改成功", null);
       }
     }catch(e){
-      return ResultEntity.name(false, -2, '获取乘员失败,请检查网络或重试', null);
+      debugPrint(e.toString());
+      return ResultEntity.name(false, -2, '失败,请检查网络或重试', null);
     }
   }
 }

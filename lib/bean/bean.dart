@@ -48,10 +48,10 @@ class OrderGeneral {
 
 class Passenger {
   late final int userId;
-  late final String passengerId;
-  late final String passengerName;
-  late final String phoneNum;
-  late final String role;
+  late String passengerId;
+  late String passengerName;
+  late String phoneNum;
+  late String role;
 
   Passenger.fromJson(jsonMap) {
     userId = jsonMap['userId'] ?? 0;
@@ -59,6 +59,16 @@ class Passenger {
     passengerName = jsonMap['passengerName'] ?? 'unKnown';
     phoneNum = jsonMap['phoneNum'] ?? 'unKnown';
     role = jsonMap['role'] ?? 'unKnown';
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'userId': userId,
+      'passengerId': passengerId,
+      'passengerName': passengerName,
+      'phoneNum': phoneNum,
+      'role': role,
+    };
   }
 }
 

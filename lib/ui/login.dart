@@ -4,6 +4,7 @@ import 'package:flutter_login/flutter_login.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:train_client_flutter/ui/main_page.dart';
 import 'package:train_client_flutter/util/string_util.dart';
 
 import '../api/api.dart';
@@ -20,7 +21,7 @@ class LoginPage extends StatelessWidget {
     ResultEntity requestMap = await UserApi.login(data.name, data.password);
     if (requestMap.result) {
       Fluttertoast.showToast( msg: '登录成功');
-      Get.back();
+      Get.to(()=>const MainPage());
       return null;
     }else{
       return requestMap.message;
