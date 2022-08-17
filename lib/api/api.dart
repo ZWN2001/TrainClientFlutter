@@ -77,24 +77,24 @@ class Http{
 }
 
 class Server{
-  static String baseHost = "http://10.0.2.2:8081";
-  static String query = "/query";
-  static String command = "/command";
-  static String hostPay = "/alipay";
-  static String hostPassenger = "/passenger";
-  static String hostTicket = "/ticket";
-  static String hostUser = "/user";
-  static String hostTrainRoute = "/trainRoute";
-  static String hostStation = "/station";
-  static String hostSeatType = "/seatType";
+  static const String baseHost = "http://10.0.2.2:8081";
+  static const String query = "/query";
+  static const String command = "/command";
+  static const String hostPay = "/alipay";
+  static const String hostPassenger = "/passenger";
+  static const String hostTicket = "/ticket";
+  static const String hostUser = "/user";
+  static const String hostTrainRoute = "/trainRoute";
+  static const String hostStation = "/station";
+  static const String hostSeatType = "/seatType";
 }
 
 class UserApi{
-  static String urlPostRegister = "${Server.hostUser}/register";
-  static String urlPostLogin = "${Server.hostUser}/login";
-  static String urlPostLogout = "${Server.hostUser}/logout";
-  static String urlPostRefresh = "${Server.hostUser}/refresh";
-  static String urlGetUserInfo = "${Server.hostUser}/getUserInfo";
+  static const String _urlPostRegister = "${Server.hostUser}/register";
+  static const String _urlPostLogin = "${Server.hostUser}/login";
+  static const String _urlPostLogout = "${Server.hostUser}/logout";
+  static const String _urlPostRefresh = "${Server.hostUser}/refresh";
+  static const String _urlGetUserInfo = "${Server.hostUser}/getUserInfo";
 
   static bool get isLogin => _curUser != null;
 
@@ -106,7 +106,7 @@ class UserApi{
   static Future<ResultEntity> login(String userId, String pwd) async {
     String token;
     try{
-      Response response = await Http.post(urlPostLogin, data: FormData.fromMap(
+      Response response = await Http.post(_urlPostLogin, data: FormData.fromMap(
           {'userId': userId, 'loginKey': pwd}));
       Map<String, dynamic> data = json.decode(response.data);
       if(data['code'] != 200){
@@ -123,7 +123,7 @@ class UserApi{
 
   static Future<ResultEntity> register(User user) async {
     try{
-      Response response = await Http.post(urlPostRegister, data: FormData.fromMap(
+      Response response = await Http.post(_urlPostRegister, data: FormData.fromMap(
           {'userId': user.userId, 'password':user.pwd}));
       Map<String, dynamic> data = json.decode(response.data);
       if (response.statusCode != 200) {
@@ -152,7 +152,7 @@ class UserApi{
 
   static Future<Map<String, dynamic>> _getUserInfo(String token) async {
     try {
-      Response response = await Http.get(urlGetUserInfo,options: Options(headers: {'Token': 'Bearer:$token'}));
+      Response response = await Http.get(_urlGetUserInfo,options: Options(headers: {'Token': 'Bearer:$token'}));
       Map<String, dynamic> data = json.decode(response.data);
       if (data['code'] != 200) {
         return {};
@@ -207,36 +207,57 @@ class DataApi{
 }
 
 class PassengerApi{
-  String urlPostAdd = "${Server.hostPassenger}${Server.command}/add";
-  String urlPostModify = "${Server.hostPassenger}${Server.command}/modify";
-  String urlPostDelete = "${Server.hostPassenger}${Server.command}/delete";
-  String urlGetQueryAll = "${Server.hostPassenger}${Server.query}/all";
-  String urlGetQuerySingle = "${Server.hostPassenger}${Server.query}/single";
+  static const String _urlPostAdd = "${Server.hostPassenger}${Server.command}/add";
+  static const String _urlPostModify = "${Server.hostPassenger}${Server.command}/modify";
+  static const String _urlPostDelete = "${Server.hostPassenger}${Server.command}/delete";
+  static const String _urlGetQueryAll = "${Server.hostPassenger}${Server.query}/all";
+  static const String _urlGetQuerySingle = "${Server.hostPassenger}${Server.query}/single";
+
+  static Future<ResultEntity> getAllPassenger() async {
+    try{
+      Response response = await Http.get(_urlGetQueryAll);
+      Map<String, dynamic> data = json.decode(response.data);
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常',null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试',null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'],null);
+        }
+        return ResultEntity.name( true, 0, "注册成功",null);
+      }
+    }catch(e){
+      return ResultEntity.name(false, -2, '获取乘员失败,请检查网络或重试',null);
+    }
+  }
 }
 
 class TicketAndOrderApi{
   ///订票
-  String urlPostBooking = "${Server.hostTicket}${Server.command}/booking";
+  static const String _urlPostBooking = "${Server.hostTicket}${Server.command}/booking";
   ///退票
-  String urlPostRefund = "${Server.hostTicket}${Server.command}/refund";
+  static const String _urlPostRefund = "${Server.hostTicket}${Server.command}/refund";
   ///改签
-  String urlPostRebook = "${Server.hostTicket}${Server.command}/rebook";
+  static const String _urlPostRebook = "${Server.hostTicket}${Server.command}/rebook";
   ///取票
-  String urlPostGet = "${Server.hostTicket}${Server.command}/get";
-  String urlPostBookingCancel = "${Server.hostTicket}${Server.command}/bookingCancel";
+  static const String _urlPostGet = "${Server.hostTicket}${Server.command}/get";
+  static const String _urlPostBookingCancel = "${Server.hostTicket}${Server.command}/bookingCancel";
   ///余票
-  String urlGetTicketRemain = "${Server.hostTicket}${Server.query}/ticketRemain";
+  static const String _urlGetTicketRemain = "${Server.hostTicket}${Server.query}/ticketRemain";
   ///票价
-  String urlGetTicketPrice = "${Server.hostTicket}${Server.query}/ticketPrice";
-  String urlGetSelfTicket = "${Server.hostTicket}${Server.query}/selfTicket";
-  String urlGetSelfOrder = "${Server.hostTicket}${Server.query}/selfOrder";
-  String urlGetSelfPaiedOrder = "${Server.hostTicket}${Server.query}/selfPaiedOrder";
-  String urlGetTicketInfo = "${Server.hostTicket}${Server.query}/ticketInfo";
-  String urlGetTicketSeatInfo = "${Server.hostTicket}${Server.query}/ticketSeatInfo";
-  String urlGetTicketToPayDetail = "${Server.hostTicket}${Server.query}/ticketToPayDetail";
+  static const String _urlGetTicketPrice = "${Server.hostTicket}${Server.query}/ticketPrice";
+  static const String _urlGetSelfTicket = "${Server.hostTicket}${Server.query}/selfTicket";
+  static const String _urlGetSelfOrder = "${Server.hostTicket}${Server.query}/selfOrder";
+  static const String _urlGetSelfPaiedOrder = "${Server.hostTicket}${Server.query}/selfPaiedOrder";
+  static const String _urlGetTicketInfo = "${Server.hostTicket}${Server.query}/ticketInfo";
+  static const String _urlGetTicketSeatInfo = "${Server.hostTicket}${Server.query}/ticketSeatInfo";
+  static const String _urlGetTicketToPayDetail = "${Server.hostTicket}${Server.query}/ticketToPayDetail";
 }
 
 class TrainRouteApi{
-  String urlGetQueryTrainRoute = "${Server.hostTrainRoute}${Server.query}/trainRoute";
-  String urlGetQueryDetail = "${Server.hostTrainRoute}${Server.query}/trainRouteDetail";
+  static const String _urlGetQueryTrainRoute = "${Server.hostTrainRoute}${Server.query}/trainRoute";
+  static const String _urlGetQueryDetail = "${Server.hostTrainRoute}${Server.query}/trainRouteDetail";
 }
