@@ -103,6 +103,11 @@ class UserApi{
 
   static User? get curUser => _curUser;
 
+  static String? getToken(){
+    String? token =  Store.getString('token');
+    return token;
+  }
+
   static Future<ResultEntity> login(String userId, String pwd) async {
     String token;
     try{
@@ -152,7 +157,8 @@ class UserApi{
 
   static Future<Map<String, dynamic>> _getUserInfo(String token) async {
     try {
-      Response response = await Http.get(_urlGetUserInfo,options: Options(headers: {'Token': 'Bearer:$token'}));
+      Response response = await Http.get(_urlGetUserInfo,
+          options: Options(headers: {'Token': 'Bearer:$token'}));
       Map<String, dynamic> data = json.decode(response.data);
       if (data['code'] != 200) {
         return {};
@@ -185,8 +191,8 @@ class PayApi{
 }
 
 class DataApi{
-  static final String _urlGetAllStationDetail = "${Server.hostStation}${Server.query}/allStationDetail";
-  static final String _urlGetAllSeatType = "${Server.hostSeatType}${Server.query}/allSeatType";
+  static const String _urlGetAllStationDetail = "${Server.hostStation}${Server.query}/allStationDetail";
+  static const String _urlGetAllSeatType = "${Server.hostSeatType}${Server.query}/allSeatType";
 
   static Future<List<Station>> getAllStationList() async {
     try{
@@ -215,22 +221,25 @@ class PassengerApi{
 
   static Future<ResultEntity> getAllPassenger() async {
     try{
-      Response response = await Http.get(_urlGetQueryAll);
+      Response response = await Http.get(_urlGetQueryAll,
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
       Map<String, dynamic> data = json.decode(response.data);
       if (response.statusCode != 200) {
         if (response.statusCode! >= 500) {
-          return ResultEntity.name(false, response.statusCode!, '服务器异常',null);
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
         } else {
-          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试',null);
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
         }
       }else{
         if(data['code'] != 200){
-          return ResultEntity.name(false, data['code'], data['message'],null);
+          return ResultEntity.name(false, data['code'], data['message'], null);
         }
-        return ResultEntity.name( true, 0, "注册成功",null);
+        List list = data['data'];
+        List<Passenger> result =  list.map((e) => Passenger.fromJson(e)).toList();
+        return ResultEntity.name( true, 0, "成功", result);
       }
     }catch(e){
-      return ResultEntity.name(false, -2, '获取乘员失败,请检查网络或重试',null);
+      return ResultEntity.name(false, -2, '获取乘员失败,请检查网络或重试', null);
     }
   }
 }

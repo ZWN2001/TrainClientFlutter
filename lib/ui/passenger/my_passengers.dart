@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:train_client_flutter/api/api.dart';
 
 import '../../bean/bean.dart';
 import '../../widget/cards.dart';
@@ -12,9 +14,14 @@ class MyPassengerPage extends StatefulWidget{
 }
 
 class MyPassengerState extends State<MyPassengerPage>{
-  Passenger o = Passenger.fromJson({});
-  late List<Passenger> list = [o];
+  late List<Passenger> list = [];
+  Widget _body = const Center(child: CircularProgressIndicator());
 
+  @override
+  void initState() {
+    super.initState();
+    _getPassenger();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +34,21 @@ class MyPassengerState extends State<MyPassengerPage>{
               }, child: const Text('添加',
             style: TextStyle(fontSize: 16, color: Colors.white),))
         ],),
-      body: Column(
-        children: [
-          tipsCard(),
-          const SizedBox(height: 24,),
-          list.isEmpty ? _noTicketWidget() : _ticketsWidget()
-        ],
-      ),
+      body: _body
     );
   }
 
-  Widget tipsCard(){
+  Widget _resultBody(){
+    return Column(
+      children: [
+        _tipsCard(),
+        const SizedBox(height: 24,),
+        list.isEmpty ? _noTicketWidget() : _ticketsWidget()
+      ],
+    );
+  }
+
+  Widget _tipsCard(){
     return Container(
           color: const Color.fromRGBO(255, 200, 200, 0.4),
           child: const Padding(
@@ -65,6 +76,18 @@ class MyPassengerState extends State<MyPassengerPage>{
         ],
       ),
     );
+  }
+
+  Future<void> _getPassenger() async {
+    ResultEntity requestMap = await PassengerApi.getAllPassenger();
+    if (requestMap.result) {
+      list.clear();
+      list.addAll(requestMap.data);
+      _body = _resultBody();
+    }else{
+      Fluttertoast.showToast( msg: requestMap.message);
+    }
+    setState((){});
   }
 
 }

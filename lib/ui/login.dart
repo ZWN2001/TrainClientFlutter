@@ -8,7 +8,6 @@ import 'package:train_client_flutter/util/string_util.dart';
 
 import '../api/api.dart';
 import '../bean/bean.dart';
-import 'main_page.dart';
 
 class LoginPage extends StatelessWidget {
   static const routeName = '/auth';
@@ -21,12 +20,11 @@ class LoginPage extends StatelessWidget {
     ResultEntity requestMap = await UserApi.login(data.name, data.password);
     if (requestMap.result) {
       Fluttertoast.showToast( msg: '登录成功');
-      Get.offAll(() => const MainPage());
+      Get.back();
       return null;
     }else{
       return requestMap.message;
     }
-    return null;
   }
 
   Future<String?> _registerUser(LoginData data) async {
