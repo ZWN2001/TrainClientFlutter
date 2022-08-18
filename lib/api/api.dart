@@ -297,6 +297,30 @@ class PassengerApi{
     }
   }
 
+  static Future<ResultEntity> deletePassenger(Passenger passenger) async {
+    try{
+      Response response = await Http.post( _urlPostDelete,
+          params: {'passengerJSON' : jsonEncode(passenger)},
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        return ResultEntity.name( true, 0, "修改成功", null);
+      }
+    }catch(e){
+      debugPrint(e.toString());
+      return ResultEntity.name(false, -2, '失败,请检查网络或重试', null);
+    }
+  }
+
   static Future<ResultEntity> randomPassenger() async {
     try{
       Response response = await Http.get( _urlGetRandom,
