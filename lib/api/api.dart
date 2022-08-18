@@ -363,7 +363,7 @@ class TicketAndOrderApi{
         return ResultEntity.name( true, 0, "成功", result);
       }
     }catch(e){
-      return ResultEntity.name(false, -2, '获取乘员失败,请检查网络或重试', null);
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
     }
   }
 
@@ -388,7 +388,7 @@ class TicketAndOrderApi{
         return ResultEntity.name( true, 0, "成功", result);
       }
     }catch(e){
-      return ResultEntity.name(false, -2, '获取乘员失败,请检查网络或重试', null);
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
     }
   }
 
@@ -397,7 +397,7 @@ class TicketAndOrderApi{
       Response response = await Http.get(_urlGetSelfTicket,
           params: {'userId' : UserApi.getUserId()},
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
-      Map<String, dynamic> data = response.data;
+      Map<String, dynamic> data = json.decode(response.data);
       if (response.statusCode != 200) {
         if (response.statusCode! >= 500) {
           return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
@@ -413,7 +413,7 @@ class TicketAndOrderApi{
         return ResultEntity.name( true, 0, "成功", result);
       }
     }catch(e){
-      return ResultEntity.name(false, -2, '获取乘员失败,请检查网络或重试', null);
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
     }
   }
 }
