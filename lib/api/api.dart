@@ -223,6 +223,7 @@ class PassengerApi{
   static const String _urlPostDelete = "${Server.hostPassenger}${Server.command}/delete";
   static const String _urlGetQueryAll = "${Server.hostPassenger}${Server.query}/all";
   static const String _urlGetQuerySingle = "${Server.hostPassenger}${Server.query}/single";
+  static const String _urlGetRandom = "${Server.hostPassenger}${Server.command}/random";
 
   static Future<ResultEntity> getAllPassenger() async {
     try{
@@ -298,7 +299,8 @@ class PassengerApi{
 
   static Future<ResultEntity> randomPassenger() async {
     try{
-      Response response = await Http.post( _urlPostAdd);
+      Response response = await Http.get( _urlGetRandom,
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
       Map<String, dynamic> data = response.data;
       if (response.statusCode != 200) {
         if (response.statusCode! >= 500) {
@@ -310,7 +312,7 @@ class PassengerApi{
         if(data['code'] != 200){
           return ResultEntity.name(false, data['code'], data['message'], null);
         }
-        return ResultEntity.name( true, 0, "成功", null);
+        return ResultEntity.name( true, 0, "成功", data['data']);
       }
     }catch(e){
       debugPrint(e.toString());

@@ -44,7 +44,10 @@ class AddPassengerState extends State<AddPassengerPage>{
     return Scaffold(
         appBar: AppBar(title: const Text('添加乘员信息'),
           actions: [
-            TextButton(onPressed: (){}, child: const Text('随机生成'))
+            TextButton(
+                onPressed: _getRandomPassenger,
+                child: const Text('随机生成',
+                  style: TextStyle(color: Colors.white),))
           ],),
         body: SingleChildScrollView(
           child: Column(
@@ -354,11 +357,24 @@ class AddPassengerState extends State<AddPassengerPage>{
       passenger.userId = UserApi.getUserId()!;
       ResultEntity resultEntity = await PassengerApi.addPassenger(passenger);
       if(resultEntity.result){
-        Get.back();
+        Get.back(result: passenger);
       }
       Fluttertoast.showToast(msg: resultEntity.message);
     }
+  }
 
+  Future<void> _getRandomPassenger() async {
+    ResultEntity resultEntity = await PassengerApi.randomPassenger();
+    if(resultEntity.result){
+      Passenger passenger = Passenger.fromJson(resultEntity.data);
+      _selectedRole = passenger.role == 'common'? '成人':'学生';
+      nameController.text = passenger.passengerName;
+      certificateController.text = passenger.passengerId;
+      phoneNumController.text = passenger.phoneNum;
+      setState((){});
+    }else{
+      Fluttertoast.showToast(msg: resultEntity.message);
+    }
   }
 
   String tips = '1．为配合做好新冠疫情常态化防控工作，同时便于乘车人及时接收到车运行'

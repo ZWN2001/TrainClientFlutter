@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:train_client_flutter/api/api.dart';
+import 'package:train_client_flutter/ui/passenger/add_passenger.dart';
 
 import '../../bean/bean.dart';
 import '../../widget/cards.dart';
@@ -29,8 +32,12 @@ class MyPassengerState extends State<MyPassengerPage>{
       appBar: AppBar(title: const Text("乘员列表"),
         actions: [
           TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/passenger_add');
+              onPressed: () async {
+                Passenger? p = await Get.to(() => const AddPassengerPage());
+                if(p != null){
+                  list.add(p);
+                  setState((){_body = _resultBody();});
+                }
               }, child: const Text('添加',
             style: TextStyle(fontSize: 16, color: Colors.white),))
         ],),
@@ -39,12 +46,14 @@ class MyPassengerState extends State<MyPassengerPage>{
   }
 
   Widget _resultBody(){
-    return Column(
-      children: [
-        _tipsCard(),
-        const SizedBox(height: 24,),
-        list.isEmpty ? _noTicketWidget() : _ticketsWidget()
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          _tipsCard(),
+          const SizedBox(height: 24,),
+          list.isEmpty ? _noTicketWidget() : _ticketsWidget()
+        ],
+      ),
     );
   }
 
@@ -71,9 +80,7 @@ class MyPassengerState extends State<MyPassengerPage>{
   Widget _ticketsWidget(){
     return SingleChildScrollView(
       child: Column(
-        children: [
-          PassengerInfoCard(passenger: list.first,)
-        ],
+        children: list.map((e) => PassengerInfoCard(passenger: e,)).toList()
       ),
     );
   }
