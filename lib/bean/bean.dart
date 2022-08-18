@@ -152,3 +152,12 @@ class ResultEntity<T> {
   }
 
 }
+
+class OrderStatus {
+  static const String UN_PAY = "未支付";
+  static const String CANCEL = "已取消";
+  static const String TIMEOUT = "支付超时";
+  static const String PAIED = "已支付";
+  static const String REFUNDED = "已退票";
+  static const String DRAFTED = "已出票";
+}

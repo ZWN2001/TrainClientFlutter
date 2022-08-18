@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../api/api.dart';
 import '../../bean/bean.dart';
 import '../../widget/cards.dart';
 
@@ -13,15 +15,20 @@ class OrderAllPage extends StatefulWidget{
 }
 
 class OrderAllState extends State<OrderAllPage>{
-  OrderGeneral o = OrderGeneral.fromJson({});
-  late List<OrderGeneral> list = [o];
+  late List<OrderGeneral> list = [];
+  Widget _body = const Center(child: CircularProgressIndicator());
 
+  @override
+  void initState() {
+    super.initState();
+    _getOrder();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("全部订单"),),
-      body: list.isEmpty?_noTicketWidget():_ticketsWidget(),
+      body: _body,
     );
   }
   Widget _noTicketWidget(){
@@ -33,11 +40,21 @@ class OrderAllState extends State<OrderAllPage>{
   Widget _ticketsWidget(){
     return SingleChildScrollView(
       child: Column(
-        children: [
-          TicketPaiedCard(orderGeneral: list.first,)
-        ],
+          children: list.map((e) => AllTicketCard(orderGeneral: e,)).toList()
       ),
     );
+  }
+
+  Future<void> _getOrder() async {
+    ResultEntity requestMap = await TicketAndOrderApi.getOrderAll();
+    if (requestMap.result) {
+      list.clear();
+      list.addAll(requestMap.data);
+      _body = list.isEmpty?_noTicketWidget():_ticketsWidget();
+    }else{
+      Fluttertoast.showToast( msg: requestMap.message);
+    }
+    setState((){});
   }
 
 }
