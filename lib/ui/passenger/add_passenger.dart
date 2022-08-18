@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:train_client_flutter/api/api.dart';
+import 'package:train_client_flutter/bean/bean.dart';
+
+import '../../util/string_util.dart';
 
 class AddPassengerPage extends StatefulWidget{
   const AddPassengerPage({Key? key}) : super(key: key);
@@ -36,7 +42,10 @@ class AddPassengerState extends State<AddPassengerPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('编辑乘员信息'),),
+        appBar: AppBar(title: const Text('添加乘员信息'),
+          actions: [
+            TextButton(onPressed: (){}, child: const Text('随机生成'))
+          ],),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,7 +72,7 @@ class AddPassengerState extends State<AddPassengerPage>{
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const SizedBox(width: 32,),
-                  Expanded(child: ElevatedButton(onPressed: (){},
+                  Expanded(child: ElevatedButton(onPressed: _submit,
                       child: const Padding(padding: EdgeInsets.fromLTRB(24, 10, 24, 10),
                         child: Text('提交',style: TextStyle(fontSize: 18),),))),
                   const SizedBox(width: 32,),
@@ -290,6 +299,66 @@ class AddPassengerState extends State<AddPassengerPage>{
             ),
           );
         }).toList();
+  }
+
+  Future<void> _submit() async {
+    if(nameController.text.length < 2 || nameController.text.length > 8 ||
+        !StringUtil.allChinese(nameController.text)){
+      if(mounted){
+        setState((){
+          nameErrorText = '姓名不合法';
+        });
+      }
+    }else{
+      if(mounted){
+        setState((){
+          nameErrorText = null;
+        });
+      }
+    }
+
+    if(!StringUtil.verifyCardId(certificateController.text)){
+      if(mounted){
+        setState((){
+          certificateErrorText = '身份证不合法';
+        });
+      }
+    }else{
+      if(mounted){
+        setState((){
+          certificateErrorText = null;
+        });
+      }
+    }
+
+    if(!StringUtil.phoneNumLegal(phoneNumController.text)){
+      if(mounted){
+        setState((){
+          phoneNumErrorText = '手机号非法';
+        });
+      }
+    }else{
+      if(mounted){
+        setState((){
+          phoneNumErrorText = null;
+        });
+      }
+    }
+
+    if(nameErrorText == null && certificateErrorText == null && phoneNumErrorText == null){
+      Passenger passenger = Passenger();
+      passenger.role = _selectedRole == '成人'? 'common' : 'student';
+      passenger.passengerName = nameController.text;
+      passenger.passengerId = certificateController.text;
+      passenger.phoneNum = phoneNumController.text;
+      passenger.userId = UserApi.getUserId()!;
+      ResultEntity resultEntity = await PassengerApi.addPassenger(passenger);
+      if(resultEntity.result){
+        Get.back();
+      }
+      Fluttertoast.showToast(msg: resultEntity.message);
+    }
+
   }
 
   String tips = '1．为配合做好新冠疫情常态化防控工作，同时便于乘车人及时接收到车运行'

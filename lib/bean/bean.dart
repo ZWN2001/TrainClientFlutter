@@ -61,6 +61,8 @@ class Passenger {
     role = jsonMap['role'] ?? 'unKnown';
   }
 
+  Passenger();
+
   Map<String, dynamic> toJson() {
     return {
       'userId': userId,

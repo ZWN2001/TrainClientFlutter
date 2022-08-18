@@ -324,7 +324,7 @@ class PassengerEditState extends State<PassengerEditPage>{
       widget.passenger.passengerName = nameController.text;
       widget.passenger.passengerId = certificateController.text;
       widget.passenger.phoneNum = phoneNumController.text;
-      ResultEntity resultEntity = await PassengerApi.modifyassenger(widget.passenger);
+      ResultEntity resultEntity = await PassengerApi.modifyPassenger(widget.passenger);
       if(resultEntity.result){
         Get.back();
       }
