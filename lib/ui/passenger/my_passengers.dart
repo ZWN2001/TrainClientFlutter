@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:train_client_flutter/api/api.dart';
 import 'package:train_client_flutter/ui/passenger/add_passenger.dart';
 
