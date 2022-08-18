@@ -38,7 +38,7 @@ class _StationPageState extends State<StationPage> {
       appBar: AppBar(title: const Text('车站选择'), centerTitle: true,
         bottom: PreferredSize(
           preferredSize: const Size(300, 50),
-          child: buildFloatingSearchBar(),
+          child: _buildFloatingSearchBar(),
         ),
       ),
       resizeToAvoidBottomInset: false,
@@ -96,7 +96,7 @@ class _StationPageState extends State<StationPage> {
     );
   }
 
-  Widget buildFloatingSearchBar() {
+  Widget _buildFloatingSearchBar() {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
     return SizedBox(height: 60,

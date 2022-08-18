@@ -35,7 +35,7 @@ class _SplashState extends State<Splash>{
                   shape:  const StadiumBorder(),
                 ),
                 onPressed: () {
-                  newHomePage();
+                  _newHomePage();
                 },
                 child: const Text(
                   "跳过",
@@ -53,15 +53,15 @@ class _SplashState extends State<Splash>{
   @override
   void initState() {
     super.initState();
-    countDown();
+    _countDown();
   }
 
   // 倒计时
-  void countDown() {
+  void _countDown() {
     var duration =  const Duration(seconds: 5);
-     Future.delayed(duration, newHomePage);
+     Future.delayed(duration, _newHomePage);
   }
-  void newHomePage() {
+  void _newHomePage() {
     var routePath = Get.currentRoute;
     if(routePath != MainPage.routeName){
       Navigator.popAndPushNamed(context, MainPage.routeName);

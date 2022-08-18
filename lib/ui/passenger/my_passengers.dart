@@ -18,11 +18,10 @@ class MyPassengerPage extends StatefulWidget{
 class MyPassengerState extends State<MyPassengerPage>{
   bool _loading = true;
   List<bool> selectList = [];
-  late List<Passenger> passengerList = [];
-  List<Passenger> deletePassengers = []; //要删除的ID数组
+  late final List<Passenger> _passengerList = [];
+  List<Passenger> _deletePassengers = []; //要删除的ID数组
   bool _isOff = true; //相关组件显示隐藏控制，true代表隐藏
   bool _checkValue = false; //总的复选框控制开关
-  String deleteButtonName = '选择删除';
 
   @override
   void initState() {
@@ -41,7 +40,7 @@ class MyPassengerState extends State<MyPassengerPage>{
               onPressed: () async {
                 Passenger? p = await Get.to(() => const AddPassengerPage());
                 if(p != null){
-                  passengerList.add(p);
+                  _passengerList.add(p);
                   selectList.add(false);
                   if(mounted){setState((){});}
                 }
@@ -54,7 +53,7 @@ class MyPassengerState extends State<MyPassengerPage>{
                 for (int i = 0; i <selectList.length;i++) {
                   selectList[i] = false; //列表设置为未选中
                 }
-                deletePassengers = []; //重置
+                _deletePassengers = []; //重置
                 if(mounted){
                   setState(() {
                     _isOff = !_isOff; //显示隐藏总开关
@@ -62,15 +61,15 @@ class MyPassengerState extends State<MyPassengerPage>{
                   });
                 }
               },
-              child: Text(deleteButtonName,
-                style: const TextStyle(fontSize: 16, color: Colors.white),))
+              child: const Text('选择删除',
+                style: TextStyle(fontSize: 16, color: Colors.white),))
         ],),
-      body: _loading?const Center(child: CircularProgressIndicator()) : mainContent()
+      body: _loading?const Center(child: CircularProgressIndicator()) : _mainContent()
     );
   }
 
-  Widget mainContent() {
-    if (passengerList.isEmpty) {
+  Widget _mainContent() {
+    if (_passengerList.isEmpty) {
       return _noTicketWidget();
     } else {
       return Container(
@@ -95,9 +94,9 @@ class MyPassengerState extends State<MyPassengerPage>{
   Widget _ticketsWidget(){
     return ListView.builder(
       itemBuilder: (context, index) {
-        return _createGridViewItem(index ,passenger : passengerList[index]);
+        return _createGridViewItem(index ,passenger : _passengerList[index]);
       },
-      itemCount: passengerList.length,
+      itemCount: _passengerList.length,
     );
   }
 
@@ -136,7 +135,7 @@ class MyPassengerState extends State<MyPassengerPage>{
                     InkWell(
                       child: const Text('删除',style: TextStyle(fontSize: 16),),
                       onTap: (){
-                        _delete(deletePassengers);
+                        _delete(_deletePassengers);
                       },
                     ),
                     const SizedBox(width: 16,),
@@ -160,9 +159,9 @@ class MyPassengerState extends State<MyPassengerPage>{
               value: selectList[index],
               onChanged: (value) {
                 if (value == false) {
-                  deletePassengers.remove(passenger);
+                  _deletePassengers.remove(passenger);
                 } else {
-                  deletePassengers.add(passenger);
+                  _deletePassengers.add(passenger);
                 }
                 setState(() {
                   selectList[index] = value!;
@@ -179,8 +178,8 @@ class MyPassengerState extends State<MyPassengerPage>{
   Future<void> _getPassenger() async {
     ResultEntity requestMap = await PassengerApi.getAllPassenger();
     if (requestMap.result) {
-      passengerList.clear();
-      passengerList.addAll(requestMap.data);
+      _passengerList.clear();
+      _passengerList.addAll(requestMap.data);
       _initSelectList();
       _loading = false;
     }else{
@@ -190,18 +189,18 @@ class MyPassengerState extends State<MyPassengerPage>{
   }
 
   void _initSelectList(){
-    for (int i = 0; i <passengerList.length;i++) {
+    for (int i = 0; i <_passengerList.length;i++) {
       selectList.add(false);
     }
   }
 
   //底部复选框的操作逻辑
   _selectAll(value) {
-    deletePassengers = []; //要删除的数组ID重置
+    _deletePassengers = []; //要删除的数组ID重置
     for(int i = 0;i<selectList.length;i++) {
       selectList[i] = value;
       if (value == true) {
-        deletePassengers.add(passengerList[i]);
+        _deletePassengers.add(_passengerList[i]);
       }
     }
 

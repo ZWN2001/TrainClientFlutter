@@ -14,30 +14,30 @@ class PassengerEditPage extends StatefulWidget{
 
 class PassengerEditState extends State<PassengerEditPage> {
 
-  List<String> certificateTypes = ["中国居民身份证"];
-  List<String> passengerRoles = ['成人', '学生'];
+  final List<String> _certificateTypes = ["中国居民身份证"];
+  final List<String> _passengerRoles = ['成人', '学生'];
   List<DropdownMenuItem<String>> _certificateTypeMenuItems = [];
   List<DropdownMenuItem<String>> _passengerRolesMenuItems = [];
   String _selectedCertificateType = "";
   String _selectedRole = '';
-  TextEditingController nameController = TextEditingController();
-  TextEditingController certificateController = TextEditingController();
-  TextEditingController phoneNumController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _certificateController = TextEditingController();
+  final TextEditingController _phoneNumController = TextEditingController();
 
-  String? nameErrorText;
-  String? certificateErrorText;
-  String? phoneNumErrorText;
+  String? _nameErrorText;
+  String? _certificateErrorText;
+  String? _phoneNumErrorText;
 
 
   @override
   void initState() {
     super.initState();
-    _selectedCertificateType = certificateTypes[0];
-    _selectedRole = passengerRoles[0];
+    _selectedCertificateType = _certificateTypes[0];
+    _selectedRole = _passengerRoles[0];
     _updateSubrouteMenuItems();
-    nameController.text = widget.passenger.passengerName;
-    certificateController.text = widget.passenger.passengerId;
-    phoneNumController.text = widget.passenger.phoneNum;
+    _nameController.text = widget.passenger.passengerName;
+    _certificateController.text = widget.passenger.passengerId;
+    _phoneNumController.text = widget.passenger.phoneNum;
   }
 
   @override
@@ -58,7 +58,7 @@ class PassengerEditState extends State<PassengerEditPage> {
                   ],
                 ),
               ),
-              basicInfo(),
+              _basicInfo(),
               const Padding(padding: EdgeInsets.all(12),
                 child: Text('联系方式', style: TextStyle(fontSize: 20),),),
               Container(
@@ -81,7 +81,7 @@ class PassengerEditState extends State<PassengerEditPage> {
                 child: Text('温馨提示：', style: TextStyle(fontSize: 15),),
               ),
               Padding(padding: const EdgeInsets.fromLTRB(12, 0, 12, 32),
-                child: Text(tips,
+                child: Text(_tips,
                   style: const TextStyle(fontSize: 15, color: Colors.grey),),
               ),
             ],
@@ -90,7 +90,7 @@ class PassengerEditState extends State<PassengerEditPage> {
     );
   }
 
-  Widget basicInfo() {
+  Widget _basicInfo() {
     return Container(
       color: Colors.white,
       child: Column(
@@ -142,7 +142,7 @@ class PassengerEditState extends State<PassengerEditPage> {
             padding: EdgeInsets.only(bottom: 16,),
             child: Text('姓    名:', style: TextStyle(fontSize: 16),),)),
           Expanded(flex: 5, child: TextField(
-            controller: nameController,
+            controller: _nameController,
             decoration: InputDecoration(
               hintText: "请输入真实姓名，以方便购票",
               contentPadding: const EdgeInsets.all(4),
@@ -150,7 +150,7 @@ class PassengerEditState extends State<PassengerEditPage> {
               hintStyle: const TextStyle(
                 color: Colors.grey, textBaseline: TextBaseline.ideographic,),
               helperText: '',
-              errorText: nameErrorText,
+              errorText: _nameErrorText,
               errorStyle: const TextStyle(color: Colors.red),
             ),
           ))
@@ -168,7 +168,7 @@ class PassengerEditState extends State<PassengerEditPage> {
             padding: EdgeInsets.only(bottom: 16,),
             child: Text('证件号码:', style: TextStyle(fontSize: 16),),)),
           Expanded(flex: 5, child: TextField(
-            controller: certificateController,
+            controller: _certificateController,
             decoration: InputDecoration(
               hintText: "用于身份核验，请正确填写",
               contentPadding: const EdgeInsets.all(4),
@@ -176,7 +176,7 @@ class PassengerEditState extends State<PassengerEditPage> {
               hintStyle: const TextStyle(
                 color: Colors.grey, textBaseline: TextBaseline.ideographic,),
               helperText: '',
-              errorText: certificateErrorText,
+              errorText: _certificateErrorText,
               errorStyle: const TextStyle(color: Colors.red),
             ),
           ))
@@ -194,7 +194,7 @@ class PassengerEditState extends State<PassengerEditPage> {
             padding: EdgeInsets.only(bottom: 16,),
             child: Text('手机号码:', style: TextStyle(fontSize: 16),),)),
           Expanded(flex: 5, child: TextField(
-            controller: phoneNumController,
+            controller: _phoneNumController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               hintText: "请准确填写乘车人手机号码",
@@ -203,7 +203,7 @@ class PassengerEditState extends State<PassengerEditPage> {
               hintStyle: const TextStyle(
                 color: Colors.grey, textBaseline: TextBaseline.ideographic,),
               helperText: '',
-              errorText: phoneNumErrorText,
+              errorText: _phoneNumErrorText,
               errorStyle: const TextStyle(color: Colors.red),
             ),
           ))
@@ -218,7 +218,7 @@ class PassengerEditState extends State<PassengerEditPage> {
         items: _certificateTypeMenuItems,
         value: _selectedCertificateType,
         selectedItemBuilder: (BuildContext context) {
-          return certificateTypes.map<Widget>((String routeName) {
+          return _certificateTypes.map<Widget>((String routeName) {
             return Container(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -247,7 +247,7 @@ class PassengerEditState extends State<PassengerEditPage> {
         items: _passengerRolesMenuItems,
         value: _selectedRole,
         selectedItemBuilder: (BuildContext context) {
-          return passengerRoles.map<Widget>((String routeName) {
+          return _passengerRoles.map<Widget>((String routeName) {
             return Container(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -272,7 +272,7 @@ class PassengerEditState extends State<PassengerEditPage> {
 
   void _updateSubrouteMenuItems() {
     _certificateTypeMenuItems =
-        certificateTypes.map<DropdownMenuItem<String>>((String routeName) {
+        _certificateTypes.map<DropdownMenuItem<String>>((String routeName) {
           return DropdownMenuItem(
             value: routeName,
             child: Text(
@@ -289,7 +289,7 @@ class PassengerEditState extends State<PassengerEditPage> {
         }).toList();
 
     _passengerRolesMenuItems =
-        passengerRoles.map<DropdownMenuItem<String>>((String routeName) {
+        _passengerRoles.map<DropdownMenuItem<String>>((String routeName) {
           return DropdownMenuItem(
             value: routeName,
             child: Text(
@@ -307,31 +307,31 @@ class PassengerEditState extends State<PassengerEditPage> {
   }
 
   Future<void> _submit() async {
-    if (nameController.text.length < 2 || nameController.text.length > 8 ||
-        !StringUtil.allChinese(nameController.text)) {
-      nameErrorText = '姓名不合法';
+    if (_nameController.text.length < 2 || _nameController.text.length > 8 ||
+        !StringUtil.allChinese(_nameController.text)) {
+      _nameErrorText = '姓名不合法';
     } else {
-      nameErrorText = null;
+      _nameErrorText = null;
     }
 
-    if (!StringUtil.verifyCardId(certificateController.text)) {
-      certificateErrorText = '身份证不合法';
+    if (!StringUtil.verifyCardId(_certificateController.text)) {
+      _certificateErrorText = '身份证不合法';
     } else {
-      certificateErrorText = null;
+      _certificateErrorText = null;
     }
 
-    if (!StringUtil.phoneNumLegal(phoneNumController.text)) {
-      phoneNumErrorText = '手机号非法';
+    if (!StringUtil.phoneNumLegal(_phoneNumController.text)) {
+      _phoneNumErrorText = '手机号非法';
     } else {
-      phoneNumErrorText = null;
+      _phoneNumErrorText = null;
     }
 
-    if (nameErrorText == null && certificateErrorText == null &&
-        phoneNumErrorText == null) {
+    if (_nameErrorText == null && _certificateErrorText == null &&
+        _phoneNumErrorText == null) {
       widget.passenger.role = _selectedRole == '成人' ? 'common' : 'student';
-      widget.passenger.passengerName = nameController.text;
-      widget.passenger.passengerId = certificateController.text;
-      widget.passenger.phoneNum = phoneNumController.text;
+      widget.passenger.passengerName = _nameController.text;
+      widget.passenger.passengerId = _certificateController.text;
+      widget.passenger.phoneNum = _phoneNumController.text;
       ResultEntity resultEntity = await PassengerApi.modifyPassenger(
           widget.passenger);
       if (resultEntity.result) {
@@ -341,7 +341,7 @@ class PassengerEditState extends State<PassengerEditPage> {
     }
   }
 
-  String tips = '1．为配合做好新冠疫情常态化防控工作，同时便于乘车人及时接收到车运行'
+  final String _tips = '1．为配合做好新冠疫情常态化防控工作，同时便于乘车人及时接收到车运行'
       '变更信息，购票时需登记每名乘车旅客中国大陆手机号码，请惩提前填报并通知乘车人协'
       '助完戌手机号码核验。对于未成年人、老年人等重点旅客以及无手机的旅客，可提供监护'
       '人或能及时联系的亲友手机号码。铁路部门将依法保护旅客个人信息安全。\n'

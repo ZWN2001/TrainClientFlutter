@@ -93,7 +93,7 @@ class UserApi{
   static const String _urlPostRegister = "${Server.hostUser}/register";
   static const String _urlPostLogin = "${Server.hostUser}/login";
   static const String _urlPostLogout = "${Server.hostUser}/logout";
-  static const String _urlPostRefresh = "${Server.hostUser}/refresh";
+  // static const String _urlPostRefresh = "${Server.hostUser}/refresh";
   static const String _urlGetUserInfo = "${Server.hostUser}/getUserInfo";
 
   static bool get isLogin => _curUser != null;

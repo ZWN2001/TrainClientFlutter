@@ -15,7 +15,7 @@ class OrderAllPage extends StatefulWidget{
 }
 
 class OrderAllState extends State<OrderAllPage>{
-  late List<OrderGeneral> list = [];
+  late final List<OrderGeneral> _list = [];
   Widget _body = const Center(child: CircularProgressIndicator());
 
   @override
@@ -40,7 +40,7 @@ class OrderAllState extends State<OrderAllPage>{
   Widget _ticketsWidget(){
     return SingleChildScrollView(
       child: Column(
-          children: list.map((e) => AllTicketCard(orderGeneral: e,)).toList()
+          children: _list.map((e) => AllTicketCard(orderGeneral: e,)).toList()
       ),
     );
   }
@@ -48,9 +48,9 @@ class OrderAllState extends State<OrderAllPage>{
   Future<void> _getOrder() async {
     ResultEntity requestMap = await TicketAndOrderApi.getOrderAll();
     if (requestMap.result) {
-      list.clear();
-      list.addAll(requestMap.data);
-      _body = list.isEmpty?_noTicketWidget():_ticketsWidget();
+      _list.clear();
+      _list.addAll(requestMap.data);
+      _body = _list.isEmpty?_noTicketWidget():_ticketsWidget();
     }else{
       Fluttertoast.showToast( msg: requestMap.message);
     }
