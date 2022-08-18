@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get_utils/get_utils.dart';
 
 import '../bean/bean.dart';
 import '../util/store.dart';
@@ -118,7 +117,7 @@ class UserApi{
     try{
       Response response = await Http.post(_urlPostLogin, data: FormData.fromMap(
           {'userId': userId, 'loginKey': pwd}));
-      Map<String, dynamic> data = json.decode(response.data);
+      Map<String, dynamic> data = response.data;
       if(data['code'] != 200){
           return ResultEntity.name(false, data['code'], data['message'], null);
         }else{
@@ -135,7 +134,7 @@ class UserApi{
     try{
       Response response = await Http.post(_urlPostRegister, data: FormData.fromMap(
           {'userId': user.userId, 'password':user.pwd}));
-      Map<String, dynamic> data = json.decode(response.data);
+      Map<String, dynamic> data = response.data;
       if (response.statusCode != 200) {
         if (response.statusCode! >= 500) {
           return ResultEntity.name(false, response.statusCode!, '服务器异常',null);
@@ -164,7 +163,7 @@ class UserApi{
     try {
       Response response = await Http.get(_urlGetUserInfo,
           options: Options(headers: {'Token': 'Bearer:$token'}));
-      Map<String, dynamic> data = json.decode(response.data);
+      Map<String, dynamic> data = response.data;
       if (data['code'] != 200) {
         return {};
       } else {
@@ -202,7 +201,7 @@ class DataApi{
   static Future<List<Station>> getAllStationList() async {
     try{
       Response response = await Http.get(_urlGetAllStationDetail);
-      Map<String, dynamic> data = json.decode(response.data);
+      Map<String, dynamic> data = response.data;
       if(data['code'] != 200){
         return [];
       }else{
@@ -228,7 +227,7 @@ class PassengerApi{
     try{
       Response response = await Http.get(_urlGetQueryAll,
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
-      Map<String, dynamic> data = json.decode(response.data);
+      Map<String, dynamic> data = response.data;
       if (response.statusCode != 200) {
         if (response.statusCode! >= 500) {
           return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
@@ -253,7 +252,7 @@ class PassengerApi{
       Response response = await Http.post( _urlPostModify,
           params: {'passengerJSON' : jsonEncode(passenger)},
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
-      Map<String, dynamic> data = json.decode(response.data);
+      Map<String, dynamic> data = response.data;
       if (response.statusCode != 200) {
         if (response.statusCode! >= 500) {
           return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
