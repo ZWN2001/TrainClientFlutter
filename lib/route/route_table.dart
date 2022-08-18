@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:train_client_flutter/ui/passenger/add_passenger.dart';
 import 'package:train_client_flutter/ui/passenger/my_passengers.dart';
-import 'package:train_client_flutter/ui/my_tickets.dart';
+import 'package:train_client_flutter/ui/order/my_tickets.dart';
 import 'package:train_client_flutter/ui/order/order_all.dart';
 
 import '../api/api.dart';
