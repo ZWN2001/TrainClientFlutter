@@ -249,7 +249,7 @@ class PassengerApi{
   static const String _urlPostModify = "${Server.hostPassenger}${Server.command}/modify";
   static const String _urlPostDelete = "${Server.hostPassenger}${Server.command}/delete";
   static const String _urlGetQueryAll = "${Server.hostPassenger}${Server.query}/all";
-  static const String _urlGetQuerySingle = "${Server.hostPassenger}${Server.query}/single";
+  // static const String _urlGetQuerySingle = "${Server.hostPassenger}${Server.query}/single";
   static const String _urlGetRandom = "${Server.hostPassenger}${Server.command}/random";
 
   static Future<ResultEntity> getAllPassenger() async {
@@ -471,13 +471,12 @@ class TicketAndOrderApi{
 
 class TrainRouteApi{
   static const String _urlGetQueryTrainRoute = "${Server.hostTrainRoute}${Server.query}/trainRoute";
-  static const String _urlGetQueryDetail = "${Server.hostTrainRoute}${Server.query}/trainRouteDetail";
+  static const String _urlGetQueryTrainRouteDetail = "${Server.hostTrainRoute}${Server.query}/trainRouteDetail";
 
   static Future<ResultEntity> getTrainRouteDetail(String trainRouteId) async {
     try {
-      Response response = await Http.get(_urlGetQueryDetail,
+      Response response = await Http.get(_urlGetQueryTrainRouteDetail,
           params: {'trainRouteId' : trainRouteId});
-      print(response);
       Map<String, dynamic> data = response.data;
       if (data['code'] != 200) {
         return ResultEntity.name(false, data['code'], data['message'], null);
