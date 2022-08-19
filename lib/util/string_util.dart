@@ -13,7 +13,7 @@ class StringUtil{
   }
 
   ///手机号合法
-  static bool phoneNumLegal(String str) {
+  static bool verifyPhoneNum(String str) {
     RegExp exp = RegExp(
         r'^((13[0-9])|(14[0-9])|(15[0-9])|(16[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))\d{8}$');
     return exp.hasMatch(str);
@@ -60,62 +60,4 @@ class StringUtil{
   }
 
 
-
-// // 根据身份证号获取年龄
-//   int getAgeFromCardId(String cardId) {
-//     bool isRight = verifyCardId(cardId);
-//     if(!isRight) {
-//       return 0;
-//     }
-//     int len = (cardId).length;
-//     String strBirthday = "";
-//     if (len == 18) {  //处理18位的身份证号码从号码中得到生日和性别代码
-//       strBirthday = "${cardId.substring(6, 10)}-${cardId.substring(10, 12)}-${cardId.substring(12, 14)}";
-//     }
-//     if (len == 15) {
-//       strBirthday = "19${cardId.substring(6, 8)}-${cardId.substring(8, 10)}-${cardId.substring(10, 12)}";
-//     }
-//     int age = getAgeFromBirthday(strBirthday);
-//     return age;
-//   }
-
-// // 根据出生日期获取年龄
-//   int getAgeFromBirthday(String strBirthday) {
-//     if(strBirthday.isEmpty) {
-//       return 0;
-//     }
-//     DateTime birth = DateTime.parse(strBirthday);
-//     DateTime now = DateTime.now();
-//
-//     int age = now.year - birth.year;
-//     //再考虑月、天的因素
-//     if (now.month < birth.month || (now.month == birth.month && now.day < birth.day)) {
-//       age --;
-//     }
-//     return age;
-//   }
-//
-// // 根据身份证获取性别
-//   String getSexFromCardId(String cardId) {
-//     String sex = "";
-//     bool isRight = verifyCardId(cardId);
-//     if (!isRight) {
-//       return sex;
-//     }
-//     if (cardId.length == 18) {
-//       if (int.parse(cardId.substring(16, 17)) % 2 == 1) {
-//         sex = "男";
-//       } else {
-//         sex = "女";
-//       }
-//     }
-//     if (cardId.length == 15) {
-//       if (int.parse(cardId.substring(14, 15)) % 2 == 1) {
-//         sex = "男";
-//       } else {
-//         sex = "女";
-//       }
-//     }
-//     return sex;
-//   }
 }

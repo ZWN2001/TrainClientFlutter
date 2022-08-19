@@ -154,7 +154,6 @@ class UserApi{
   }
 
   static Future<ResultEntity> logout() async {
-    String token;
     try{
       Response response = await Http.post(_urlPostLogout, data: FormData.fromMap(
           {'token': getToken()}),
@@ -473,4 +472,23 @@ class TicketAndOrderApi{
 class TrainRouteApi{
   static const String _urlGetQueryTrainRoute = "${Server.hostTrainRoute}${Server.query}/trainRoute";
   static const String _urlGetQueryDetail = "${Server.hostTrainRoute}${Server.query}/trainRouteDetail";
+
+  static Future<ResultEntity> getTrainRouteDetail(String trainRouteId) async {
+    try {
+      Response response = await Http.get(_urlGetQueryDetail,
+          params: {'trainRouteId' : trainRouteId});
+      print(response);
+      Map<String, dynamic> data = response.data;
+      if (data['code'] != 200) {
+        return ResultEntity.name(false, data['code'], data['message'], null);
+      } else {
+        List list = data['data'];
+        List<TrainRouteAtom> result = list.map((e) => TrainRouteAtom.fromJson(e)).toList();
+        return ResultEntity.name(true, data['code'], data['message'], result);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return ResultEntity.name(false, -1, '', null);
+    }
+  }
 }

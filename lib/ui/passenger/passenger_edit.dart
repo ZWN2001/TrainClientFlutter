@@ -320,7 +320,7 @@ class PassengerEditState extends State<PassengerEditPage> {
       _certificateErrorText = null;
     }
 
-    if (!StringUtil.phoneNumLegal(_phoneNumController.text)) {
+    if (!StringUtil.verifyPhoneNum(_phoneNumController.text)) {
       _phoneNumErrorText = '手机号非法';
     } else {
       _phoneNumErrorText = null;

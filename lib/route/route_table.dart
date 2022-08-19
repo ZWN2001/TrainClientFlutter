@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:train_client_flutter/ui/passenger/add_passenger.dart';
 import 'package:train_client_flutter/ui/passenger/my_passengers.dart';
 import 'package:train_client_flutter/ui/order/my_tickets.dart';
 import 'package:train_client_flutter/ui/order/order_all.dart';
+import 'package:train_client_flutter/ui/timetable.dart';
 
 import '../api/api.dart';
 import '../ui/login.dart';
@@ -14,11 +14,9 @@ import '../ui/splash.dart';
 
 /// 路由表
 class RouteTable {
-  //路由界面a-z排序
   static final Map<String, WidgetBuilder> _routes = {
     // 开屏界面
     '/': (context) =>  const Splash(),
-    // 主界面
     MainPage.routeName: (context) => const MainPage(),
     OrderUnpaiedPage.routeName: (context) => const OrderUnpaiedPage(),
     OrderPaiedPage.routeName: (context) => const OrderPaiedPage(),
@@ -27,6 +25,7 @@ class RouteTable {
     MyPassengerPage.routeName: (context) => const MyPassengerPage(),
     AddPassengerPage.routeName: (context) => const AddPassengerPage(),
     LoginPage.routeName: (context) => const LoginPage(),
+    TimeTablePage.routeName: (context) => const TimeTablePage(),
   };
 
 //  鉴权拦截表

@@ -358,7 +358,7 @@ class UserButtonCard extends StatelessWidget{
       child: Row(
         children: [
           Expanded(child: _imageButtonsItem(context, const ImageIcon(AssetImage('icons/passenger.png')), '乘员列表', '/my_passenger')),
-          Expanded(child: _buttonsItem(context, const Icon(Icons.pending_actions_outlined, size: 28,), '时刻表', 'route')),
+          Expanded(child: _buttonsItem(context, const Icon(Icons.pending_actions_outlined, size: 28,), '时刻表', '/timetable')),
           Expanded(child: _buttonsItem(context, const Icon(Icons.confirmation_num_outlined, size: 28,), '优惠券', 'route'))
         ],
       ),),

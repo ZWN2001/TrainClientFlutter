@@ -334,7 +334,7 @@ class AddPassengerState extends State<AddPassengerPage>{
       }
     }
 
-    if(!StringUtil.phoneNumLegal(_phoneNumController.text)){
+    if(!StringUtil.verifyPhoneNum(_phoneNumController.text)){
       if(mounted){
         setState((){
           _phoneNumErrorText = '手机号非法';

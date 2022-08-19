@@ -127,6 +127,26 @@ class Station  extends ISuspensionBean{
   }
 }
 
+class TrainRouteAtom {
+  late final String stationId;
+  late final String stationName;
+  late final int stationNo;
+  late final String arriveTime;
+  late final String startTime;
+  late final int  stopoverTime;
+  int duration = 0;
+
+  TrainRouteAtom.fromJson(jsonMap){
+    stationId = jsonMap['stationId'] ?? 'unKnown';
+    stationName = jsonMap['stationName'] ?? 'unKnown';
+    stationNo = jsonMap['stationNo'] ?? 0.0;
+    arriveTime = jsonMap['arriveTime'] ?? 'unKnown';
+    startTime = jsonMap['startTime'] ?? 'unKnown';
+    stopoverTime = jsonMap['stopoverTime'] ?? 0.0;
+  }
+
+}
+
 
 //模版类仅用来标识
 class ResultEntity<T> {
