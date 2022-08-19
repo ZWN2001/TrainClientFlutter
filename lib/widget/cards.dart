@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:train_client_flutter/api/api.dart';
 import 'package:train_client_flutter/constant.dart';
 import 'package:train_client_flutter/ui/passenger/passenger_edit.dart';
 import 'package:train_client_flutter/util/utils.dart';
@@ -415,45 +416,6 @@ class UserButtonCard extends StatelessWidget{
       ],
     );
   }
-}
-
-class UserServicesCard extends StatelessWidget{
-  const UserServicesCard({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('温馨服务',style: TextStyle(fontSize: 20),),
-            const Divider(color: Colors.grey,),
-            userServicesItem('开通会员',(){}),
-            const Divider(color: Colors.grey,),
-            userServicesItem('列车查询',(){}),
-            const Divider(color: Colors.grey,),
-            userServicesItem('退出登录',(){}),
-          ],
-        ),
-      )
-    );
-  }
-
-  Widget userServicesItem(String name, void Function()? ontap){
-    return  GestureDetector(
-      onTap: ontap,
-      child: Row(
-        children: [
-          Text(name,style: const TextStyle(fontSize: 16),),
-          const Expanded(child: SizedBox()),
-          const Icon(Icons.keyboard_arrow_right)
-        ],
-      ),
-    );
-  }
-
 }
 
 class OrderPassengerCard extends StatelessWidget{

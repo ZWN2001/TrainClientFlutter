@@ -153,10 +153,38 @@ class UserApi{
     }
   }
 
+  static Future<ResultEntity> logout() async {
+    String token;
+    try{
+      Response response = await Http.post(_urlPostLogout, data: FormData.fromMap(
+          {'token': getToken()}),
+          options: Options(headers: {'Token': 'Bearer:${getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if(data['code'] != 200){
+        return ResultEntity.name(false, data['code'], data['message'], null);
+      }else{
+        _deleteUserInfo();
+        return ResultEntity.name(true, 0, "成功", null);
+      }
+    }catch(e){
+      return ResultEntity.name(false, -2, '失败', null);
+    }
+  }
+
+  static void _deleteUserInfo(){
+    Store.remove('token');
+    Store.remove('user_userId');
+    Store.remove('user_userName');
+    Store.remove('user_role');
+    Store.remove('user_gender');
+    Store.remove('user_email');
+    _curUser = null;
+  }
+
   static Future _getUserInformationAndStore(String token) async {
     Map<String, dynamic> info = await _getUserInfo(token);
     try {
-      await _storeUserLoginCache(User.fromJson(info), token);
+      _storeUserLoginCache(User.fromJson(info), token);
     } catch (e) {debugPrint(e.toString());}
   }
 
@@ -177,16 +205,16 @@ class UserApi{
   }
 
   /// 储存用户登录信息
-  static Future _storeUserLoginCache(User userInfo,
-      [String? token]) async {
+  static void _storeUserLoginCache(User userInfo,
+      [String? token]) {
     if (token != null) {
-      await Store.set('token', token);
+      Store.set('token', token);
     }
-    await Store.set('user_userId', userInfo.userId!);
-    await Store.set('user_userName', userInfo.userName ?? 'unKnown');
-    await Store.set('user_role', userInfo.role!);
-    await Store.set('user_gender', userInfo.gender ?? false);
-    await Store.set('user_email', userInfo.email ?? 'unKnown');
+    Store.set('user_userId', userInfo.userId!);
+    Store.set('user_userName', userInfo.userName ?? 'unKnown');
+    Store.set('user_role', userInfo.role!);
+    Store.set('user_gender', userInfo.gender ?? false);
+    Store.set('user_email', userInfo.email ?? 'unKnown');
     _curUser = userInfo;
   }
 }

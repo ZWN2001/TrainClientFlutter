@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:train_client_flutter/api/api.dart';
 import 'package:train_client_flutter/ui/passenger/add_passenger.dart';
+import 'package:train_client_flutter/widget/dialog.dart';
 
 import '../../bean/bean.dart';
 import '../../widget/cards.dart';
@@ -212,7 +213,8 @@ class MyPassengerState extends State<MyPassengerPage>{
   }
 
   Future<void> _delete(List<Passenger> deletePassengers) async {
-    bool? delete = await _showDeleteConfirmDialog();
+    bool? delete = await MyDialog.showDeleteConfirmDialog(context: context,
+        tips: "您确定要删除该乘员吗?\n该操作会同时删除该乘员的订票记录");
     if (delete != null) {
       if(deletePassengers.isEmpty){
         Fluttertoast.showToast(msg: '请选择乘员');
@@ -224,30 +226,6 @@ class MyPassengerState extends State<MyPassengerPage>{
         if(mounted){setState((){});}
       }
     }
-  }
-
-  Future<bool?> _showDeleteConfirmDialog() {
-    return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("提示"),
-          content: const Text("您确定要删除该乘员吗?\n该操作会同时删除该乘员的订票记录"),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("取消"),
-              onPressed: () => Navigator.of(context).pop(), //关闭对话框
-            ),
-            TextButton(
-              child: const Text("删除"),
-              onPressed: () {
-                Navigator.of(context).pop(true); //关闭对话框
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
 }
