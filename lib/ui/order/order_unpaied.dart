@@ -229,7 +229,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
         _order = _res[0];
         DateTime dateTime = DateTime.parse(_order!.orderTime);
         DateTime now = DateTime.now();
-        _countdownTime = now.difference(dateTime).inSeconds;
+        _countdownTime = 5 * 60 - now.difference(dateTime).inSeconds;
         _startCountdownTimer();
         //初始化各乘员
         for(Order o in _res){
@@ -270,7 +270,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
     void callback(timer) {
       setState(() {
         if (_countdownTime < 1) {
-          //TODO
+          _order = null;
           _timer!.cancel();
         } else {
           _countdownTime = _countdownTime - 1;
