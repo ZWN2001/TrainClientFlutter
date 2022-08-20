@@ -28,6 +28,34 @@ class User {
   }
 }
 
+class Order {
+  late final  String orderId;
+  late final  String passengerId;
+  late final  String departureDate;
+  late final  String trainRouteId;
+  late final  String fromStationId;
+  late final  String toStationId;
+  late final  int seatTypeId;
+  late final  String orderTime;
+  late final  double price;
+  late final  String tradeNo;
+
+  Order.fromJson(jsonMap){
+    orderId = jsonMap['orderId'] ?? 'unKnown';
+    passengerId = jsonMap['passengerId'] ?? 'unKnown';
+    departureDate = jsonMap['departureDate'] ?? 'unKnown';
+    trainRouteId = jsonMap['trainRouteId'] ?? 'unKnown';
+    fromStationId = jsonMap['fromStationId'] ?? 'unKnown';
+    toStationId = jsonMap['toStationId'] ?? 'unKnown';
+    seatTypeId = jsonMap['seatTypeId'] ?? 0;
+    orderTime = jsonMap['orderTime'] ?? DateTime.now().toString();
+    price = jsonMap['price'] ?? 0.0;
+    tradeNo = jsonMap['tradeNo'] ?? 'unKnown';
+  }
+
+
+}
+
 class OrderGeneral {
   late final String orderId;
   late final String trainRouteId;
@@ -44,6 +72,15 @@ class OrderGeneral {
     departureDate = jsonMap['departureDate'] ?? 'unKnown';
     orderStatus = jsonMap['orderStatus'] ?? 'unKnown';
   }
+}
+
+class OrderStatus {
+  static const String UN_PAY = "未支付";
+  static const String CANCEL = "已取消";
+  static const String TIMEOUT = "支付超时";
+  static const String PAIED = "已支付";
+  static const String REFUNDED = "已退票";
+  static const String DRAFTED = "已出票";
 }
 
 class Passenger {
@@ -79,7 +116,7 @@ class PassengerToPay {
   late final String passengerId;
   late final String passengerName;
   late final String role;
-  late final double price;
+  late double price;
 
   PassengerToPay.fromJson(jsonMap) {
     passengerId = jsonMap['passengerId'] ?? 'unKnown';
@@ -147,6 +184,19 @@ class TrainRouteAtom {
 
 }
 
+class TicketRouteTimeInfo {
+  late final String startTime;
+  late final String arriveTime;
+  late String durationInfo;
+
+  TicketRouteTimeInfo.fromJson(jsonMap){
+    startTime = jsonMap['startTime'] ?? 'unKnown';
+    arriveTime = jsonMap['arriveTime'] ?? 'unKnown';
+    durationInfo = jsonMap['durationInfo'] ?? 'unKnown';
+  }
+
+}
+
 
 //模版类仅用来标识
 class ResultEntity<T> {
@@ -173,11 +223,3 @@ class ResultEntity<T> {
 
 }
 
-class OrderStatus {
-  static const String UN_PAY = "未支付";
-  static const String CANCEL = "已取消";
-  static const String TIMEOUT = "支付超时";
-  static const String PAIED = "已支付";
-  static const String REFUNDED = "已退票";
-  static const String DRAFTED = "已出票";
-}

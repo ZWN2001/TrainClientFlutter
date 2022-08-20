@@ -249,7 +249,7 @@ class PassengerApi{
   static const String _urlPostModify = "${Server.hostPassenger}${Server.command}/modify";
   static const String _urlPostDelete = "${Server.hostPassenger}${Server.command}/delete";
   static const String _urlGetQueryAll = "${Server.hostPassenger}${Server.query}/all";
-  // static const String _urlGetQuerySingle = "${Server.hostPassenger}${Server.query}/single";
+  static const String _urlGetQuerySingle = "${Server.hostPassenger}${Server.query}/single";
   static const String _urlGetRandom = "${Server.hostPassenger}${Server.command}/random";
 
   static Future<ResultEntity> getAllPassenger() async {
@@ -270,6 +270,30 @@ class PassengerApi{
         List list = data['data'];
         List<Passenger> result =  list.map((e) => Passenger.fromJson(e)).toList();
         return ResultEntity.name( true, 0, "成功", result);
+      }
+    }catch(e){
+      return ResultEntity.name(false, -2, '获取乘员失败,请检查网络或重试', null);
+    }
+  }
+
+  static Future<ResultEntity> getSinglePassenger(String passengerId) async {
+    try{
+      Response response = await Http.get(_urlGetQuerySingle,
+          params: {'userId' : UserApi.getUserId(), 'passengerId' : passengerId},
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        PassengerToPay p = PassengerToPay.fromJson(data['data']);
+        return ResultEntity.name( true, 0, "成功", p);
       }
     }catch(e){
       return ResultEntity.name(false, -2, '获取乘员失败,请检查网络或重试', null);
@@ -467,11 +491,37 @@ class TicketAndOrderApi{
       return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
     }
   }
+
+  static Future<ResultEntity> getTicketToPayDetail() async {
+    try{
+      Response response = await Http.get(_urlGetTicketToPayDetail,
+          params: {'userId' : UserApi.getUserId()},
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        List list = data['data'];
+        List<Order> result =  list.map((e) => Order.fromJson(e)).toList();
+        return ResultEntity.name( true, 0, "成功", result);
+      }
+    }catch(e){
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
+    }
+  }
 }
 
 class TrainRouteApi{
   static const String _urlGetQueryTrainRoute = "${Server.hostTrainRoute}${Server.query}/trainRoute";
   static const String _urlGetQueryTrainRouteDetail = "${Server.hostTrainRoute}${Server.query}/trainRouteDetail";
+  static const String _urlGetQueryTicketRouteTimeInfo = "${Server.hostTrainRoute}${Server.query}/ticketRouteTimeInfo";
 
   static Future<ResultEntity> getTrainRouteDetail(String trainRouteId) async {
     try {
@@ -484,6 +534,25 @@ class TrainRouteApi{
         List list = data['data'];
         List<TrainRouteAtom> result = list.map((e) => TrainRouteAtom.fromJson(e)).toList();
         return ResultEntity.name(true, data['code'], data['message'], result);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return ResultEntity.name(false, -1, '', null);
+    }
+  }
+
+  static Future<ResultEntity> getTrainRouteStartTime(String trainRouteId, String fromStationId, String toStationId) async {
+    try {
+      Response response = await Http.get(_urlGetQueryTicketRouteTimeInfo,
+          params: {'trainRouteId' : trainRouteId, 'fromStationId' : fromStationId,
+          'toStationId' : toStationId},
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (data['code'] != 200) {
+        return ResultEntity.name(false, data['code'], data['message'], null);
+      } else {
+        TicketRouteTimeInfo info = TicketRouteTimeInfo.fromJson(data['data']);
+        return ResultEntity.name(true, data['code'], data['message'], info);
       }
     } catch (e) {
       debugPrint(e.toString());

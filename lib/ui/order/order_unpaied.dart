@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:train_client_flutter/api/api.dart';
 
 import '../../bean/bean.dart';
 import '../../widget/cards.dart';
@@ -14,34 +16,29 @@ class OrderUnpaiedPage extends StatefulWidget{
 }
 
 class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
-  late Timer _timer;
+  late Timer? _timer;
   int _countdownTime = 150;
-  String fromStation = '潍坊';
-  String fromTime = '04:13';
-  String toStation = '北京';
-  String toTime = '13:26';
-  String trainRouteId = 'K286';
-  String stopoverTime = '9时13分';
-  String startTime = '2022年08月14日 周日';
+  TicketRouteTimeInfo timeInfo = TicketRouteTimeInfo.fromJson({});
   List<PassengerToPay> passengerList = [];
-  PassengerToPay p = PassengerToPay.fromJson({});
   double allPrice = 0;
+  List<Order> res = [];
+  Order? order;
+  bool loading = true;
 
   @override
   void initState() {
     super.initState();
-    startCountdownTimer();
-    passengerList.add(p);
-    for (var element in passengerList) {
-      allPrice+=element.price;
-    }
+    initOrder();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('未完成'),elevation: 0,),
-      body: haveOrder(),
+      body: loading ? const Center(child: CircularProgressIndicator()):(
+      order == null? const Center(child: Text('无订单需要支付')):
+          haveOrder()
+      )
     );
   }
 
@@ -126,30 +123,30 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(fromTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
-                    Text(fromStation)
+                    Text(timeInfo.startTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+                    Text(order!.fromStationId)
                   ],
                 ),
                 const Expanded(child: SizedBox()),
                 Column(
                   children: [
-                    Text(trainRouteId, style: const TextStyle(fontSize: 18)),
+                    Text(order!.trainRouteId, style: const TextStyle(fontSize: 18)),
                     const ImageIcon(AssetImage('icons/arrow.png'),size: 26,color: Colors.blue,),
-                    Text('历时$stopoverTime',style: const TextStyle(color: Colors.grey)),
+                    Text('历时 ${timeInfo.durationInfo}',style: const TextStyle(color: Colors.grey)),
                   ],
                 ),
                 const Expanded(child: SizedBox()),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(toTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
-                    Text(toStation)
+                    Text(timeInfo.arriveTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+                    Text(order!.toStationId)
                   ],
                 ),
               ],
             ),
             const SizedBox(height: 12,),
-            Text('发车时间：$startTime',style: const TextStyle(color: Colors.grey),),
+            Text('发车时间：${order!.departureDate}',style: const TextStyle(color: Colors.grey),),
             const SizedBox(height: 12,),
           ],
         ),
@@ -159,10 +156,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
 
   Widget passengerInfoCard(){
     return Column(
-        // children: allGrades.map((g) => GradeCard(g)).toList(),
-      children: [
-        OrderPassengerCard(passenger: p,)
-      ],
+        children: passengerList.map((p) =>  OrderPassengerCard(passenger: p)).toList(),
     );
   }
 
@@ -226,6 +220,50 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
     );
   }
 
+  Future<void> initOrder() async {
+    ResultEntity orderResult = await TicketAndOrderApi.getTicketToPayDetail();
+    if(orderResult.result){
+      res = orderResult.data;
+      if(res.isNotEmpty){
+        //初始化order与订单剩余时间
+        order = res[0];
+        DateTime dateTime = DateTime.parse(order!.orderTime);
+        DateTime now = DateTime.now();
+        _countdownTime = now.difference(dateTime).inSeconds;
+        startCountdownTimer();
+        //初始化各乘员
+        for(Order o in res){
+          ResultEntity r = await PassengerApi.getSinglePassenger(o.passengerId);
+          if(r.result){
+            PassengerToPay p = r.data;
+            p.price = o.price;
+            passengerList.add(p);
+            allPrice += p.price;
+          }
+        }
+        //初始化车次发车与到站时间 & 历时
+        ResultEntity resultEntity = await
+        TrainRouteApi.getTrainRouteStartTime(order!.trainRouteId, order!.fromStationId, order!.toStationId);
+        if(resultEntity.result){
+          timeInfo = resultEntity.data;
+          String duration = timeInfo.durationInfo;
+          List<String> list = duration.split(":");
+          if(list.length == 2){
+            timeInfo.durationInfo = "${list[0]}小时${list[1]}分钟";
+          }else if(list.length == 3){
+            timeInfo.durationInfo = "${list[0]}天${list[1]}小时${list[2]}分钟";
+          }
+
+        }else{
+          Fluttertoast.showToast(msg: '初始化车次时间失败');
+        }
+      }
+    }else{
+      Fluttertoast.showToast(msg: orderResult.message);
+    }
+    setState((){loading = false;});
+  }
+
   void startCountdownTimer() {
     const oneSec = Duration(seconds: 1);
 
@@ -233,7 +271,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
       setState(() {
         if (_countdownTime < 1) {
           //TODO
-          _timer.cancel();
+          _timer!.cancel();
         } else {
           _countdownTime = _countdownTime - 1;
         }
@@ -245,8 +283,8 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
   @override
   void dispose() {
     super.dispose();
-    if(mounted){
-      _timer.cancel();
+    if( _timer != null){
+      _timer!.cancel();
     }
   }
 
