@@ -18,31 +18,31 @@ class OrderUnpaiedPage extends StatefulWidget{
 class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
   late Timer? _timer;
   int _countdownTime = 150;
-  TicketRouteTimeInfo timeInfo = TicketRouteTimeInfo.fromJson({});
-  List<PassengerToPay> passengerList = [];
-  double allPrice = 0;
-  List<Order> res = [];
-  Order? order;
-  bool loading = true;
+  TicketRouteTimeInfo _timeInfo = TicketRouteTimeInfo.fromJson({});
+  final List<PassengerToPay> _passengerList = [];
+  double _allPrice = 0;
+  List<Order> _res = [];
+  Order? _order;
+  bool _loading = true;
 
   @override
   void initState() {
     super.initState();
-    initOrder();
+    _initOrder();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('未完成'),elevation: 0,),
-      body: loading ? const Center(child: CircularProgressIndicator()):(
-      order == null? const Center(child: Text('无订单需要支付')):
-          haveOrder()
+      appBar: AppBar(elevation: 0,),
+      body: _loading ? const Center(child: CircularProgressIndicator()):(
+      _order == null? const Center(child: Text('无订单需要支付')):
+          _haveOrder()
       )
     );
   }
 
-  Widget haveOrder(){
+  Widget _haveOrder(){
     return Stack(
       children: [
         Container(
@@ -58,21 +58,21 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
           child: SingleChildScrollView(
             child: Column(
               children: [
-                countDownRow(),
-                tipsCard(),
+                _countDownRow(),
+                _tipsCard(),
                 const SizedBox(height: 8,),
-                orderInfoCard(),
-                passengerInfoCard(),
+                _orderInfoCard(),
+                _passengerInfoCard(),
               ],
             ),
           )
         ),
-        Positioned(left:0,bottom:0,right:0,child: settlementCard())
+        Positioned(left:0,bottom:0,right:0,child: _settlementCard())
       ],
     );
   }
 
-  Widget countDownRow(){
+  Widget _countDownRow(){
     return Padding(
       padding: const EdgeInsets.only(top: 8,bottom: 12),
       child: Row(
@@ -95,7 +95,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
     );
   }
 
-  Widget tipsCard(){
+  Widget _tipsCard(){
     return Card(
         child: Container(
           color: const Color.fromRGBO(255, 200, 200, 0.4),
@@ -111,7 +111,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
     );
   }
 
-  Widget orderInfoCard(){
+  Widget _orderInfoCard(){
     return Card(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
@@ -123,30 +123,30 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(timeInfo.startTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
-                    Text(order!.fromStationId)
+                    Text(_timeInfo.startTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+                    Text(' ${_order!.fromStationId}')
                   ],
                 ),
                 const Expanded(child: SizedBox()),
                 Column(
                   children: [
-                    Text(order!.trainRouteId, style: const TextStyle(fontSize: 18)),
+                    Text(_order!.trainRouteId, style: const TextStyle(fontSize: 18)),
                     const ImageIcon(AssetImage('icons/arrow.png'),size: 26,color: Colors.blue,),
-                    Text('历时 ${timeInfo.durationInfo}',style: const TextStyle(color: Colors.grey)),
+                    Text('历时 ${_timeInfo.durationInfo}',style: const TextStyle(color: Colors.grey)),
                   ],
                 ),
                 const Expanded(child: SizedBox()),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(timeInfo.arriveTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
-                    Text(order!.toStationId)
+                    Text(_timeInfo.arriveTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+                    Text('${_order!.toStationId} ')
                   ],
                 ),
               ],
             ),
             const SizedBox(height: 12,),
-            Text('发车时间：${order!.departureDate}',style: const TextStyle(color: Colors.grey),),
+            Text('发车时间：${_order!.departureDate}',style: const TextStyle(color: Colors.grey),),
             const SizedBox(height: 12,),
           ],
         ),
@@ -154,13 +154,13 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
     );
   }
 
-  Widget passengerInfoCard(){
+  Widget _passengerInfoCard(){
     return Column(
-        children: passengerList.map((p) =>  OrderPassengerCard(passenger: p)).toList(),
+        children: _passengerList.map((p) =>  OrderPassengerCard(passenger: p)).toList(),
     );
   }
 
-  Widget settlementCard(){
+  Widget _settlementCard(){
     return Container(
       width: double.infinity,
       height: 100,
@@ -184,7 +184,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
               const SizedBox(width: 24,),
               const Text("总金额:  ",style: TextStyle(fontSize: 16,color: Colors.grey),),
               const Text('￥',style: TextStyle(fontSize: 16,color: Colors.deepOrange),),
-              Text('$allPrice',style: const TextStyle(fontSize: 24,color: Colors.deepOrange),),
+              Text('$_allPrice',style: const TextStyle(fontSize: 24,color: Colors.deepOrange),),
             ],
           ),
           const SizedBox(height: 8,),
@@ -220,38 +220,38 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
     );
   }
 
-  Future<void> initOrder() async {
+  Future<void> _initOrder() async {
     ResultEntity orderResult = await TicketAndOrderApi.getTicketToPayDetail();
     if(orderResult.result){
-      res = orderResult.data;
-      if(res.isNotEmpty){
+      _res = orderResult.data;
+      if(_res.isNotEmpty){
         //初始化order与订单剩余时间
-        order = res[0];
-        DateTime dateTime = DateTime.parse(order!.orderTime);
+        _order = _res[0];
+        DateTime dateTime = DateTime.parse(_order!.orderTime);
         DateTime now = DateTime.now();
         _countdownTime = now.difference(dateTime).inSeconds;
-        startCountdownTimer();
+        _startCountdownTimer();
         //初始化各乘员
-        for(Order o in res){
+        for(Order o in _res){
           ResultEntity r = await PassengerApi.getSinglePassenger(o.passengerId);
           if(r.result){
             PassengerToPay p = r.data;
             p.price = o.price;
-            passengerList.add(p);
-            allPrice += p.price;
+            _passengerList.add(p);
+            _allPrice += p.price;
           }
         }
         //初始化车次发车与到站时间 & 历时
         ResultEntity resultEntity = await
-        TrainRouteApi.getTrainRouteStartTime(order!.trainRouteId, order!.fromStationId, order!.toStationId);
+        TrainRouteApi.getTrainRouteStartTime(_order!.trainRouteId, _order!.fromStationId, _order!.toStationId);
         if(resultEntity.result){
-          timeInfo = resultEntity.data;
-          String duration = timeInfo.durationInfo;
+          _timeInfo = resultEntity.data;
+          String duration = _timeInfo.durationInfo;
           List<String> list = duration.split(":");
           if(list.length == 2){
-            timeInfo.durationInfo = "${list[0]}小时${list[1]}分钟";
+            _timeInfo.durationInfo = "${list[0]}小时${list[1]}分钟";
           }else if(list.length == 3){
-            timeInfo.durationInfo = "${list[0]}天${list[1]}小时${list[2]}分钟";
+            _timeInfo.durationInfo = "${list[0]}天${list[1]}小时${list[2]}分钟";
           }
 
         }else{
@@ -261,10 +261,10 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
     }else{
       Fluttertoast.showToast(msg: orderResult.message);
     }
-    setState((){loading = false;});
+    setState((){_loading = false;});
   }
 
-  void startCountdownTimer() {
+  void _startCountdownTimer() {
     const oneSec = Duration(seconds: 1);
 
     void callback(timer) {

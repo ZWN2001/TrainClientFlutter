@@ -190,8 +190,16 @@ class TicketRouteTimeInfo {
   late String durationInfo;
 
   TicketRouteTimeInfo.fromJson(jsonMap){
-    startTime = jsonMap['startTime'] ?? 'unKnown';
-    arriveTime = jsonMap['arriveTime'] ?? 'unKnown';
+    String startTimeInfo = jsonMap['startTime'] ?? 'unKnown';
+    if(startTimeInfo != 'unKnown'){
+      startTimeInfo = startTimeInfo.substring(0,5);
+    }
+    startTime = startTimeInfo;
+    String arriveTimeInfo = jsonMap['arriveTime'] ?? 'unKnown';
+    if(arriveTimeInfo != 'unKnown'){
+      arriveTimeInfo = arriveTimeInfo.substring(0,5);
+    }
+    arriveTime = arriveTimeInfo;
     durationInfo = jsonMap['durationInfo'] ?? 'unKnown';
   }
 
