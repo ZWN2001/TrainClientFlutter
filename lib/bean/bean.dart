@@ -167,6 +167,16 @@ class Station  extends ISuspensionBean{
   }
 }
 
+class SeatType {
+  late final String seatTypeId;
+  late final String seatTypeName;
+
+  SeatType.fromJson(jsonMap){
+    seatTypeId = jsonMap['seatTypeId'] ?? '1';
+    seatTypeName = jsonMap['seatTypeName'] ?? 'unKnown';
+  }
+}
+
 class TrainRouteAtom {
   late final String stationId;
   late final String stationName;

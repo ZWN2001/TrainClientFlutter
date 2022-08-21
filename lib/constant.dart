@@ -3,21 +3,39 @@ import 'package:train_client_flutter/bean/bean.dart';
 
 class Constant {
 
-  static Map<String, Station> stationIdToNameMap = {};
-  static Map<String, Station> stationNameToIdMap = {};
+  static Map<String, Station> stationIdMap = {};
+  static Map<String, Station> stationNameMap = {};
   static List<Station> allStationList = [];
+
+  static Map<String, String> seatIdToTypeMap = {};
+  static Map<String, String> seatTypeToIdMap = {};
+  static List<SeatType> allSeatTypeList = [];
 
   static Future<void> initStationInfo() async {
     allStationList = await DataApi.getAllStationList();
     if(allStationList.isNotEmpty){
-      _initMap(allStationList);
+      _initStationMap(allStationList);
     }
   }
 
-  static void _initMap(List<Station> stationList){
+  static Future<void> initSeatInfo() async {
+    allSeatTypeList = await DataApi.getAllSeatMap();
+    if(allSeatTypeList.isNotEmpty){
+      _initSeatTypeMap(allSeatTypeList);
+    }
+  }
+
+  static void _initStationMap(List<Station> stationList){
     for (var element in stationList) {
-      stationIdToNameMap[element.stationId] = element;
-      stationNameToIdMap[element.stationName] = element;
+      stationIdMap[element.stationId] = element;
+      stationNameMap[element.stationName] = element;
+    }
+  }
+
+  static void _initSeatTypeMap(List<SeatType> seatTypeList){
+    for (var element in seatTypeList) {
+      seatIdToTypeMap[element.seatTypeId] = element.seatTypeName;
+      seatTypeToIdMap[element.seatTypeName] = element.seatTypeId;
     }
   }
 

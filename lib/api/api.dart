@@ -226,6 +226,22 @@ class DataApi{
   static const String _urlGetAllStationDetail = "${Server.hostStation}${Server.query}/allStationDetail";
   static const String _urlGetAllSeatType = "${Server.hostSeatType}${Server.query}/allSeatType";
 
+  static Future<List<SeatType>> getAllSeatMap() async {
+    try{
+      Response response = await Http.get(_urlGetAllSeatType);
+      Map<String, dynamic> data = response.data;
+      if(data['code'] != 200){
+        return [];
+      }else{
+        List list = data['data'];
+        return list.map((e) => SeatType.fromJson(e)).toList();
+      }
+    }catch(e){
+      debugPrint(e.toString());
+      return [];
+    }
+  }
+
   static Future<List<Station>> getAllStationList() async {
     try{
       Response response = await Http.get(_urlGetAllStationDetail);

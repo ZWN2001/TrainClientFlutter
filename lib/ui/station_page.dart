@@ -129,7 +129,7 @@ class _StationPageState extends State<StationPage> {
               child: CircularButton(
                 icon: const Icon(Icons.place),
                 onPressed: () {
-                  Get.back(result: Constant.stationIdToNameMap['JNK']);
+                  Get.back(result: Constant.stationIdMap['JNK']);
                 },
               ),
             ),
@@ -172,7 +172,7 @@ class _StationPageState extends State<StationPage> {
     //   Station.fromJson(stations['shanghai']!.toJson())..tagIndex = '★',
     // ]);
     hotCityList.addAll(Constant.hotStationIdList.map((e) => Station.fromJson(
-        Constant.stationIdToNameMap[e]!.toJson())..tagIndex = '★'));
+        Constant.stationIdMap[e]!.toJson())..tagIndex = '★'));
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Wrap(

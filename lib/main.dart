@@ -20,6 +20,7 @@ Future<void> initialize() async {
   await Future.wait([
     Store.initialize(),
     Constant.initStationInfo(),
+    Constant.initSeatInfo()
   ]);
 }
 
