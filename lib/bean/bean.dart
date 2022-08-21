@@ -36,6 +36,7 @@ class Order {
   late final  String fromStationId;
   late final  String toStationId;
   late final  int seatTypeId;
+  late final  String orderStatus;
   late final  String orderTime;
   late final  double price;
   late final  String tradeNo;
@@ -48,12 +49,11 @@ class Order {
     fromStationId = jsonMap['fromStationId'] ?? 'unKnown';
     toStationId = jsonMap['toStationId'] ?? 'unKnown';
     seatTypeId = jsonMap['seatTypeId'] ?? 0;
+    orderStatus = jsonMap['orderStatus'] ?? 'unKnown';
     orderTime = jsonMap['orderTime'] ?? DateTime.now().toString();
     price = jsonMap['price'] ?? 0.0;
-    tradeNo = jsonMap['tradeNo'] ?? 'unKnown';
+    tradeNo = jsonMap['tradeNo'] ?? '无';
   }
-
-
 }
 
 class OrderGeneral {
@@ -81,6 +81,7 @@ class OrderStatus {
   static const String PAIED = "已支付";
   static const String REFUNDED = "已退票";
   static const String DRAFTED = "已出票";
+  static const String REBOOK = "已改签";
 }
 
 class Passenger {
@@ -116,12 +117,14 @@ class PassengerToPay {
   late final String passengerId;
   late final String passengerName;
   late final String role;
+  late int seatTypeId;
   late double price;
 
   PassengerToPay.fromJson(jsonMap) {
     passengerId = jsonMap['passengerId'] ?? 'unKnown';
     passengerName = jsonMap['passengerName'] ?? 'unKnown';
     role = jsonMap['role'] ?? 'unKnown';
+    seatTypeId = jsonMap['seatTypeId'] ?? 0;
     price = jsonMap['price'] ?? 0.0;
   }
 

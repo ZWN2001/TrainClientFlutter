@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:train_client_flutter/api/api.dart';
 import 'package:train_client_flutter/constant.dart';
 import 'package:train_client_flutter/ui/passenger/passenger_edit.dart';
 import 'package:train_client_flutter/util/utils.dart';
@@ -449,7 +448,8 @@ class OrderPassengerCard extends StatelessWidget{
                         ),
                       ),
                       const Expanded(child: SizedBox()),
-                      Text('￥${passenger.price}',style: const TextStyle(color: Colors.deepOrange,fontSize: 18),)
+                      Text('${passenger.seatTypeId}  ￥${passenger.price}',//TODO
+                        style: const TextStyle(color: Colors.deepOrange,fontSize: 18),)
                     ],
                   ),
                   const SizedBox(height: 8,),
@@ -462,6 +462,70 @@ class OrderPassengerCard extends StatelessWidget{
                       )
                     ],
                   )
+                ],
+              ),
+            )
+        )
+    );
+  }
+}
+
+class OrderPassengerWithSeatInfoCard extends StatelessWidget{
+  const OrderPassengerWithSeatInfoCard({Key? key, required this.passenger, required this.carriageId, required this.seat}) : super(key: key);
+  final PassengerToPay passenger;
+  final int carriageId;
+  final int seat;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+        child: Card(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(passenger.passengerName,
+                        style: const TextStyle(fontSize: 18),),
+                      const SizedBox(width: 8,),
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blue, width: 1),
+                          borderRadius: BorderRadius.circular(3), // 圆角
+                        ),
+                        child: Padding(padding: const EdgeInsets.only(
+                            left: 4, right: 4, bottom: 2),
+                          child: Text(
+                            passenger.role == 'common' ? '成人票' : '学生票',
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.blue),),
+                        ),
+                      ),
+                      const Expanded(child: SizedBox()),
+                      Text('${passenger.seatTypeId}  ￥${passenger.price}',//TODO
+                        style: const TextStyle(color: Colors.deepOrange,fontSize: 18),)
+                    ],
+                  ),
+                  const SizedBox(height: 8,),
+                  Row(
+                    children: [
+                      const Text('中国居民身份证', style: TextStyle(color: Colors.grey,fontSize: 16),),
+                      const Expanded(child: SizedBox()),
+                      Padding(padding: const EdgeInsets.only(top: 4),
+                        child: Text(passenger.passengerId, style: const TextStyle(fontSize: 16),),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 8,),
+                  Row(
+                    children: [
+                      Text('车厢号：$carriageId', style: const TextStyle(fontSize: 16),),
+                      const SizedBox(width: 16,),
+                      Text('座位编号：$carriageId', style: const TextStyle(fontSize: 16),),
+                    ],
+                  ),
                 ],
               ),
             )

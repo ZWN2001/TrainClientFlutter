@@ -114,7 +114,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
   Widget _orderInfoCard(){
     return Card(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+        padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -229,7 +229,13 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
         _order = _res[0];
         DateTime dateTime = DateTime.parse(_order!.orderTime);
         DateTime now = DateTime.now();
-        _countdownTime = 5 * 60 - now.difference(dateTime).inSeconds;
+        // _countdownTime = 5 * 60 - now.difference(dateTime).inSeconds;
+        // if(_countdownTime<0){
+        //   _order = null;
+        //   return;
+        // }
+        //TODO:暂时如此
+        _countdownTime = 5 * 600 ;
         _startCountdownTimer();
         //初始化各乘员
         for(Order o in _res){
@@ -237,6 +243,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
           if(r.result){
             PassengerToPay p = r.data;
             p.price = o.price;
+            p.seatTypeId = o.seatTypeId;
             _passengerList.add(p);
             _allPrice += p.price;
           }

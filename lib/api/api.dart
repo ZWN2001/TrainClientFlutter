@@ -413,7 +413,7 @@ class TicketAndOrderApi{
   static const String _urlGetSelfTicket = "${Server.hostTicket}${Server.query}/selfTicket";
   static const String _urlGetSelfOrder = "${Server.hostTicket}${Server.query}/selfOrder";
   static const String _urlGetSelfPaiedOrder = "${Server.hostTicket}${Server.query}/selfPaiedOrder";
-  static const String _urlGetTicketInfo = "${Server.hostTicket}${Server.query}/ticketInfo";
+  static const String _urlGetOrderInfo = "${Server.hostTicket}${Server.query}/orderInfo";
   static const String _urlGetTicketSeatInfo = "${Server.hostTicket}${Server.query}/ticketSeatInfo";
   static const String _urlGetTicketToPayDetail = "${Server.hostTicket}${Server.query}/ticketToPayDetail";
 
@@ -496,6 +496,31 @@ class TicketAndOrderApi{
     try{
       Response response = await Http.get(_urlGetTicketToPayDetail,
           params: {'userId' : UserApi.getUserId()},
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        List list = data['data'];
+        List<Order> result =  list.map((e) => Order.fromJson(e)).toList();
+        return ResultEntity.name( true, 0, "成功", result);
+      }
+    }catch(e){
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
+    }
+  }
+
+  static Future<ResultEntity> getOrderInfo(String orderId) async {
+    try{
+      Response response = await Http.get(_urlGetOrderInfo,
+          params: {'userId' : UserApi.getUserId(), 'orderId' : orderId},
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
       Map<String, dynamic> data = response.data;
       if (response.statusCode != 200) {
