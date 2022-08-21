@@ -3,7 +3,6 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:train_client_flutter/constant.dart';
 import 'package:train_client_flutter/route/route_table.dart';
 import 'package:train_client_flutter/ui/splash.dart';
-import 'package:train_client_flutter/util/sharedpreference_util.dart';
 import 'package:train_client_flutter/util/store.dart';
 
 import 'api/api.dart';
@@ -19,7 +18,6 @@ Future<void> initialize() async {
   Http.init(baseUrl: Server.baseHost, connectTimeout: 7500, receiveTimeout: 7500);
   //并行初始化
   await Future.wait([
-    SharedPreferenceUtil.initialize(),
     Store.initialize(),
     Constant.initStationInfo(),
   ]);
