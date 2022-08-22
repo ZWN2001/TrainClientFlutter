@@ -29,70 +29,76 @@ class _StationPageState extends State<StationPage> {
     // SuspensionUtil.sortListBySuspensionTag(stationList);
     //加个tag
     stationList.insert(
-        0, Station.name(stationName: 'unKnown')..tagIndex = '★');
+        0, Station.name(stationName: '')..tagIndex = '★');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('车站选择'), centerTitle: true,
-        bottom: PreferredSize(
-          preferredSize: const Size(300, 50),
-          child: _buildFloatingSearchBar(),
-        ),
-      ),
+      appBar: AppBar(title: const Text('车站选择'), centerTitle: true,),
       resizeToAvoidBottomInset: false,
-      body: Column(
+      body: Stack(
+        fit: StackFit.expand,
         children: [
-          Expanded(
-            child: AzListView(
-              padding: const EdgeInsets.only(left: 24),
-              data: stationList,
-              itemCount: stationList.length,
-              itemBuilder: (BuildContext context, int index) {
-                if (index == 0) return _buildHeader();
-                Station model = stationList[index];
-                return ListTile(
-                    title: Text(model.stationName),
-                    onTap: () {
-                      Get.back(result: model);
-                    });
-              },
-              susItemHeight: susItemHeight,
-              susItemBuilder: (BuildContext context, int index) {
-                Station model = stationList[index];
-                String tag = model.getSuspensionTag();
-                if ('★' == tag) {
-                  return Container();
-                }
-                return Container(
-                  height: 40,
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.only(left: 40.0),
-                  color: const Color(0xFFF3F4F5),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    tag,
-                    softWrap: false,
-                    style: const TextStyle(
-                      fontSize: 14.0,
-                      color: Color(0xFF666666),
-                    ),
+          _stationList(),
+          _buildFloatingSearchBar()
+        ],
+      )
+    );
+  }
+
+  Widget _stationList(){
+    return  Column(
+      children: [
+        const SizedBox(height: 44,),
+        Expanded(
+          child: AzListView(
+            padding: const EdgeInsets.only(left: 24),
+            data: stationList,
+            itemCount: stationList.length,
+            itemBuilder: (BuildContext context, int index) {
+              if (index == 0) return _buildHeader();
+              Station model = stationList[index];
+              return ListTile(
+                  title: Text(model.stationName),
+                  onTap: () {
+                    Get.back(result: model);
+                  });
+            },
+            susItemHeight: susItemHeight,
+            susItemBuilder: (BuildContext context, int index) {
+              Station model = stationList[index];
+              String tag = model.getSuspensionTag();
+              if ('★' == tag) {
+                return Container();
+              }
+              return Container(
+                height: 40,
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.only(left: 40.0),
+                color: const Color(0xFFF3F4F5),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  tag,
+                  softWrap: false,
+                  style: const TextStyle(
+                    fontSize: 14.0,
+                    color: Color(0xFF666666),
                   ),
-                );
-              },
-              indexBarAlignment: Alignment.centerRight,
-              indexBarData:
-              SuspensionUtil.getTagIndexList(stationList),
-              indexBarOptions: const IndexBarOptions(
-                needRebuild: true,
-                color: Colors.transparent,
-                downColor: Color(0xFFEEEEEE),
-              ),
+                ),
+              );
+            },
+            indexBarAlignment: Alignment.centerRight,
+            indexBarData:
+            SuspensionUtil.getTagIndexList(stationList),
+            indexBarOptions: const IndexBarOptions(
+              needRebuild: true,
+              color: Colors.transparent,
+              downColor: Color(0xFFEEEEEE),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -108,12 +114,11 @@ class _StationPageState extends State<StationPage> {
           physics: const BouncingScrollPhysics(),
           axisAlignment: isPortrait ? 0.0 : -1.0,
           openAxisAlignment: 0.0,
-          // width: isPortrait ? 600 : 500,
           debounceDelay: const Duration(milliseconds: 500),
           onQueryChanged: (query) {
             suggestions.clear();
             for (var s in stationList) {
-              if (s.stationName == 'unKonwn') {
+              if (s.stationName == '') {
                 continue;
               }
               if (s.stationName.contains(query))  {
@@ -164,13 +169,6 @@ class _StationPageState extends State<StationPage> {
 
   Widget _buildHeader() {
     List<Station> hotCityList = [];
-    // hotCityList.addAll([
-    //   Station.fromJson(stations['xuzhoudong']!.toJson())..tagIndex = '★',
-    //   Station.fromJson(stations['jinanxi']!.toJson())..tagIndex = '★',
-    //   Station.fromJson(stations['beijingnan']!.toJson())..tagIndex = '★',
-    //   Station.fromJson(stations['beijing']!.toJson())..tagIndex = '★',
-    //   Station.fromJson(stations['shanghai']!.toJson())..tagIndex = '★',
-    // ]);
     hotCityList.addAll(Constant.hotStationIdList.map((e) => Station.fromJson(
         Constant.stationIdMap[e]!.toJson())..tagIndex = '★'));
     return Padding(
@@ -189,7 +187,7 @@ class _StationPageState extends State<StationPage> {
               child: Text(e.stationName),
             ),
             onPressed: () {
-              Get.back(result: e..tagIndex = '');
+              Get.back(result: e);
             },
           );
         }).toList(),

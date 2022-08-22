@@ -63,7 +63,7 @@ class _SplashState extends State<Splash>{
   }
   void _newHomePage() {
     var routePath = Get.currentRoute;
-    if(routePath != MainPage.routeName){
+    if(routePath != MainPage.routeName && mounted){
       Navigator.popAndPushNamed(context, MainPage.routeName);
     }
   }

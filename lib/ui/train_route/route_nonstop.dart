@@ -24,7 +24,7 @@ class RouteNoStopPage extends StatefulWidget{
 
 class RouteNoStopState extends State<RouteNoStopPage>{
   List<TrainRoute> _trainRouteList = [];
-  final Map<TrainRoute, TicketRouteTimeInfo> _ticketRouteTimeInfoMap = {};
+  // final Map<TrainRoute, TicketRouteTimeInfo> _ticketRouteTimeInfoMap = {};
   bool _isLoading = true;
 
   @override
@@ -42,10 +42,11 @@ class RouteNoStopState extends State<RouteNoStopPage>{
     );
   }
 
-  Widget _routeList(){
-    return ListView.builder(
-      itemBuilder: (context,index){
-        return _routeInfoCard(_trainRouteList[index], _ticketRouteTimeInfoMap[_trainRouteList[index]]!);
+  Widget _routeList() {
+    return _trainRouteList.isEmpty ? const Center(child: Text('暂无车次'),)
+        : ListView.builder(
+      itemBuilder: (context, index) {
+        return _routeInfoCard(_trainRouteList[index]);
       },
       itemCount: _trainRouteList.length,
     );
@@ -56,13 +57,13 @@ class RouteNoStopState extends State<RouteNoStopPage>{
         widget.fromStationId, widget.toStationId, widget.date.day);
     if(resultEntity.result){
       _trainRouteList = resultEntity.data;
-      for (TrainRoute element in _trainRouteList) {
-        ResultEntity r = await TrainRouteApi.getTrainRouteTimeInfo(
-            element.trainRouteId, element.fromStationId, element.toStationId);
-        if(r.result) {
-          _ticketRouteTimeInfoMap[element] = r.data;
-        }
-      }
+      // for (TrainRoute element in _trainRouteList) {
+      //   ResultEntity r = await TrainRouteApi.getTrainRouteTimeInfo(
+      //       element.trainRouteId, element.fromStationId, element.toStationId);
+      //   if(r.result) {
+      //     _ticketRouteTimeInfoMap[element] = r.data;
+      //   }
+      // }
       _isLoading = false;
       setState((){});
     }else{
@@ -70,7 +71,7 @@ class RouteNoStopState extends State<RouteNoStopPage>{
     }
   }
 
-  Widget _routeInfoCard(TrainRoute route, TicketRouteTimeInfo timeInfo){
+  Widget _routeInfoCard(TrainRoute route){
     double size = 26;
     return Card(
       child: Padding(
@@ -83,7 +84,7 @@ class RouteNoStopState extends State<RouteNoStopPage>{
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(timeInfo.startTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+                    Text(route.startTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
                     Row(
                       children: [
                         route.formIsStart ? PassStartEndIcon.stationStartIcon(size) : PassStartEndIcon.stationPassIcon(size),
@@ -98,14 +99,14 @@ class RouteNoStopState extends State<RouteNoStopPage>{
                   children: [
                     Text(route.trainRouteId, style: const TextStyle(fontSize: 18)),
                     const ImageIcon(AssetImage('icons/arrow.png'),size: 26,color: Colors.blue,),
-                    Text('历时 ${timeInfo.durationInfo}',style: const TextStyle(color: Colors.grey)),
+                    Text('历时 ${route.durationInfo}',style: const TextStyle(color: Colors.grey)),
                   ],
                 ),
                 const Expanded(child: SizedBox()),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(timeInfo.arriveTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+                    Text(route.arriveTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
                     Row(
                       children: [
                         route.toIsEnd ? PassStartEndIcon.stationEndIcon(size) : PassStartEndIcon.stationPassIcon(size),

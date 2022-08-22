@@ -73,9 +73,15 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
                                       ? () {
                                     _changeDate(_date.subtract(const Duration(days: 1)));
                                     if(currentIndex == 0){
-                                      nostop = RouteNoStopPage(date: _date, fromStationId: fromStationId, toStationId: toStationId,);
+                                      nostop = RouteNoStopPage(key:UniqueKey(),
+                                        date: _date,
+                                        fromStationId: fromStationId,
+                                        toStationId: toStationId
+                                      );
                                     }else{
-                                      transfer = RouteTransferPage(date: _date);
+                                      transfer = RouteTransferPage(
+                                          key:UniqueKey(),
+                                          date: _date);
                                     }
                                   }
                                       : null,
@@ -98,9 +104,15 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
                                     if (time != null) {
                                       _changeDate(time);
                                       if(currentIndex == 0){
-                                        nostop = RouteNoStopPage(date: _date, fromStationId: fromStationId, toStationId: toStationId,);
+                                        nostop = RouteNoStopPage(key:UniqueKey(),
+                                            date: _date,
+                                            fromStationId: fromStationId,
+                                            toStationId: toStationId
+                                        );
                                       }else{
-                                        transfer = RouteTransferPage(date: _date);
+                                        transfer = RouteTransferPage(
+                                            key:UniqueKey(),
+                                            date: _date);
                                       }
                                     }
                                   },
@@ -131,9 +143,15 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
                                       ? () {
                                     _changeDate(_date.add(const Duration(days: 1)));
                                     if(currentIndex == 0){
-                                      nostop = RouteNoStopPage(date: _date, fromStationId: fromStationId, toStationId: toStationId,);
+                                      nostop = RouteNoStopPage(key:UniqueKey(),
+                                          date: _date,
+                                          fromStationId: fromStationId,
+                                          toStationId: toStationId
+                                      );
                                     }else{
-                                      transfer = RouteTransferPage(date: _date);
+                                      transfer = RouteTransferPage(
+                                          key:UniqueKey(),
+                                          date: _date);
                                     }
                                   }
                                       : null,

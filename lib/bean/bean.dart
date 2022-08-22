@@ -143,7 +143,7 @@ class Station  extends ISuspensionBean{
     stationName = jsonMap['stationName'] ?? 'unKnown';
     city = jsonMap['city'] ?? 'unKnown';
     tagIndex = PinyinHelper.getFirstWordPinyin(jsonMap['stationName'] ?? 'unKnown').substring(0,1).toUpperCase();
-    abbr = PinyinHelper.getShortPinyin(jsonMap['stationName'] ?? 'unKnown');
+    abbr = PinyinHelper.getPinyin(jsonMap['stationName'] ?? 'unKnown');
   }
 
   Station.name({required this.stationName});
@@ -203,6 +203,9 @@ class TrainRoute{
   late final String toStationId;
   late final bool formIsStart;
   late final bool toIsEnd;
+  late final String startTime;
+  late final String arriveTime;
+  late String durationInfo;
 
   TrainRoute.fromJson(jsonMap){
     trainRouteId = jsonMap['trainRouteId'] ?? 'unKnown';
@@ -210,6 +213,17 @@ class TrainRoute{
     toStationId = jsonMap['toStationId'] ?? 'unKnown';
     formIsStart = jsonMap['formIsStart'] ?? true;
     toIsEnd = jsonMap['toIsEnd'] ?? true;
+    String startTimeInfo = jsonMap['startTime'] ?? 'unKnown';
+    if(startTimeInfo != 'unKnown'){
+      startTimeInfo = startTimeInfo.substring(0,5);
+    }
+    startTime = startTimeInfo;
+    String arriveTimeInfo = jsonMap['arriveTime'] ?? 'unKnown';
+    if(arriveTimeInfo != 'unKnown'){
+      arriveTimeInfo = arriveTimeInfo.substring(0,5);
+    }
+    arriveTime = arriveTimeInfo;
+    durationInfo = jsonMap['durationInfo'] ?? 'unKnown';
   }
 
   @override
