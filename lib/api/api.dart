@@ -567,7 +567,7 @@ class TrainRouteApi{
   static Future<ResultEntity> getTrainRoute(String from, String to, int day) async {
     try {
       Response response = await Http.get(_urlGetQueryTrainRoute,
-          params: {'from' : from, 'to' : to, 'day' : day});
+          params: {'from' : from, 'to' : to, 'day' : day - 1});
       Map<String, dynamic> data = response.data;
       if (data['code'] != 200) {
         return ResultEntity.name(false, data['code'], data['message'], null);

@@ -73,7 +73,8 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
                                       ? () {
                                     _changeDate(_date.subtract(const Duration(days: 1)));
                                     if(currentIndex == 0){
-                                      nostop = RouteNoStopPage(key:UniqueKey(),
+                                      nostop = RouteNoStopPage(
+                                          key:UniqueKey(),
                                         date: _date,
                                         fromStationId: fromStationId,
                                         toStationId: toStationId
@@ -83,6 +84,7 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
                                           key:UniqueKey(),
                                           date: _date);
                                     }
+                                    setState((){});
                                   }
                                       : null,
                                   child: const Text(
@@ -104,7 +106,8 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
                                     if (time != null) {
                                       _changeDate(time);
                                       if(currentIndex == 0){
-                                        nostop = RouteNoStopPage(key:UniqueKey(),
+                                        nostop = RouteNoStopPage(
+                                            key:UniqueKey(),
                                             date: _date,
                                             fromStationId: fromStationId,
                                             toStationId: toStationId
@@ -114,6 +117,7 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
                                             key:UniqueKey(),
                                             date: _date);
                                       }
+                                      setState((){});
                                     }
                                   },
                                   child: Row(
@@ -143,7 +147,8 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
                                       ? () {
                                     _changeDate(_date.add(const Duration(days: 1)));
                                     if(currentIndex == 0){
-                                      nostop = RouteNoStopPage(key:UniqueKey(),
+                                      nostop = RouteNoStopPage(
+                                          key:UniqueKey(),
                                           date: _date,
                                           fromStationId: fromStationId,
                                           toStationId: toStationId
@@ -153,6 +158,7 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
                                           key:UniqueKey(),
                                           date: _date);
                                     }
+                                    setState((){});
                                   }
                                       : null,
                                   child: const Text(
