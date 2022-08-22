@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:train_client_flutter/constant.dart';
 import 'package:train_client_flutter/widget/cards.dart';
 
 class HomePage extends StatefulWidget{
@@ -7,10 +8,17 @@ class HomePage extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() =>_HomePageState();
-
 }
 
 class _HomePageState extends State<HomePage>{
+
+  @override
+  void initState() {
+    super.initState();
+    if(Constant.allStationList.isNotEmpty){
+      Constant.initStationInfo();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +41,7 @@ class _HomePageState extends State<HomePage>{
               children: [
                 SizedBox(height: screenH * 0.18,),
                 const Padding(padding: EdgeInsets.fromLTRB(8, 0, 8, 12),
-                  child: RouteCard(),),
+                  child: RouteSelectCard(),),
                 Padding(padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                     child: SizedBox(height: 190, child: _buttonsGridView())),
                 Padding(padding: const EdgeInsets.fromLTRB(12, 0, 8, 0),

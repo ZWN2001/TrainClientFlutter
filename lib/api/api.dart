@@ -564,6 +564,24 @@ class TrainRouteApi{
   static const String _urlGetQueryTrainRouteDetail = "${Server.hostTrainRoute}${Server.query}/trainRouteDetail";
   static const String _urlGetQueryTicketRouteTimeInfo = "${Server.hostTrainRoute}${Server.query}/ticketRouteTimeInfo";
 
+  static Future<ResultEntity> getTrainRoute(String from, String to, int day) async {
+    try {
+      Response response = await Http.get(_urlGetQueryTrainRoute,
+          params: {'from' : from, 'to' : to, 'day' : day});
+      Map<String, dynamic> data = response.data;
+      if (data['code'] != 200) {
+        return ResultEntity.name(false, data['code'], data['message'], null);
+      } else {
+        List list = data['data'];
+        List<TrainRoute> result = list.map((e) => TrainRoute.fromJson(e)).toList();
+        return ResultEntity.name(true, data['code'], data['message'], result);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return ResultEntity.name(false, -1, '', null);
+    }
+  }
+
   static Future<ResultEntity> getTrainRouteDetail(String trainRouteId) async {
     try {
       Response response = await Http.get(_urlGetQueryTrainRouteDetail,
@@ -582,12 +600,11 @@ class TrainRouteApi{
     }
   }
 
-  static Future<ResultEntity> getTrainRouteStartTime(String trainRouteId, String fromStationId, String toStationId) async {
+  static Future<ResultEntity> getTrainRouteTimeInfo(String trainRouteId, String fromStationId, String toStationId) async {
     try {
       Response response = await Http.get(_urlGetQueryTicketRouteTimeInfo,
           params: {'trainRouteId' : trainRouteId, 'fromStationId' : fromStationId,
-          'toStationId' : toStationId},
-          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+          'toStationId' : toStationId});
       Map<String, dynamic> data = response.data;
       if (data['code'] != 200) {
         return ResultEntity.name(false, data['code'], data['message'], null);

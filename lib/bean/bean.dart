@@ -197,6 +197,27 @@ class TrainRouteAtom {
 
 }
 
+class TrainRoute{
+  late final String trainRouteId;
+  late final String fromStationId;
+  late final String toStationId;
+  late final bool formIsStart;
+  late final bool toIsEnd;
+
+  TrainRoute.fromJson(jsonMap){
+    trainRouteId = jsonMap['trainRouteId'] ?? 'unKnown';
+    fromStationId = jsonMap['fromStationId'] ?? 'unKnown';
+    toStationId = jsonMap['toStationId'] ?? 'unKnown';
+    formIsStart = jsonMap['formIsStart'] ?? true;
+    toIsEnd = jsonMap['toIsEnd'] ?? true;
+  }
+
+  @override
+  String toString() {
+    return 'TrainRoute{trainRouteId: $trainRouteId, fromStationId: $fromStationId, toStationId: $toStationId, formIsStart: $formIsStart, toIsEnd: $toIsEnd}';
+  }
+}
+
 class TicketRouteTimeInfo {
   late final String startTime;
   late final String arriveTime;
@@ -242,5 +263,9 @@ class ResultEntity<T> {
     data = data ?? '';
   }
 
+  @override
+  String toString() {
+    return 'ResultEntity{result: $result, code: $code, message: $message, data: $data}';
+  }
 }
 

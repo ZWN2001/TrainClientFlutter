@@ -250,7 +250,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
         }
         //初始化车次发车与到站时间 & 历时
         ResultEntity resultEntity = await
-        TrainRouteApi.getTrainRouteStartTime(_order!.trainRouteId, _order!.fromStationId, _order!.toStationId);
+        TrainRouteApi.getTrainRouteTimeInfo(_order!.trainRouteId, _order!.fromStationId, _order!.toStationId);
         if(resultEntity.result){
           _timeInfo = resultEntity.data;
           String duration = _timeInfo.durationInfo;

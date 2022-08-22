@@ -7,15 +7,16 @@ import 'package:train_client_flutter/util/utils.dart';
 
 import '../bean/bean.dart';
 import '../ui/station_page.dart';
+import '../ui/train_route/tab.dart';
 
-class RouteCard extends StatefulWidget{
-  const RouteCard({Key? key}) : super(key: key);
+class RouteSelectCard extends StatefulWidget{
+  const RouteSelectCard({Key? key}) : super(key: key);
 
   @override
-  RouteCardState createState() =>RouteCardState();
+  RouteSelectCardState createState() =>RouteSelectCardState();
 }
 
-class RouteCardState extends State<RouteCard>{
+class RouteSelectCardState extends State<RouteSelectCard>{
    Station _fromStation = Station.name(stationName: '未选择');
    Station _toStation = Station.name(stationName: '未选择');
    DateTime _date = DateTime.now();
@@ -121,7 +122,12 @@ class RouteCardState extends State<RouteCard>{
                           || _toStation.stationName == '未选择'){
                         Fluttertoast.showToast(msg: '请选择出发地及目的地');
                       }else{
-
+                        Get.to(()=>TrainRouteTabPage(
+                          fromStationId: _fromStation.stationId,
+                          toStationId: _toStation.stationId,
+                          date: _date,
+                          title: '${_fromStation.stationName}<>${_toStation.stationName}',
+                        ));
                       }
                     },
                   ),
@@ -772,6 +778,58 @@ class PassengerInfoCard extends StatelessWidget{
           return PassengerEditPage(passenger: passenger);
         }));
       },
+    );
+  }
+}
+
+///是经停还是始终
+class PassStartEndIcon{
+  static const double textSize = 12;
+  static Widget stationPassIcon(double size){
+    return SizedBox(
+      width: size,
+      height: size,
+      child: const Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4))
+        ),
+        color: Colors.blueAccent,
+        child: Center(
+          child: Text('过', style: TextStyle(color: Colors.white,fontSize: textSize)),
+        ),
+      ),
+    );
+  }
+
+  static Widget stationStartIcon(double size){
+    return SizedBox(
+      width: size,
+      height: size,
+      child: const Card(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(4))
+        ),
+        color: Colors.orange,
+        child: Center(
+          child: Text('始', style: TextStyle(color: Colors.white,fontSize: textSize)),
+        ),
+      ),
+    );
+  }
+
+  static Widget stationEndIcon(double size){
+    return SizedBox(
+      width: size,
+      height: size,
+      child: const Card(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(4))
+        ),
+        color: Colors.green,
+        child: Center(
+          child: Text('终', style: TextStyle(color: Colors.white,fontSize: textSize)),
+        ),
+      ),
     );
   }
 }
