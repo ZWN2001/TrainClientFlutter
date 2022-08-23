@@ -564,10 +564,10 @@ class TrainRouteApi{
   static const String _urlGetQueryTrainRouteDetail = "${Server.hostTrainRoute}${Server.query}/trainRouteDetail";
   static const String _urlGetQueryTicketRouteTimeInfo = "${Server.hostTrainRoute}${Server.query}/ticketRouteTimeInfo";
 
-  static Future<ResultEntity> getTrainRoute(String from, String to, int day) async {
+  static Future<ResultEntity> getTrainRoute(String from, String to, String date) async {
     try {
       Response response = await Http.get(_urlGetQueryTrainRoute,
-          params: {'from' : from, 'to' : to, 'day' : day - 1});
+          params: {'from' : from, 'to' : to, 'date' : date});
       Map<String, dynamic> data = response.data;
       if (data['code'] != 200) {
         return ResultEntity.name(false, data['code'], data['message'], null);

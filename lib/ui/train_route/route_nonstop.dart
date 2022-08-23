@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:train_client_flutter/api/api.dart';
 import 'package:train_client_flutter/constant.dart';
+import 'package:train_client_flutter/util/date_util.dart';
 
 import '../../bean/bean.dart';
 import '../../widget/cards.dart';
@@ -54,7 +55,7 @@ class RouteNoStopState extends State<RouteNoStopPage>{
 
   Future<void> _getData() async {
     ResultEntity resultEntity = await TrainRouteApi.getTrainRoute(
-        widget.fromStationId, widget.toStationId, widget.date.day);
+        widget.fromStationId, widget.toStationId, DateUtil.date(widget.date));
     if(resultEntity.result){
       _trainRouteList = resultEntity.data;
       // for (TrainRoute element in _trainRouteList) {
@@ -117,6 +118,9 @@ class RouteNoStopState extends State<RouteNoStopPage>{
                 ),
               ],
             ),
+            Row(
+              children: route.tickets.keys.map((e) => Expanded(child: Text('${Constant.seatIdToTypeMap[e]}剩余：${route.tickets[e]}张'))).toList(),
+            )
           ],
         ),
       ),

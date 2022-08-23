@@ -36,7 +36,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
     return Scaffold(
       appBar: AppBar(elevation: 0,),
       body: _loading ? const Center(child: CircularProgressIndicator()):(
-      _order == null? const Center(child: Text('无订单需要支付')):
+      _order == null? const Center(child: Text('无订单需要支付',style: TextStyle(fontSize: 20))):
           _haveOrder()
       )
     );
@@ -264,8 +264,11 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
         }else{
           Fluttertoast.showToast(msg: '初始化车次时间失败');
         }
+      }else{
+        _timer = null;
       }
     }else{
+      _timer = null;
       Fluttertoast.showToast(msg: orderResult.message);
     }
     setState((){_loading = false;});

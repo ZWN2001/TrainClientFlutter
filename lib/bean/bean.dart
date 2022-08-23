@@ -48,7 +48,7 @@ class Order {
     trainRouteId = jsonMap['trainRouteId'] ?? 'unKnown';
     fromStationId = jsonMap['fromStationId'] ?? 'unKnown';
     toStationId = jsonMap['toStationId'] ?? 'unKnown';
-    seatTypeId = jsonMap['seatTypeId'] ?? 0;
+    seatTypeId = jsonMap['seatTypeId'] ?? 1;
     orderStatus = jsonMap['orderStatus'] ?? 'unKnown';
     orderTime = jsonMap['orderTime'] ?? DateTime.now().toString();
     price = jsonMap['price'] ?? 0.0;
@@ -124,7 +124,7 @@ class PassengerToPay {
     passengerId = jsonMap['passengerId'] ?? 'unKnown';
     passengerName = jsonMap['passengerName'] ?? 'unKnown';
     role = jsonMap['role'] ?? 'unKnown';
-    seatTypeId = jsonMap['seatTypeId'] ?? 0;
+    seatTypeId = jsonMap['seatTypeId'] ?? 1;
     price = jsonMap['price'] ?? 0.0;
   }
 
@@ -206,6 +206,9 @@ class TrainRoute{
   late final String startTime;
   late final String arriveTime;
   late String durationInfo;
+  late int duratoinInt;
+  late Map<int,int> tickets;
+
 
   TrainRoute.fromJson(jsonMap){
     trainRouteId = jsonMap['trainRouteId'] ?? 'unKnown';
@@ -223,7 +226,24 @@ class TrainRoute{
       arriveTimeInfo = arriveTimeInfo.substring(0,5);
     }
     arriveTime = arriveTimeInfo;
-    durationInfo = jsonMap['durationInfo'] ?? 'unKnown';
+    String time = jsonMap['durationInfo'] ?? 'unKnown';
+    if(time != 'unKnown'){
+      List<String> list = time.split(":");
+      if(list.length == 2){
+        durationInfo = "${list[0]}小时${list[1]}分钟";
+        duratoinInt = int.parse(list[0]) * 60 + int.parse(list[1]);
+      }else if(list.length == 3){
+        durationInfo = "${list[0]}天${list[1]}小时${list[2]}分钟";
+        duratoinInt = int.parse(list[0]) * 60 * 24 + int.parse(list[1]) * 60 + int.parse(list[2]);
+      }
+    }
+    Map<String, dynamic> map = jsonMap['tickets'] ?? {};
+    print(map);
+    tickets = {};
+    map.forEach((key, value) {
+      int keyInt = int.parse(key);
+      tickets[keyInt] = value;
+    });
   }
 
   @override

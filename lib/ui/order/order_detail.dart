@@ -21,7 +21,7 @@ class OrderDetailState extends State<OrderDetailPage>{
   final List<PassengerToPay> _passengerList = [];
   double _allPrice = 0;
   List<Order> _res = [];
-  late Order _order;
+  late Order? _order;
   bool _loading = true;
   int carriageId = 0;
   int seat = 0;
@@ -35,9 +35,16 @@ class OrderDetailState extends State<OrderDetailPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(elevation: 0,),
+        appBar: AppBar(
+          elevation: 0,
+          leading: BackButton(onPressed: () {
+            Navigator.pop(context);
+          }),),
         body: _loading ?
-        const Center(child: CircularProgressIndicator()): _haveOrder()
+        const Center(child: CircularProgressIndicator()) :
+        (_order == null ?
+        const Center(child: Text('无订单需要支付', style: TextStyle(fontSize: 20)))
+            : _haveOrder())
     );
   }
 
@@ -57,13 +64,14 @@ class OrderDetailState extends State<OrderDetailPage>{
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  _countDownRow(),
+                  _statusRow(),
                   _tipsCard(),
                   const SizedBox(height: 8,),
                   _orderInfoCard(),
-                  const SizedBox(height: 8,),
+                  // const SizedBox(height: ,),
                   _ticketInfoCard(),
-                  (_order.orderStatus == OrderStatus.PAIED || _order.orderStatus == OrderStatus.REBOOK) ?
+                  const SizedBox(height: 8,),
+                  (_order!.orderStatus == OrderStatus.PAIED || _order!.orderStatus == OrderStatus.REBOOK) ?
                   _passengerInfoCard():_passengerWithSeatInfoCard(),
                 ],
               ),
@@ -74,7 +82,7 @@ class OrderDetailState extends State<OrderDetailPage>{
     );
   }
 
-  Widget _countDownRow(){
+  Widget _statusRow(){
     return Padding(
       padding: const EdgeInsets.only(top: 8,bottom: 12),
       child: Row(
@@ -84,7 +92,7 @@ class OrderDetailState extends State<OrderDetailPage>{
             child: Icon(Icons.access_time_outlined,
               size: 28, color: Colors.white,),),
           const SizedBox(width: 10,),
-          Text(_order.orderStatus,style: const TextStyle(fontSize: 24,
+          Text(_order!.orderStatus,style: const TextStyle(fontSize: 24,
               color: Colors.white,fontWeight: FontWeight.bold),),
         ],
       ),
@@ -120,13 +128,13 @@ class OrderDetailState extends State<OrderDetailPage>{
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(_timeInfo.startTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
-                    Text(' ${_order.fromStationId}')
+                    Text(' ${_order!.fromStationId}')
                   ],
                 ),
                 const Expanded(child: SizedBox()),
                 Column(
                   children: [
-                    Text(_order.trainRouteId, style: const TextStyle(fontSize: 18)),
+                    Text(_order!.trainRouteId, style: const TextStyle(fontSize: 18)),
                     const ImageIcon(AssetImage('icons/arrow.png'),size: 26,color: Colors.blue,),
                     Text('历时 ${_timeInfo.durationInfo}',style: const TextStyle(color: Colors.grey)),
                   ],
@@ -136,13 +144,13 @@ class OrderDetailState extends State<OrderDetailPage>{
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(_timeInfo.arriveTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
-                    Text('${_order.toStationId} ')
+                    Text('${_order!.toStationId} ')
                   ],
                 ),
               ],
             ),
             const SizedBox(height: 12,),
-            Text('发车时间：${_order.departureDate}',style: const TextStyle(color: Colors.grey),),
+            Text('发车时间：${_order!.departureDate}',style: const TextStyle(color: Colors.grey),),
             const SizedBox(height: 12,),
           ],
         ),
@@ -227,10 +235,17 @@ class OrderDetailState extends State<OrderDetailPage>{
         child: Padding(
             padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('订单号：${_order.orderId}'),
-                Text('订单创建时间：${_order.orderTime}'),
-                Text('交易流水号：${_order.tradeNo}')
+                Row(
+                  children: [
+                    Expanded(child: Text('订单号：${_order!.orderId}'),)
+                  ],
+                ),
+                const SizedBox(height: 4,),
+                Text('订单创建时间：${_order!.orderTime}'),
+                const SizedBox(height: 4,),
+                Text('交易流水号：${_order!.tradeNo}')
               ],
             )
         )
@@ -251,13 +266,14 @@ class OrderDetailState extends State<OrderDetailPage>{
           if(r.result){
             PassengerToPay p = r.data;
             p.price = o.price;
+            p.seatTypeId = o.seatTypeId;
             _passengerList.add(p);
             _allPrice += p.price;
           }
         }
         //初始化车次发车与到站时间 & 历时
         ResultEntity resultEntity = await
-        TrainRouteApi.getTrainRouteTimeInfo(_order.trainRouteId, _order.fromStationId, _order.toStationId);
+        TrainRouteApi.getTrainRouteTimeInfo(_order!.trainRouteId, _order!.fromStationId, _order!.toStationId);
         if(resultEntity.result){
           _timeInfo = resultEntity.data;
           String duration = _timeInfo.durationInfo;
@@ -275,6 +291,7 @@ class OrderDetailState extends State<OrderDetailPage>{
         }
       }
     }else{
+      _order = null;
       Fluttertoast.showToast(msg: orderResult.message);
     }
     setState((){_loading = false;});

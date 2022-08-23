@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:train_client_flutter/constant.dart';
+import 'package:train_client_flutter/ui/order/order_detail.dart';
 import 'package:train_client_flutter/ui/passenger/passenger_edit.dart';
 import 'package:train_client_flutter/util/utils.dart';
 
@@ -598,7 +599,7 @@ class TicketPaiedCard extends StatelessWidget{
                       child: ElevatedButton(
                         child: const Text('详细信息'),
                         onPressed: (){
-
+                          Get.to(()=>OrderDetailPage(orderId: orderGeneral.orderId));
                         },
                       ),
                   ),
@@ -686,7 +687,7 @@ class AllTicketCard extends StatelessWidget{
                     child: ElevatedButton(
                       child: const Text('详细信息'),
                       onPressed: (){
-
+                        Get.to(()=>OrderDetailPage(orderId: orderGeneral.orderId));
                       },
                     ),
                   ),
@@ -695,7 +696,6 @@ class AllTicketCard extends StatelessWidget{
             ),
           ],
         ),
-
       ),
     );
   }
