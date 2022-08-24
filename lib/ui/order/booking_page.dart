@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -80,6 +78,7 @@ class BookingState extends State<BookingPage> {
                 _passengerCards(),
               const SizedBox(height: 8,),
               Image.asset('images/orderTips.jpg'),
+              const SizedBox(height: 12,),
               Row(
                 children: [
                   Expanded(
