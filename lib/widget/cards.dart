@@ -455,7 +455,7 @@ class OrderPassengerCard extends StatelessWidget{
                         ),
                       ),
                       const Expanded(child: SizedBox()),
-                      Text('${passenger.seatTypeId}  ￥${passenger.price}',//TODO
+                      Text('${Constant.seatIdToTypeMap[passenger.seatTypeId.toString()]}  ￥${passenger.price}',//TODO
                         style: const TextStyle(color: Colors.deepOrange,fontSize: 18),)
                     ],
                   ),

@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:train_client_flutter/api/api.dart';
+import 'package:train_client_flutter/constant.dart';
+import 'package:train_client_flutter/ui/main_page.dart';
 
 import '../../bean/bean.dart';
 import '../../widget/cards.dart';
@@ -33,13 +36,20 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(elevation: 0,),
-      body: _loading ? const Center(child: CircularProgressIndicator()):(
-      _order == null? const Center(child: Text('无订单需要支付',style: TextStyle(fontSize: 20))):
-          _haveOrder()
-      )
-    );
+    return WillPopScope(
+        onWillPop: () async {
+          Get.offAll(()=>const MainPage(targetIndex: 2,));
+          return true;
+        },
+        child: Scaffold(
+            appBar: AppBar(elevation: 0,),
+            body: _loading ? const Center(child: CircularProgressIndicator()):(
+                _order == null? const Center(child: Text('无订单需要支付',style: TextStyle(fontSize: 20))):
+                _haveOrder()
+            )
+        ),
+      );
+
   }
 
   Widget _haveOrder(){
@@ -78,7 +88,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          const Padding(padding: EdgeInsets.only(bottom: 2),
+          const Padding(padding: EdgeInsets.only(bottom: 2,left: 2),
             child: Icon(Icons.access_time_outlined,
               size: 28, color: Colors.white,),),
           const SizedBox(width: 10,),
@@ -124,7 +134,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(_timeInfo.startTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
-                    Text(' ${_order!.fromStationId}')
+                    Text(' ${Constant.stationIdMap[_order!.fromStationId]?.stationName}')
                   ],
                 ),
                 const Expanded(child: SizedBox()),
@@ -140,7 +150,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(_timeInfo.arriveTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
-                    Text('${_order!.toStationId} ')
+                    Text('${Constant.stationIdMap[_order!.toStationId]?.stationName} ')
                   ],
                 ),
               ],
@@ -229,13 +239,13 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
         _order = _res[0];
         DateTime dateTime = DateTime.parse(_order!.orderTime);
         DateTime now = DateTime.now();
-        // _countdownTime = 5 * 60 - now.difference(dateTime).inSeconds;
-        // if(_countdownTime<0){
-        //   _order = null;
-        //   return;
-        // }
+        _countdownTime = 5 * 60 - now.difference(dateTime).inSeconds;
+        if(_countdownTime<0){
+          _order = null;
+          return;
+        }
         //TODO:暂时如此
-        _countdownTime = 5 * 600 ;
+        // _countdownTime = 5 * 600 ;
         _startCountdownTimer();
         //初始化各乘员
         for(Order o in _res){

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:train_client_flutter/api/api.dart';
+import 'package:train_client_flutter/ui/order/order_unpaied.dart';
 import 'package:train_client_flutter/ui/passenger/select_passenger.dart';
 import 'package:train_client_flutter/util/utils.dart';
 
@@ -306,10 +307,10 @@ class BookingState extends State<BookingPage> {
     });
   }
 
-  Future<void> _submitOrder(Order order , List<String> passengerIds) async {
+  Future<void> _submitOrder(Order order, List<String> passengerIds) async {
     ResultEntity resultEntity = await TicketAndOrderApi.ticketBooking(order, passengerIds);
     if(resultEntity.result){
-
+      Get.to(() => const OrderUnpaiedPage());
     }else{
       Fluttertoast.showToast(msg: resultEntity.message);
     }

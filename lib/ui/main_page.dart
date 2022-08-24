@@ -5,8 +5,9 @@ import 'package:train_client_flutter/ui/order_page.dart';
 import 'package:train_client_flutter/ui/travel_service.dart';
 
 class MainPage extends StatefulWidget{
-  const MainPage({Key? key}) : super(key: key);
+  const MainPage({Key? key, this.targetIndex}) : super(key: key);
   static const routeName = '/main_page';
+  final int? targetIndex;
 
   @override
   State<StatefulWidget> createState() =>_MainPageState();
@@ -34,6 +35,14 @@ class _MainPageState extends State<MainPage>{
   ];
 
   int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    if(widget.targetIndex != null){
+      currentIndex = widget.targetIndex!;
+    }
+  }
 
   final pages = [const HomePage(),const TravelService(),const OrderPage(),const MinePage()];
 
