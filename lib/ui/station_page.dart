@@ -169,8 +169,12 @@ class _StationPageState extends State<StationPage> {
 
   Widget _buildHeader() {
     List<Station> hotCityList = [];
-    hotCityList.addAll(Constant.hotStationIdList.map((e) => Station.fromJson(
-        Constant.stationIdMap[e]!.toJson())..tagIndex = '★'));
+    if(Constant.stationIdMap.isNotEmpty) {
+      hotCityList.addAll(Constant.hotStationIdList.map((e) =>
+      Station.fromJson(
+          Constant.stationIdMap[e]!.toJson())
+        ..tagIndex = '★'));
+    }
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Wrap(

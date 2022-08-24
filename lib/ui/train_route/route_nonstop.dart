@@ -75,7 +75,7 @@ class RouteNoStopState extends State<RouteNoStopPage>{
     return GestureDetector(
       onTap: (){
         if(UserApi.isLogin){
-          Get.to(()=>BookingPage(route: route));
+          Get.to(()=>BookingPage(route: route,departureDate: widget.date,));
         }else{
           Get.to(()=>const LoginPage());
         }

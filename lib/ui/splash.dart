@@ -27,23 +27,23 @@ class _SplashState extends State<Splash>{
                  fit: BoxFit.fill,
                ),
              ),
-             Container(
-              alignment: Alignment.topRight,
-              padding: const EdgeInsets.fromLTRB(0.0, 45.0, 10.0, 0.0),
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  shape:  const StadiumBorder(),
-                ),
-                onPressed: () {
-                  _newHomePage();
-                },
-                child: const Text(
-                  "跳过",
-                  textAlign: TextAlign.center,
-                  style:  TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
+            //  Container(
+            //   alignment: Alignment.topRight,
+            //   padding: const EdgeInsets.fromLTRB(0.0, 45.0, 10.0, 0.0),
+            //   child: OutlinedButton(
+            //     style: OutlinedButton.styleFrom(
+            //       shape:  const StadiumBorder(),
+            //     ),
+            //     onPressed: () {
+            //       _newHomePage();
+            //     },
+            //     child: const Text(
+            //       "跳过",
+            //       textAlign: TextAlign.center,
+            //       style:  TextStyle(color: Colors.white),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -58,7 +58,7 @@ class _SplashState extends State<Splash>{
 
   // 倒计时
   void _countDown() {
-    var duration =  const Duration(seconds: 5);
+    var duration =  const Duration(seconds: 2);
      Future.delayed(duration, _newHomePage);
   }
   void _newHomePage() {

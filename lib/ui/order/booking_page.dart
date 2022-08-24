@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:train_client_flutter/api/api.dart';
 import 'package:train_client_flutter/ui/passenger/select_passenger.dart';
@@ -6,11 +9,13 @@ import 'package:train_client_flutter/util/utils.dart';
 
 import '../../bean/bean.dart';
 import '../../constant.dart';
+import '../../util/date_util.dart';
 import '../../widget/cards.dart';
 
 class BookingPage extends StatefulWidget{
-  const BookingPage({Key? key, required this.route}) : super(key: key);
+  const BookingPage({Key? key, required this.route, required this.departureDate}) : super(key: key);
   final TrainRoute route;
+  final DateTime departureDate;
 
   @override
   State<StatefulWidget> createState() => BookingState();
@@ -18,11 +23,10 @@ class BookingPage extends StatefulWidget{
 
 class BookingState extends State<BookingPage> {
   List<TicketPrice> _prices = [];
-  List<Passenger> passengers = [];
+  final List<Passenger> _passengers = [];
   late TrainRoute _route;
   int? _selectedType ;
   bool _isLoading = true;
-  int enableNumMax = 4;
 
   @override
   void initState() {
@@ -62,20 +66,64 @@ class BookingState extends State<BookingPage> {
     );
   }
 
-  Widget _contentCard(){
+  Widget _contentCard() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-      child: Column(
-        children: [
-          _routeInfoCard(),
-          const SizedBox(height: 8,),
-          _selectPassengerButton(),
-          const SizedBox(height: 16,),
-          if(passengers.isNotEmpty)
-          _passengerCards()
-          // Image.asset('images/orderTips.jpg')
-        ],
-      ),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              _routeInfoCard(),
+              const SizedBox(height: 8,),
+              _selectPassengerButton(),
+              const SizedBox(height: 8,),
+              if(_passengers.isNotEmpty)
+                _passengerCards(),
+              const SizedBox(height: 8,),
+              Image.asset('images/orderTips.jpg'),
+              Row(
+                children: [
+                  Expanded(
+                      child: ElevatedButton(
+                          onPressed: () {
+                            if(_passengers.isNotEmpty){
+                              if(_selectedType == null){
+                                Fluttertoast.showToast(msg: '请选择座位类型');
+                              }else{
+                                Order order = Order.name();
+                                order.orderId = '';
+                                order.userId = UserApi.getUserId().toString();
+                                order.passengerId = '';
+                                order.departureDate = DateUtil.date(widget.departureDate);
+                                order.trainRouteId = _route.trainRouteId;
+                                order.fromStationId = _route.fromStationId;
+                                order.toStationId = _route.toStationId;
+                                order.seatTypeId = _selectedType!;
+                                order.orderStatus = '';
+                                order.orderTime = '';
+                                order.price = 0;
+                                order.tradeNo = '';
+                                List<String> passengerIds = [];
+                                for (var element in _passengers) {
+                                  passengerIds.add(element.passengerId);
+                                }
+                                _submitOrder(order, passengerIds);
+                              }
+                            }else{
+                              Fluttertoast.showToast(msg: '请选择乘员');
+                            }
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                            child: Text('提交订单'),
+                          ))
+
+                  )
+                ],
+              ),
+              const SizedBox(height: 24,),
+            ],
+          ),
+        )
     );
   }
 
@@ -181,9 +229,10 @@ class BookingState extends State<BookingPage> {
     return GestureDetector(
       onTap: () async {
         List<Passenger>? addedPassengerList = await Get.to(() =>
-            SelectPassengerPage(addedPassengers: passengers,));
+            SelectPassengerPage(addedPassengers: _passengers,));
         if(addedPassengerList != null){
-          passengers.addAll(addedPassengerList);
+          _passengers.clear();
+          _passengers.addAll(addedPassengerList);
         }
         setState((){});
       },
@@ -205,7 +254,7 @@ class BookingState extends State<BookingPage> {
 
   Widget _passengerCards() {
     return Column(
-      children: passengers.map((e) => _passengerInfo(e)).toList(),
+      children: _passengers.map((e) => _passengerInfo(e)).toList(),
     );
   }
 
@@ -236,7 +285,7 @@ class BookingState extends State<BookingPage> {
               IconButton(
                   onPressed: () {
                     setState((){
-                      passengers.remove(passenger);
+                      _passengers.remove(passenger);
                     });
                   },
                   icon: const Icon(Icons.delete_forever))
@@ -257,5 +306,15 @@ class BookingState extends State<BookingPage> {
       _isLoading = false;
     });
   }
+
+  Future<void> _submitOrder(Order order , List<String> passengerIds) async {
+    ResultEntity resultEntity = await TicketAndOrderApi.ticketBooking(order, passengerIds);
+    if(resultEntity.result){
+
+    }else{
+      Fluttertoast.showToast(msg: resultEntity.message);
+    }
+  }
+  
 
 }

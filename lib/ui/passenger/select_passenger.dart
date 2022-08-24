@@ -39,7 +39,9 @@ class SelectPassengerState extends State<SelectPassengerPage>{
           actions: [
             TextButton(
                 onPressed: () async {
-                  Get.back(result: _addedPassengers);
+                  List<Passenger> list = [];
+                  list.addAll(_addedPassengers);
+                  Get.back(result: list);
                 },
                 child: const Text('完成',
                   style: TextStyle(fontSize: 16, color: Colors.white),)),
@@ -115,12 +117,20 @@ class SelectPassengerState extends State<SelectPassengerPage>{
               onChanged: (value) {
                 if (value == false) {
                   _addedPassengers.remove(passenger);
+                  setState(() {
+                    selectList[index] = value!;
+                  });
                 } else {
-                  _addedPassengers.add(passenger);
+                  if(_addedPassengers.length == 3){
+                    Fluttertoast.showToast(msg: '乘员不能超过三人');
+                  }else{
+                    _addedPassengers.add(passenger);
+                    setState(() {
+                      selectList[index] = value!;
+                    });
+                  }
                 }
-                setState(() {
-                  selectList[index] = value!;
-                });
+
               },
             ),
             Expanded(child: PassengerInfoCard(passenger : passenger))
@@ -149,11 +159,4 @@ class SelectPassengerState extends State<SelectPassengerPage>{
     }
     setState((){});
   }
-
-  // void _initSelectList(){
-  //   for (int i = 0; i <_passengerList.length;i++) {
-  //     selectList.add(false);
-  //   }
-  // }
-
 }

@@ -28,18 +28,22 @@ class User {
   }
 }
 
+@JsonSerializable()
 class Order {
   late final  String orderId;
+  late String userId;
   late final  String passengerId;
   late final  String departureDate;
   late final  String trainRouteId;
   late final  String fromStationId;
   late final  String toStationId;
-  late final  int seatTypeId;
+  late final  int    seatTypeId;
   late final  String orderStatus;
   late final  String orderTime;
   late final  double price;
   late final  String tradeNo;
+
+  Order.name();
 
   Order.fromJson(jsonMap){
     orderId = jsonMap['orderId'] ?? 'unKnown';
@@ -54,6 +58,23 @@ class Order {
     price = jsonMap['price'] ?? 0.0;
     tradeNo = jsonMap['tradeNo'] ?? '无';
   }
+
+  Map<String, dynamic> toJson() => _$OrderToJson(this);
+
+  Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
+    'orderId': instance.orderId,
+    'userId': instance.userId,
+    'passengerId': instance.passengerId,
+    'departureDate': instance.departureDate,
+    'trainRouteId': instance.trainRouteId,
+    'fromStationId': instance.fromStationId,
+    'toStationId': instance.toStationId,
+    'seatTypeId': instance.seatTypeId,
+    'orderStatus': instance.orderStatus,
+    'orderTime': instance.orderTime,
+    'price': instance.price,
+    'tradeNo': instance.tradeNo,
+  };
 }
 
 class OrderGeneral {

@@ -433,6 +433,32 @@ class TicketAndOrderApi{
   static const String _urlGetTicketSeatInfo = "${Server.hostTicket}${Server.query}/ticketSeatInfo";
   static const String _urlGetTicketToPayDetail = "${Server.hostTicket}${Server.query}/ticketToPayDetail";
 
+  static Future<ResultEntity> ticketBooking(Order order, List<String> passengerIds) async {
+    try{
+      Response response = await Http.post(_urlPostBooking,
+          params: {'orderString' : jsonEncode(order),'passengerIdsString' : passengerIds.toString()},
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      print(response);
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        List list = data['data'];
+        List<OrderGeneral> result =  list.map((e) => OrderGeneral.fromJson(e)).toList();
+        return ResultEntity.name( true, 0, "成功", result);
+      }
+    }catch(e){
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
+    }
+  }
+
   static Future<ResultEntity> getOrderPaied() async {
     try{
       Response response = await Http.get(_urlGetSelfPaiedOrder,
