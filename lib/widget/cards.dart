@@ -281,7 +281,7 @@ class UserCard extends StatelessWidget{
           const SizedBox(height: 8,),
           Row(
             children: [
-              const SizedBox(width: 14,),
+              const SizedBox(width: 18,),
               SizedBox(width: 64,
                   child: ClipOval(
                     child: Image.asset('images/default_head.jpg'),)),
@@ -712,8 +712,6 @@ class AllTicketCard extends StatelessWidget{
         return Colors.green;
       case OrderStatus.REFUNDED:
         return Colors.deepPurpleAccent;
-      case OrderStatus.DRAFTED:
-        return Colors.blue;
       default:
         return Colors.blue;
 

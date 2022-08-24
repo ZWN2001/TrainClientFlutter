@@ -425,7 +425,7 @@ class TicketAndOrderApi{
   ///余票
   static const String _urlGetTicketRemain = "${Server.hostTicket}${Server.query}/ticketRemain";
   ///票价
-  static const String _urlGetTicketPrice = "${Server.hostTicket}${Server.query}/ticketPrice";
+  static const String _urlGetTicketPrices = "${Server.hostTicket}${Server.query}/ticketPrices";
   static const String _urlGetSelfTicket = "${Server.hostTicket}${Server.query}/selfTicket";
   static const String _urlGetSelfOrder = "${Server.hostTicket}${Server.query}/selfOrder";
   static const String _urlGetSelfPaiedOrder = "${Server.hostTicket}${Server.query}/selfPaiedOrder";
@@ -551,6 +551,33 @@ class TicketAndOrderApi{
         }
         List list = data['data'];
         List<Order> result =  list.map((e) => Order.fromJson(e)).toList();
+        return ResultEntity.name( true, 0, "成功", result);
+      }
+    }catch(e){
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
+    }
+  }
+
+  static Future<ResultEntity> getTicketPrices(String trainRouteId,
+      String fromStationId, String toStationId) async {
+    try{
+      Response response = await Http.get(_urlGetTicketPrices,
+          params: {'trainRouteId' : trainRouteId, 'fromStationId': fromStationId,
+          'toStationId' : toStationId},
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        List list = data['data'];
+        List<TicketPrice> result =  list.map((e) => TicketPrice.fromJson(e)).toList();
         return ResultEntity.name( true, 0, "成功", result);
       }
     }catch(e){

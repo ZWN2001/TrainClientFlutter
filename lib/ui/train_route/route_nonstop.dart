@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get_core/get_core.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:train_client_flutter/api/api.dart';
 import 'package:train_client_flutter/constant.dart';
+import 'package:train_client_flutter/ui/order/booking_page.dart';
 import 'package:train_client_flutter/util/date_util.dart';
 
 import '../../bean/bean.dart';
 import '../../widget/cards.dart';
+import '../login.dart';
 
 class RouteNoStopPage extends StatefulWidget{
   final DateTime date;
@@ -58,13 +62,7 @@ class RouteNoStopState extends State<RouteNoStopPage>{
         widget.fromStationId, widget.toStationId, DateUtil.date(widget.date));
     if(resultEntity.result){
       _trainRouteList = resultEntity.data;
-      // for (TrainRoute element in _trainRouteList) {
-      //   ResultEntity r = await TrainRouteApi.getTrainRouteTimeInfo(
-      //       element.trainRouteId, element.fromStationId, element.toStationId);
-      //   if(r.result) {
-      //     _ticketRouteTimeInfoMap[element] = r.data;
-      //   }
-      // }
+      _trainRouteList.sort((a,b)=>a.startTime.compareTo(b.startTime));
       _isLoading = false;
       setState((){});
     }else{
@@ -74,54 +72,70 @@ class RouteNoStopState extends State<RouteNoStopPage>{
 
   Widget _routeInfoCard(TrainRoute route){
     double size = 26;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(route.startTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
-                    Row(
-                      children: [
-                        route.formIsStart ? PassStartEndIcon.stationStartIcon(size) : PassStartEndIcon.stationPassIcon(size),
-                        Text(Constant.stationIdMap[route.fromStationId]!.stationName, style: const TextStyle(fontSize: 16),)
-                      ],
-                    )
+    return GestureDetector(
+      onTap: (){
+        if(UserApi.isLogin){
+          Get.to(()=>BookingPage(route: route));
+        }else{
+          Get.to(()=>const LoginPage());
+        }
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(route.startTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+                      Row(
+                        children: [
+                          route.formIsStart ? PassStartEndIcon.stationStartIcon(size) : PassStartEndIcon.stationPassIcon(size),
+                          Text(Constant.stationIdMap[route.fromStationId]!.stationName, style: const TextStyle(fontSize: 16),)
+                        ],
+                      )
 
-                  ],
-                ),
-                const Expanded(child: SizedBox()),
-                Column(
-                  children: [
-                    Text(route.trainRouteId, style: const TextStyle(fontSize: 18)),
-                    const ImageIcon(AssetImage('icons/arrow.png'),size: 26,color: Colors.blue,),
-                    Text('历时 ${route.durationInfo}',style: const TextStyle(color: Colors.grey)),
-                  ],
-                ),
-                const Expanded(child: SizedBox()),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(route.arriveTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
-                    Row(
-                      children: [
-                        route.toIsEnd ? PassStartEndIcon.stationEndIcon(size) : PassStartEndIcon.stationPassIcon(size),
-                        Text(Constant.stationIdMap[route.toStationId]!.stationName, style: const TextStyle(fontSize: 16),)
-                      ],
+                    ],
+                  ),
+                  const Expanded(child: SizedBox()),
+                  Column(
+                    children: [
+                      Text(route.trainRouteId, style: const TextStyle(fontSize: 18)),
+                      const ImageIcon(AssetImage('icons/arrow.png'),size: 26,color: Colors.blue,),
+                      Text('历时 ${route.durationInfo}',style: const TextStyle(color: Colors.grey)),
+                    ],
+                  ),
+                  const Expanded(child: SizedBox()),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(route.arriveTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+                      Row(
+                        children: [
+                          route.toIsEnd ? PassStartEndIcon.stationEndIcon(size) : PassStartEndIcon.stationPassIcon(size),
+                          Text(Constant.stationIdMap[route.toStationId]!.stationName, style: const TextStyle(fontSize: 16),)
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: route.tickets.keys.map((e) =>
+                    Expanded(
+                        child: Text('${Constant.seatIdToTypeMap[e.toString()]}:${route.tickets[e]}张')
                     )
-                  ],
-                ),
-              ],
-            ),
-            Row(
-              children: route.tickets.keys.map((e) => Expanded(child: Text('${Constant.seatIdToTypeMap[e]}剩余：${route.tickets[e]}张'))).toList(),
-            )
-          ],
+                ).toList(),
+              )
+            ],
+          ),
         ),
       ),
     );

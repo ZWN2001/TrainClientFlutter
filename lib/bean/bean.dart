@@ -80,7 +80,6 @@ class OrderStatus {
   static const String TIMEOUT = "支付超时";
   static const String PAIED = "已支付";
   static const String REFUNDED = "已退票";
-  static const String DRAFTED = "已出票";
   static const String REBOOK = "已改签";
 }
 
@@ -96,7 +95,7 @@ class Passenger {
     passengerId = jsonMap['passengerId'] ?? 'unKnown';
     passengerName = jsonMap['passengerName'] ?? 'unKnown';
     phoneNum = jsonMap['phoneNum'] ?? 'unKnown';
-    role = jsonMap['role'] ?? 'unKnown';
+    role = jsonMap['prole'] ?? 'unKnown';
   }
 
   Passenger();
@@ -107,7 +106,7 @@ class Passenger {
       'passengerId': passengerId,
       'passengerName': passengerName,
       'phoneNum': phoneNum,
-      'role': role,
+      'prole': role,
     };
   }
 }
@@ -238,7 +237,6 @@ class TrainRoute{
       }
     }
     Map<String, dynamic> map = jsonMap['tickets'] ?? {};
-    print(map);
     tickets = {};
     map.forEach((key, value) {
       int keyInt = int.parse(key);
@@ -269,6 +267,17 @@ class TicketRouteTimeInfo {
     }
     arriveTime = arriveTimeInfo;
     durationInfo = jsonMap['durationInfo'] ?? 'unKnown';
+  }
+
+}
+
+class TicketPrice {
+  late final int seatTypeId;
+  late final double price;
+
+  TicketPrice.fromJson(jsonMap){
+    seatTypeId = jsonMap['seatTypeId'] ?? 'unKnown';
+    price = jsonMap['price'] ?? 0.0;
   }
 
 }

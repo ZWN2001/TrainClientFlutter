@@ -63,7 +63,7 @@ class MinePageState extends State<MinePage> {
             const SizedBox(height: 8,),
             Row(
               children: [
-                const SizedBox(width: 14,),
+                const SizedBox(width: 18,),
                 SizedBox(width: 64,
                     child: ClipOval(
                       child: Image.asset('images/default_head.jpg'),)),
