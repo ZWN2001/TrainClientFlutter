@@ -589,7 +589,7 @@ class TicketAndOrderApi{
       Response response = await Http.get(_urlGetSelfTicket,
           params: {'userId' : UserApi.getUserId()},
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
-      Map<String, dynamic> data = json.decode(response.data);
+      Map<String, dynamic> data = response.data;
       if (response.statusCode != 200) {
         if (response.statusCode! >= 500) {
           return ResultEntity.name(false, response.statusCode!, '服务器异常', null);

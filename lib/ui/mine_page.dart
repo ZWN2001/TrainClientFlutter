@@ -20,7 +20,7 @@ class MinePageState extends State<MinePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('我的'), elevation: 0,),
+        appBar: AppBar(title: const Text('我的'), elevation: 0, automaticallyImplyLeading: false),
         body: Container(
           decoration: const BoxDecoration(
               gradient: LinearGradient(

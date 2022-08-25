@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage>{
         .size
         .height;
     return Scaffold(
-      appBar: AppBar(title: const Text('首页'),),
+      appBar: AppBar(title: const Text('首页'), automaticallyImplyLeading: false),
       body: SingleChildScrollView(
         child: Stack(
           children: [

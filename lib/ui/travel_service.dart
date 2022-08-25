@@ -7,7 +7,7 @@ class TravelService extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('出行服务'),),
+      appBar: AppBar(title: const Text('出行服务'), automaticallyImplyLeading: false),
       body: GestureDetector(
         child: Image.asset('images/travel_service.jpg'),
         onTap: (){

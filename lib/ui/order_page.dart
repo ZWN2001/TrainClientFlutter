@@ -9,7 +9,7 @@ class OrderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('订单'),),
+      appBar: AppBar(title: const Text('订单'), automaticallyImplyLeading: false),
       body: SingleChildScrollView(
         child: Column(
           children: [

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:train_client_flutter/constant.dart';
 
 import '../../api/api.dart';
 import '../../bean/bean.dart';
@@ -29,6 +30,7 @@ class OrderDetailState extends State<OrderDetailPage>{
   @override
   void initState() {
     super.initState();
+    _order = null;
     _initOrder();
   }
 
@@ -43,7 +45,7 @@ class OrderDetailState extends State<OrderDetailPage>{
         body: _loading ?
         const Center(child: CircularProgressIndicator()) :
         (_order == null ?
-        const Center(child: Text('无订单需要支付', style: TextStyle(fontSize: 20)))
+        const Center(child: Text('无订单信息', style: TextStyle(fontSize: 20)))
             : _haveOrder())
     );
   }
@@ -128,7 +130,7 @@ class OrderDetailState extends State<OrderDetailPage>{
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(_timeInfo.startTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
-                    Text(' ${_order!.fromStationId}')
+                    Text(' ${Constant.stationIdMap[_order!.fromStationId]?.stationName}')
                   ],
                 ),
                 const Expanded(child: SizedBox()),
@@ -144,7 +146,7 @@ class OrderDetailState extends State<OrderDetailPage>{
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(_timeInfo.arriveTime, style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
-                    Text('${_order!.toStationId} ')
+                    Text('${Constant.stationIdMap[_order!.toStationId]?.stationName} ')
                   ],
                 ),
               ],
@@ -283,8 +285,6 @@ class OrderDetailState extends State<OrderDetailPage>{
           }else if(list.length == 3){
             _timeInfo.durationInfo = "${list[0]}天${list[1]}小时${list[2]}分钟";
           }
-
-          //对于已出票&改签：查询车厢号与座号
 
         }else{
           Fluttertoast.showToast(msg: '初始化车次时间失败');
