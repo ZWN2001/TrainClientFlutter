@@ -78,6 +78,7 @@ class Http{
 
 class Server{
   static const String baseHost = "http://10.0.2.2:8081";
+  // static const String baseHost = "http://192.168.0.5:8081";
   static const String query = "/query";
   static const String command = "/command";
   static const String hostPay = "/alipay";
@@ -219,7 +220,57 @@ class UserApi{
 }
 
 class PayApi{
-  String urlGetPay = "${Server.hostPay}/pay";
+  static const String _urlGetPay = "${Server.hostPay}/pay";
+  static const String _urlGetOrderStatus = "${Server.hostTicket}${Server.query}/orderStatus";
+
+  static Future<ResultEntity> ticketPay(String orderId, List<String> passengerId, int payMethod) async {
+    try{
+      Response response = await Http.get(_urlGetPay,
+          params: {'orderId' : orderId, 'passengerIdString' : passengerId.toString(),
+          'payMethod' : payMethod},
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        // PayResult result = PayResult.fromJson(data['data']);
+        return ResultEntity.name( true, 0, "成功", data['data']);
+      }
+    }catch(e){
+      debugPrint(e.toString());
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
+    }
+  }
+  static Future<ResultEntity> getOrderStatus(String orderId) async {
+    try{
+      Response response = await Http.get(_urlGetOrderStatus,
+          params: {'orderId' : orderId,},
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        return ResultEntity.name( true, 0, "成功", data['data']);
+      }
+    }catch(e){
+      debugPrint(e.toString());
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
+    }
+  }
 }
 
 class DataApi{

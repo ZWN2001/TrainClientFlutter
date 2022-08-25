@@ -48,6 +48,7 @@ dependencies:
   material_floating_search_bar: ^0.3.7
   json_annotation: ^4.1.0
   timelines: ^0.1.0
+  qr_flutter: ^4.0.0
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:train_client_flutter/api/api.dart';
 import 'package:train_client_flutter/constant.dart';
 import 'package:train_client_flutter/ui/main_page.dart';
@@ -216,10 +217,8 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
                     padding: const EdgeInsets.only(left: 12,right: 24),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(primary: Colors.deepOrange),
+                      onPressed: _orderPay,
                       child: const Text('立即支付'),
-                      onPressed: (){
-
-                      },
                     ),
                   )
               ),
@@ -297,6 +296,38 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
       }else{
         Fluttertoast.showToast(msg: resultEntity.message);
       }
+    }
+  }
+
+  Future<void> _orderPay() async {
+    List<String> allPassengerIdList = [];
+    for (var element in _passengerList) {
+      allPassengerIdList.add(element.passengerId);
+    }
+    ResultEntity resultEntity = await PayApi.ticketPay(_order!.orderId, allPassengerIdList, 0);
+    if(resultEntity.result){
+     String result = resultEntity.data;
+     Get.showOverlay(
+         asyncFunction: () async {
+           ResultEntity resultEntity;
+           while (true) {
+             resultEntity = await PayApi.getOrderStatus(_order!.orderId);
+             if (resultEntity.result && resultEntity.data) {
+               Fluttertoast.showToast(msg: '支付成功');
+               Get.offAll(()=>const MainPage(targetIndex: 2,));
+               break;
+             }
+           }
+         },
+         loadingWidget: Dialog(
+           child: Container(
+             padding: const EdgeInsets.all(8),
+             alignment: Alignment.center,
+             child: QrImage(data: result),
+           ),
+         ));
+    }else{
+      Fluttertoast.showToast(msg: resultEntity.message);
     }
   }
 

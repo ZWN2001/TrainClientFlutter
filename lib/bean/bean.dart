@@ -1,4 +1,6 @@
 
+import 'dart:typed_data';
+
 import 'package:azlistview/azlistview.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:lpinyin/lpinyin.dart';
@@ -302,6 +304,16 @@ class TicketPrice {
   }
 
 }
+
+// class PayResult {
+//   late final List<String> results;
+//   late final Uint8List? qrcode;
+//
+//   PayResult.fromJson(jsonMap){
+//     results = jsonMap['results'] ?? [];
+//     qrcode = jsonMap['qrcode'];
+//   }
+// }
 
 
 //模版类仅用来标识
