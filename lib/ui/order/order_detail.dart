@@ -70,7 +70,6 @@ class OrderDetailState extends State<OrderDetailPage>{
                   _tipsCard(),
                   const SizedBox(height: 8,),
                   _orderInfoCard(),
-                  // const SizedBox(height: ,),
                   _ticketInfoCard(),
                   const SizedBox(height: 8,),
                   (_order!.orderStatus == OrderStatus.PAIED || _order!.orderStatus == OrderStatus.REBOOK) ?
@@ -79,7 +78,12 @@ class OrderDetailState extends State<OrderDetailPage>{
               ),
             )
         ),
-        Positioned(left:0,bottom:0,right:0,child: _settlementCard())
+        if(_order!.orderStatus == OrderStatus.PAIED)
+          Positioned(left:0,bottom:0,right:0,child: _paiedSettlementCard()),
+        if(_order!.orderStatus == OrderStatus.REBOOK)
+          Positioned(left:0,bottom:0,right:0,child: _rebookedSettlementCard()),
+        if(_order!.orderStatus != OrderStatus.PAIED && _order!.orderStatus != OrderStatus.REBOOK )
+          Positioned(left:0,bottom:0,right:0,child: _commonSettlementCard()),
       ],
     );
   }
@@ -172,7 +176,62 @@ class OrderDetailState extends State<OrderDetailPage>{
     );
   }
 
-  Widget _settlementCard(){
+  Widget _orderInfoCard(){
+    return Card(
+        child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(child: Text('订单号：${_order!.orderId}'),)
+                  ],
+                ),
+                const SizedBox(height: 4,),
+                Text('订单创建时间：${_order!.orderTime}'),
+                const SizedBox(height: 4,),
+                Text('交易流水号：${_order!.tradeNo}')
+              ],
+            )
+        )
+    );
+  }
+
+  Widget _commonSettlementCard(){
+    return Container(
+      width: double.infinity,
+      height: 60,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8.0),
+          boxShadow: const [
+            BoxShadow(
+                color: Colors.black12,
+                offset: Offset(0.0, -4.0), //阴影xy轴偏移量
+                blurRadius: 15.0, //阴影模糊程度
+                spreadRadius: 1.0 //阴影扩散程度
+            )
+          ]),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const SizedBox(height: 16,),
+          Row(
+            children: [
+              const SizedBox(width: 24,),
+              const Text("总金额:  ",style: TextStyle(fontSize: 16,color: Colors.grey),),
+              const Text('￥',style: TextStyle(fontSize: 16,color: Colors.deepOrange),),
+              Text('$_allPrice',style: const TextStyle(fontSize: 24,color: Colors.deepOrange),),
+            ],
+          ),
+          const SizedBox(height: 6,),
+        ],
+      ),
+    );
+  }
+
+  Widget _paiedSettlementCard(){
     return Container(
       width: double.infinity,
       height: 100,
@@ -206,7 +265,7 @@ class OrderDetailState extends State<OrderDetailPage>{
                   child: Padding(
                     padding: const EdgeInsets.only(left: 24,right: 12),
                     child: ElevatedButton(
-                      child: const Text('取消订单'),
+                      child: const Text('退票'),
                       onPressed: (){
 
                       },
@@ -217,8 +276,7 @@ class OrderDetailState extends State<OrderDetailPage>{
                   child: Padding(
                     padding: const EdgeInsets.only(left: 12,right: 24),
                     child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.deepOrange),
-                      child: const Text('立即支付'),
+                      child: const Text('改签'),
                       onPressed: (){
 
                       },
@@ -232,25 +290,44 @@ class OrderDetailState extends State<OrderDetailPage>{
     );
   }
 
-  Widget _orderInfoCard(){
-    return Card(
-        child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(child: Text('订单号：${_order!.orderId}'),)
-                  ],
-                ),
-                const SizedBox(height: 4,),
-                Text('订单创建时间：${_order!.orderTime}'),
-                const SizedBox(height: 4,),
-                Text('交易流水号：${_order!.tradeNo}')
-              ],
+  Widget _rebookedSettlementCard(){
+    return Container(
+      width: double.infinity,
+      height: 64,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8.0),
+          boxShadow: const [
+            BoxShadow(
+                color: Colors.black12,
+                offset: Offset(0.0, -4.0), //阴影xy轴偏移量
+                blurRadius: 15.0, //阴影模糊程度
+                spreadRadius: 1.0 //阴影扩散程度
             )
-        )
+          ]),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const SizedBox(height: 8,),
+          Row(
+            children: [
+              const SizedBox(width: 24,),
+              const Text("总金额:  ",style: TextStyle(fontSize: 16,color: Colors.grey),),
+              const Text('￥',style: TextStyle(fontSize: 16,color: Colors.deepOrange),),
+              Text('$_allPrice',style: const TextStyle(fontSize: 24,color: Colors.deepOrange),),
+              const Expanded(child: SizedBox()),
+              ElevatedButton(
+                child: const Text('退票'),
+                onPressed: (){
+
+                },
+              ),
+              const SizedBox(width: 18,),
+            ],
+          ),
+          const SizedBox(height: 6,),
+        ],
+      ),
     );
   }
 

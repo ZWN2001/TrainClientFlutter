@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:train_client_flutter/constant.dart';
 import 'package:train_client_flutter/ui/order/order_detail.dart';
+import 'package:train_client_flutter/ui/order/order_unpaied.dart';
 import 'package:train_client_flutter/ui/passenger/passenger_edit.dart';
 import 'package:train_client_flutter/util/utils.dart';
 
@@ -511,7 +512,7 @@ class OrderPassengerWithSeatInfoCard extends StatelessWidget{
                         ),
                       ),
                       const Expanded(child: SizedBox()),
-                      Text('${passenger.seatTypeId}  ￥${passenger.price}',//TODO
+                      Text('${Constant.seatIdToTypeMap[passenger.seatTypeId]}  ￥${passenger.price}',//TODO
                         style: const TextStyle(color: Colors.deepOrange,fontSize: 18),)
                     ],
                   ),
@@ -687,7 +688,11 @@ class AllTicketCard extends StatelessWidget{
                     child: ElevatedButton(
                       child: const Text('详细信息'),
                       onPressed: (){
-                        Get.to(()=>OrderDetailPage(orderId: orderGeneral.orderId));
+                        if(orderGeneral.orderStatus == '未支付'){
+                          Get.to(()=>const OrderUnpaiedPage());
+                        }else{
+                          Get.to(()=>OrderDetailPage(orderId: orderGeneral.orderId));
+                        }
                       },
                     ),
                   ),
