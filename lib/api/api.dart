@@ -420,7 +420,7 @@ class TicketAndOrderApi{
   ///改签
   static const String _urlPostRebook = "${Server.hostTicket}${Server.command}/rebook";
   ///取票
-  static const String _urlPostGet = "${Server.hostTicket}${Server.command}/get";
+  // static const String _urlPostGet = "${Server.hostTicket}${Server.command}/get";
   static const String _urlPostBookingCancel = "${Server.hostTicket}${Server.command}/bookingCancel";
   ///余票
   static const String _urlGetTicketRemain = "${Server.hostTicket}${Server.query}/ticketRemain";
@@ -438,7 +438,6 @@ class TicketAndOrderApi{
       Response response = await Http.post(_urlPostBooking,
           params: {'orderString' : jsonEncode(order),'passengerIdsString' : passengerIds.toString()},
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
-      print(response);
       Map<String, dynamic> data = response.data;
       if (response.statusCode != 200) {
         if (response.statusCode! >= 500) {
@@ -456,6 +455,31 @@ class TicketAndOrderApi{
       }
     }catch(e){
       return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
+    }
+  }
+
+  static Future<ResultEntity> ticketBookingCancel(String departureDate, String trainRouteId, List<String> passengetIds) async {
+    try{
+      Response response = await Http.post(_urlPostBookingCancel,
+          params: {'departureDate' : departureDate, 'trainRouteId': trainRouteId,
+            'passengetIdString' : passengetIds.toString()},
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        return ResultEntity.name( true, 0, "成功", null);
+      }
+    }catch(e){
+      debugPrint(e.toString());
+      return ResultEntity.name(false, -2, '失败,请检查网络或重试', null);
     }
   }
 

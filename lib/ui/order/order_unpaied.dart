@@ -9,6 +9,7 @@ import 'package:train_client_flutter/ui/main_page.dart';
 
 import '../../bean/bean.dart';
 import '../../widget/cards.dart';
+import '../../widget/dialog.dart';
 
 class OrderUnpaiedPage extends StatefulWidget{
   const OrderUnpaiedPage({Key? key}) : super(key: key);
@@ -31,7 +32,8 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
   @override
   void initState() {
     super.initState();
-    _initOrder();
+    _timer = null;
+    _orderInit();
   }
 
   @override
@@ -204,10 +206,8 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
                   child: Padding(
                     padding: const EdgeInsets.only(left: 24,right: 12),
                     child: ElevatedButton(
+                      onPressed: _orderCancel,
                       child: const Text('取消订单'),
-                      onPressed: (){
-
-                      },
                     ),
                   )
               ),
@@ -230,7 +230,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
     );
   }
 
-  Future<void> _initOrder() async {
+  Future<void> _orderInit() async {
     ResultEntity orderResult = await TicketAndOrderApi.getTicketToPayDetail();
     if(orderResult.result){
       _res = orderResult.data;
@@ -239,13 +239,14 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
         _order = _res[0];
         DateTime dateTime = DateTime.parse(_order!.orderTime);
         DateTime now = DateTime.now();
-        _countdownTime = 5 * 60 - now.difference(dateTime).inSeconds;
-        if(_countdownTime<0){
-          _order = null;
-          return;
-        }
+        // _countdownTime = 5 * 60 - now.difference(dateTime).inSeconds;
+        // if(_countdownTime<0){
+        //   _order = null;
+        // _loading = false;
+        //   return;
+        // }
         //TODO:暂时如此
-        // _countdownTime = 5 * 600 ;
+        _countdownTime = 5 * 60 ;
         _startCountdownTimer();
         //初始化各乘员
         for(Order o in _res){
@@ -270,18 +271,33 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
           }else if(list.length == 3){
             _timeInfo.durationInfo = "${list[0]}天${list[1]}小时${list[2]}分钟";
           }
-
         }else{
           Fluttertoast.showToast(msg: '初始化车次时间失败');
         }
-      }else{
-        _timer = null;
       }
     }else{
-      _timer = null;
       Fluttertoast.showToast(msg: orderResult.message);
     }
     setState((){_loading = false;});
+  }
+
+  Future<void> _orderCancel() async {
+    bool? delete = await MyDialog.showDeleteConfirmDialog(context: context,
+        tips: "确定取消订单吗？");
+    if(delete != null && delete){
+      List<String> allPassengerIdList = [];
+      for (var element in _passengerList) {
+        allPassengerIdList.add(element.passengerId);
+      }
+      ResultEntity resultEntity = await TicketAndOrderApi.ticketBookingCancel(_order!.departureDate,_order!.trainRouteId,allPassengerIdList);
+      if(resultEntity.result){
+        Fluttertoast.showToast(msg: '取消成功');
+        _order = null;
+        Get.back();
+      }else{
+        Fluttertoast.showToast(msg: resultEntity.message);
+      }
+    }
   }
 
   void _startCountdownTimer() {
