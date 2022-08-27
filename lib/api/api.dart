@@ -219,7 +219,6 @@ class UserApi{
   }
 
   static void initUserFromCache() {
-    print(Store.get('token'));
     if (Store.get('token') != '') {
       User user = User.name(
           userId: Store.getString('user_userId'),
@@ -488,7 +487,7 @@ class TicketAndOrderApi{
   // static const String _urlPostGet = "${Server.hostTicket}${Server.command}/get";
   static const String _urlPostBookingCancel = "${Server.hostTicket}${Server.command}/bookingCancel";
   ///余票
-  static const String _urlGetTicketRemain = "${Server.hostTicket}${Server.query}/ticketRemain";
+  // static const String _urlGetTicketRemain = "${Server.hostTicket}${Server.query}/ticketRemain";
   ///票价
   static const String _urlGetTicketPrices = "${Server.hostTicket}${Server.query}/ticketPrices";
   static const String _urlGetSelfTicket = "${Server.hostTicket}${Server.query}/selfTicket";
@@ -546,6 +545,31 @@ class TicketAndOrderApi{
     }catch(e){
       debugPrint(e.toString());
       return ResultEntity.name(false, -2, '失败,请检查网络或重试', null);
+    }
+  }
+
+  static Future<ResultEntity> ticketRefund(String orderId) async {
+    try{
+      Response response = await Http.post(_urlPostRefund,
+          params: {'orderId' : orderId},
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        List list = data['data'];
+        List<OrderGeneral> result =  list.map((e) => OrderGeneral.fromJson(e)).toList();
+        return ResultEntity.name( true, 0, "成功", result);
+      }
+    }catch(e){
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
     }
   }
 

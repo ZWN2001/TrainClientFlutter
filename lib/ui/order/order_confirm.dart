@@ -26,7 +26,7 @@ class OrderConfirmState extends State<OrderConfirmPage> {
   late TrainRoute _route;
   int? _selectedType ;
   bool _isLoading = true;
-  static List<SeatSelectRow> _seatSelectRows = [];
+  static final List<SeatSelectRow> _seatSelectRows = [];
 
   @override
   void initState() {
