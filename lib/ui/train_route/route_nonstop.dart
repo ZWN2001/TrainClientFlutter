@@ -4,7 +4,7 @@ import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:train_client_flutter/api/api.dart';
 import 'package:train_client_flutter/constant.dart';
-import 'package:train_client_flutter/ui/order/booking_page.dart';
+import 'package:train_client_flutter/ui/order/order_confirm.dart';
 import 'package:train_client_flutter/util/date_util.dart';
 
 import '../../bean/bean.dart';
@@ -75,7 +75,7 @@ class RouteNoStopState extends State<RouteNoStopPage>{
     return GestureDetector(
       onTap: (){
         if(UserApi.isLogin){
-          Get.to(()=>BookingPage(route: route,departureDate: widget.date,));
+          Get.to(()=>OrderConfirmPage(route: route,departureDate: widget.date,));
         }else{
           Get.to(()=>const LoginPage());
         }

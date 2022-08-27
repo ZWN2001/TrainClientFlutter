@@ -217,6 +217,20 @@ class UserApi{
     Store.set('user_email', userInfo.email ?? 'unKnown');
     _curUser = userInfo;
   }
+
+  static void initUserFromCache() {
+    print(Store.get('token'));
+    if (Store.get('token') != '') {
+      User user = User.name(
+          userId: Store.getString('user_userId'),
+          userName: Store.getString('user_userName'),
+          role: Store.getString('user_role'),
+          gender: Store.getBool('user_gender'),
+          email: Store.getString('user_email')
+      );
+      _curUser = user;
+    }
+  }
 }
 
 class PayApi{
@@ -484,10 +498,11 @@ class TicketAndOrderApi{
   static const String _urlGetTicketSeatInfo = "${Server.hostTicket}${Server.query}/ticketSeatInfo";
   static const String _urlGetTicketToPayDetail = "${Server.hostTicket}${Server.query}/ticketToPayDetail";
 
-  static Future<ResultEntity> ticketBooking(Order order, List<String> passengerIds) async {
+  static Future<ResultEntity> ticketBooking(Order order, List<String> passengerIds, List<int> seatSelects) async {
     try{
       Response response = await Http.post(_urlPostBooking,
-          params: {'orderString' : jsonEncode(order),'passengerIdsString' : passengerIds.toString()},
+          params: {'orderString' : jsonEncode(order),'passengerIdsString' : passengerIds.toString(),
+          'seatLocationListString':seatSelects.toString()},
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
       Map<String, dynamic> data = response.data;
       if (response.statusCode != 200) {

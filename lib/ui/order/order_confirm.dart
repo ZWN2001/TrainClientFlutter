@@ -11,21 +11,22 @@ import '../../constant.dart';
 import '../../util/date_util.dart';
 import '../../widget/cards.dart';
 
-class BookingPage extends StatefulWidget{
-  const BookingPage({Key? key, required this.route, required this.departureDate}) : super(key: key);
+class OrderConfirmPage extends StatefulWidget{
+  const OrderConfirmPage({Key? key, required this.route, required this.departureDate}) : super(key: key);
   final TrainRoute route;
   final DateTime departureDate;
 
   @override
-  State<StatefulWidget> createState() => BookingState();
+  State<StatefulWidget> createState() => OrderConfirmState();
 }
 
-class BookingState extends State<BookingPage> {
+class OrderConfirmState extends State<OrderConfirmPage> {
   List<TicketPrice> _prices = [];
   final List<Passenger> _passengers = [];
   late TrainRoute _route;
   int? _selectedType ;
   bool _isLoading = true;
+  static List<SeatSelectRow> _seatSelectRows = [];
 
   @override
   void initState() {
@@ -77,6 +78,8 @@ class BookingState extends State<BookingPage> {
               const SizedBox(height: 8,),
               if(_passengers.isNotEmpty)
                 _passengerCards(),
+              if(_passengers.isNotEmpty)
+                _selectSeatCard(),
               const SizedBox(height: 8,),
               Image.asset('images/orderTips.jpg'),
               const SizedBox(height: 12,),
@@ -233,6 +236,10 @@ class BookingState extends State<BookingPage> {
         if(addedPassengerList != null){
           _passengers.clear();
           _passengers.addAll(addedPassengerList);
+          _seatSelectRows.clear();
+          for(int i = 0; i < _passengers.length; i++){
+            _seatSelectRows.add(SeatSelectRow());
+          }
         }
         setState((){});
       },
@@ -296,6 +303,29 @@ class BookingState extends State<BookingPage> {
     );
   }
 
+  Widget _selectSeatCard(){
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('选座服务',style: TextStyle(color: Colors.orange),),
+                const Expanded(child: SizedBox()),
+                Text('可选${_seatSelectRows.length}个座位',
+                    style: const TextStyle(color: Colors.blue))
+              ],
+            ),
+            const SizedBox(height: 6,),
+            ..._seatSelectRows
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<void> _getData() async {
     ResultEntity resultEntity = await TicketAndOrderApi.getTicketPrices(
         _route.trainRouteId, _route.fromStationId, _route.toStationId);
@@ -308,13 +338,135 @@ class BookingState extends State<BookingPage> {
   }
 
   Future<void> _submitOrder(Order order, List<String> passengerIds) async {
-    ResultEntity resultEntity = await TicketAndOrderApi.ticketBooking(order, passengerIds);
-    if(resultEntity.result){
-      Get.to(() => const OrderUnpaiedPage());
-    }else{
-      Fluttertoast.showToast(msg: resultEntity.message);
+    bool hasNotChoice = false;
+    List<int> seatSelects = [];
+    for (var element in _seatSelectRows) {
+      if(element.selectIndex == null){
+        Fluttertoast.showToast(msg: '有乘员未选座');
+        hasNotChoice = true;
+        break;
+      }else{
+        seatSelects.add(element.selectIndex!);
+      }
+    }
+    if(!hasNotChoice){
+      ResultEntity resultEntity = await TicketAndOrderApi.ticketBooking(order, passengerIds, seatSelects);
+      if(resultEntity.result){
+        Get.to(() => const OrderUnpaiedPage());
+      }else{
+        Fluttertoast.showToast(msg: resultEntity.message);
+      }
     }
   }
-  
+}
+
+class SeatSelectRow extends StatefulWidget{
+  int? selectIndex;
+  SeatSelectRow({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _SeatSelectRowState();
+
+  int? getSelectIndex() => selectIndex;
+}
+
+class _SeatSelectRowState extends State<SeatSelectRow>{
+  int index1 = 1;
+  int index2 = 2;
+  int index3 = 3;
+  int index4 = 4;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.selectIndex = null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Expanded(
+            child: Center(
+              child: Text('窗'),
+            ),
+        ),
+
+        Expanded(
+          child: ElevatedButton(
+            onPressed: (){
+              setState((){
+                widget.selectIndex = index1;
+              });
+            },
+            style: ButtonStyle(backgroundColor: widget.selectIndex == index1?
+            MaterialStateProperty.all(const Color.fromRGBO(206, 231, 255, 0.9)):
+            MaterialStateProperty.all(Colors.white70)),
+            child: Text('$index1',style: const TextStyle(color: Colors.indigo),),
+          )
+        ),
+
+        const SizedBox(width: 6,),
+
+        Expanded(
+            child: ElevatedButton(
+              onPressed: (){
+                setState((){
+                  widget.selectIndex = index2;
+                });
+              },
+              style: ButtonStyle(backgroundColor: widget.selectIndex == index2?
+              MaterialStateProperty.all(const Color.fromRGBO(206, 231, 255, 0.9)):
+              MaterialStateProperty.all(Colors.white70)),
+              child: Text('$index2',style: const TextStyle(color: Colors.indigo),),
+            )
+        ),
+
+        const Expanded(
+          child: Center(
+            child: Text('过道'),
+          ),
+        ),
+
+        Expanded(
+            child: ElevatedButton(
+              onPressed: (){
+              setState((){
+                widget.selectIndex = index3;
+              });
+              },
+              style: ButtonStyle(backgroundColor: widget.selectIndex == index3?
+              MaterialStateProperty.all(const Color.fromRGBO(206, 231, 255, 0.9)):
+              MaterialStateProperty.all(Colors.white70)),
+              child: Text('$index3',style: const TextStyle(color: Colors.indigo),),
+            )
+        ),
+
+        const SizedBox(width: 6,),
+
+        Expanded(
+            child: ElevatedButton(
+              onPressed: (){
+                setState((){
+                  widget.selectIndex = index4;
+                });
+              },
+              style: ButtonStyle(backgroundColor: widget.selectIndex == index4?
+              MaterialStateProperty.all(const Color.fromRGBO(206, 231, 255, 0.9)):
+              MaterialStateProperty.all(Colors.white70)),
+              child: Text('$index4',style: const TextStyle(color: Colors.indigo),),
+            )
+        ),
+
+        const SizedBox(width: 6,),
+
+        const Expanded(
+          child: Center(
+            child: Text('窗'),
+          ),
+        ),
+      ],
+    );
+  }
 
 }
