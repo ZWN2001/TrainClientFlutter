@@ -75,7 +75,10 @@ class RouteNoStopState extends State<RouteNoStopPage>{
     return GestureDetector(
       onTap: (){
         if(UserApi.isLogin){
-          Get.to(()=>OrderConfirmPage(route: route,departureDate: widget.date,));
+          Get.to(()=>OrderConfirmPage(
+            route: route,
+            departureDate: widget.date,
+            isNostop: true,));
         }else{
           Get.to(()=>const LoginPage());
         }
@@ -124,7 +127,7 @@ class RouteNoStopState extends State<RouteNoStopPage>{
                   ),
                 ],
               ),
-              const SizedBox(height: 8,),
+              const Divider(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

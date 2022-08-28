@@ -82,7 +82,9 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
                                     }else{
                                       transfer = RouteTransferPage(
                                           key:UniqueKey(),
-                                          date: _date);
+                                          date: _date,
+                                          fromStationId: fromStationId,
+                                          toStationId: toStationId);
                                     }
                                     setState((){});
                                   }
@@ -115,7 +117,9 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
                                       }else{
                                         transfer = RouteTransferPage(
                                             key:UniqueKey(),
-                                            date: _date);
+                                            date: _date,
+                                            fromStationId: fromStationId,
+                                            toStationId: toStationId);
                                       }
                                       setState((){});
                                     }
@@ -156,7 +160,9 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
                                     }else{
                                       transfer = RouteTransferPage(
                                           key:UniqueKey(),
-                                          date: _date);
+                                          date: _date,
+                                          fromStationId: fromStationId,
+                                          toStationId: toStationId);
                                     }
                                     setState((){});
                                   }

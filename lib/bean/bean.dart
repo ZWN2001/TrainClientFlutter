@@ -219,7 +219,9 @@ class TrainRouteAtom {
 
 }
 
-class TrainRoute{
+class MyRoute{}
+
+class TrainRoute extends MyRoute{
   late final String trainRouteId;
   late final String fromStationId;
   late final String toStationId;
@@ -273,6 +275,75 @@ class TrainRoute{
   }
 }
 
+class TrainRouteTransfer extends MyRoute{
+  late final String trainRouteId1;
+  late final String trainRouteId2;
+  late final String fromStationId;
+  late final String transStationId;
+  late final String toStationId;
+  //始发站发车时间
+  late final String startTimeFrom;
+  //换乘站到达时间
+  late final String arriveTimeTrans;
+  //换乘站发车时间
+  late final String startTimeTrans;
+  //目的站到达时间
+  late final String arriveTimeTo;
+  late final int durationAll;
+  late final int durationTransfer;
+  late final Map<int, int> ticketsFirst;
+  late final Map<int, int> ticketsNext;
+
+  TrainRouteTransfer.fromJson(jsonMap){
+    trainRouteId1 = jsonMap['trainRouteId1'] ?? 'u';
+    trainRouteId2 = jsonMap['trainRouteId2'] ?? 'u';
+    fromStationId = jsonMap['fromStationId'] ?? 'u';
+    transStationId = jsonMap['transStationId'] ?? 'u';
+    toStationId = jsonMap['toStationId'] ?? 'u';
+
+    String startTimeFromInfo = jsonMap['startTimeFrom'] ?? 'u';
+    if(startTimeFromInfo != 'u'){
+      startTimeFromInfo = startTimeFromInfo.substring(0,5);
+    }
+    startTimeFrom = startTimeFromInfo;
+
+    String arriveTimeTransInfo = jsonMap['arriveTimeTrans'] ?? 'u';
+    if(arriveTimeTransInfo != 'u'){
+      arriveTimeTransInfo = arriveTimeTransInfo.substring(0,5);
+    }
+    arriveTimeTrans = arriveTimeTransInfo;
+
+    String startTimeTransInfo = jsonMap['startTimeTrans'] ?? 'u';
+    if(startTimeTransInfo != 'u'){
+      startTimeTransInfo = startTimeTransInfo.substring(0,5);
+    }
+    startTimeTrans = startTimeTransInfo;
+
+    String arriveTimeToInfo = jsonMap['arriveTimeTo'] ?? 'u';
+    if(arriveTimeToInfo != 'u'){
+      arriveTimeToInfo = arriveTimeToInfo.substring(0,5);
+    }
+    arriveTimeTo = arriveTimeToInfo;
+
+    durationTransfer = jsonMap['durationTransfer'] ?? 0;
+    // durationAll = jsonMap['durationAll'] ?? 0;
+
+    Map<String, dynamic> map1 = jsonMap['ticketsFirst'] ?? {};
+    ticketsFirst = {};
+    map1.forEach((key, value) {
+      int keyInt = int.parse(key);
+      ticketsFirst[keyInt] = value;
+    });
+
+    Map<String, dynamic> map2 = jsonMap['ticketsNext'] ?? {};
+    ticketsNext = {};
+    map2.forEach((key, value) {
+      int keyInt = int.parse(key);
+      ticketsNext[keyInt] = value;
+    });
+  }
+}
+
 class TicketRouteTimeInfo {
   late final String startTime;
   late final String arriveTime;
@@ -304,16 +375,6 @@ class TicketPrice {
   }
 
 }
-
-// class PayResult {
-//   late final List<String> results;
-//   late final Uint8List? qrcode;
-//
-//   PayResult.fromJson(jsonMap){
-//     results = jsonMap['results'] ?? [];
-//     qrcode = jsonMap['qrcode'];
-//   }
-// }
 
 
 //模版类仅用来标识

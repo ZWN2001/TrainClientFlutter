@@ -564,9 +564,7 @@ class TicketAndOrderApi{
         if(data['code'] != 200){
           return ResultEntity.name(false, data['code'], data['message'], null);
         }
-        List list = data['data'];
-        List<OrderGeneral> result =  list.map((e) => OrderGeneral.fromJson(e)).toList();
-        return ResultEntity.name( true, 0, "成功", result);
+        return ResultEntity.name( true, 0, "成功", null);
       }
     }catch(e){
       return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
@@ -728,6 +726,7 @@ class TicketAndOrderApi{
 
 class TrainRouteApi{
   static const String _urlGetQueryTrainRoute = "${Server.hostTrainRoute}${Server.query}/trainRoute";
+  static const String _urlGetQueryTrainRouteTransfer = "${Server.hostTrainRoute}${Server.query}/trainRouteTransfer";
   static const String _urlGetQueryTrainRouteDetail = "${Server.hostTrainRoute}${Server.query}/trainRouteDetail";
   static const String _urlGetQueryTicketRouteTimeInfo = "${Server.hostTrainRoute}${Server.query}/ticketRouteTimeInfo";
 
@@ -741,6 +740,24 @@ class TrainRouteApi{
       } else {
         List list = data['data'];
         List<TrainRoute> result = list.map((e) => TrainRoute.fromJson(e)).toList();
+        return ResultEntity.name(true, data['code'], data['message'], result);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return ResultEntity.name(false, -1, '', null);
+    }
+  }
+
+  static Future<ResultEntity> getTrainRouteTransfer(String from, String to, String date) async {
+    try {
+      Response response = await Http.get(_urlGetQueryTrainRouteTransfer,
+          params: {'from' : from, 'to' : to, 'date' : date});
+      Map<String, dynamic> data = response.data;
+      if (data['code'] != 200) {
+        return ResultEntity.name(false, data['code'], data['message'], null);
+      } else {
+        List list = data['data'];
+        List<TrainRouteTransfer> result = list.map((e) => TrainRouteTransfer.fromJson(e)).toList();
         return ResultEntity.name(true, data['code'], data['message'], result);
       }
     } catch (e) {

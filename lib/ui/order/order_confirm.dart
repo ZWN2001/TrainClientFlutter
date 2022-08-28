@@ -12,8 +12,9 @@ import '../../util/date_util.dart';
 import '../../widget/cards.dart';
 
 class OrderConfirmPage extends StatefulWidget{
-  const OrderConfirmPage({Key? key, required this.route, required this.departureDate}) : super(key: key);
-  final TrainRoute route;
+  const OrderConfirmPage({Key? key, required this.route, required this.departureDate, required this.isNostop}) : super(key: key);
+  final MyRoute route;
+  final bool isNostop;
   final DateTime departureDate;
 
   @override
@@ -31,7 +32,7 @@ class OrderConfirmState extends State<OrderConfirmPage> {
   @override
   void initState() {
     super.initState();
-    _route = widget.route;
+    _route = widget.route as TrainRoute;
     _selectedType = null;
     _getData();
 

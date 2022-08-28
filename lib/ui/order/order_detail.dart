@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:train_client_flutter/constant.dart';
 
 import '../../api/api.dart';
 import '../../bean/bean.dart';
 import '../../widget/cards.dart';
+import '../../widget/dialog.dart';
 
 class OrderDetailPage extends StatefulWidget{
   const OrderDetailPage({Key? key, required this.orderId}) : super(key: key);
@@ -265,10 +267,8 @@ class OrderDetailState extends State<OrderDetailPage>{
                   child: Padding(
                     padding: const EdgeInsets.only(left: 24,right: 12),
                     child: ElevatedButton(
+                      onPressed: _refund,
                       child: const Text('退票'),
-                      onPressed: (){
-
-                      },
                     ),
                   )
               ),
@@ -372,6 +372,21 @@ class OrderDetailState extends State<OrderDetailPage>{
       Fluttertoast.showToast(msg: orderResult.message);
     }
     setState((){_loading = false;});
+  }
+
+  Future<void> _refund() async {
+    bool? delete = await MyDialog.showDeleteConfirmDialog(context: context,
+        tips: "确定退票吗？");
+    if (delete != null) {
+      ResultEntity resultEntity = await TicketAndOrderApi.ticketRefund(widget.orderId);
+      if(resultEntity.result){
+        Get.back();
+        Get.back();
+        setState((){});
+      }else{
+        Fluttertoast.showToast(msg: resultEntity.message);
+      }
+    }
   }
 
 
