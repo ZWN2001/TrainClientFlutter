@@ -233,6 +233,7 @@ class TrainRoute extends MyRoute{
   late int duratoinInt;
   late Map<int,int> tickets;
 
+  TrainRoute();
 
   TrainRoute.fromJson(jsonMap){
     trainRouteId = jsonMap['trainRouteId'] ?? 'unKnown';
@@ -293,6 +294,8 @@ class TrainRouteTransfer extends MyRoute{
   late final int durationTransfer;
   late final Map<int, int> ticketsFirst;
   late final Map<int, int> ticketsNext;
+
+  TrainRouteTransfer();
 
   TrainRouteTransfer.fromJson(jsonMap){
     trainRouteId1 = jsonMap['trainRouteId1'] ?? 'u';

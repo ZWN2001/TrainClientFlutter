@@ -1,5 +1,6 @@
 import 'package:train_client_flutter/api/api.dart';
 import 'package:train_client_flutter/bean/bean.dart';
+import 'package:train_client_flutter/util/store.dart';
 
 class Constant {
 

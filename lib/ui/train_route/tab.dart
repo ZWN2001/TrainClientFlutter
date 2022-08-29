@@ -43,6 +43,7 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
     toStationId = widget.toStationId;
     _changeDate(_date);
     nostop = RouteNoStopPage(date: _date, fromStationId: fromStationId, toStationId: toStationId,);
+    transfer = RouteTransferPage(date: _date, fromStationId: fromStationId, toStationId: toStationId);
   }
 
   @override

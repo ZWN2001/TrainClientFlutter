@@ -9,6 +9,7 @@ import '../../util/date_util.dart';
 import '../../widget/cards.dart';
 import '../login.dart';
 import '../order/order_confirm.dart';
+import '../order/order_confirm_transfer.dart';
 
   class RouteTransferPage extends StatefulWidget {
     final DateTime date;
@@ -34,8 +35,8 @@ import '../order/order_confirm.dart';
     @override
     void initState() {
       super.initState();
+      _isLoading = true;
       _getData();
-      _isLoading = false;
     }
 
     @override
@@ -74,7 +75,7 @@ import '../order/order_confirm.dart';
         onTap: () {
           if (UserApi.isLogin) {
             Get.to(() =>
-                OrderConfirmPage(route: route, departureDate: widget.date,isNostop: false,));
+                OrderConfirmTransferPage(route: route, departureDate: widget.date,));
           } else {
             Get.to(() => const LoginPage());
           }
@@ -110,7 +111,7 @@ import '../order/order_confirm.dart';
                     const Expanded(child: SizedBox()),
                     Column(
                       children: [
-                        Text(route.transStationId,style: const TextStyle(fontSize: 16),),
+                        Text(Constant.stationIdMap[route.transStationId]!.stationName,style: const TextStyle(fontSize: 16),),
                         const SizedBox(height: 7,),
                         Text('同站换乘\n${getDurationString(route.durationTransfer)}',
                             style: const TextStyle(color: Colors.grey,fontSize: 13)),
@@ -144,7 +145,7 @@ import '../order/order_confirm.dart';
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Expanded(child: Text('第二程'),),
+                    const Expanded(child: Text('第一程'),),
                     ...route.ticketsFirst.keys.map((e) =>
                         Expanded(
                             child: Text(

@@ -77,8 +77,7 @@ class RouteNoStopState extends State<RouteNoStopPage>{
         if(UserApi.isLogin){
           Get.to(()=>OrderConfirmPage(
             route: route,
-            departureDate: widget.date,
-            isNostop: true,));
+            departureDate: widget.date));
         }else{
           Get.to(()=>const LoginPage());
         }

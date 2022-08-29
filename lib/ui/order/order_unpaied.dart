@@ -24,10 +24,12 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
   late Timer? _timer;
   int _countdownTime = 150;
   TicketRouteTimeInfo _timeInfo = TicketRouteTimeInfo.fromJson({});
+  TicketRouteTimeInfo _timeInfoNext = TicketRouteTimeInfo.fromJson({});
   final List<PassengerToPay> _passengerList = [];
   double _allPrice = 0;
   List<Order> _res = [];
   Order? _order;
+  Order? _orderNext;
   bool _loading = true;
 
   @override
@@ -74,8 +76,9 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
                 _countDownRow(),
                 _tipsCard(),
                 const SizedBox(height: 8,),
-                _orderInfoCard(),
+                _orderNext == null? _orderInfoCard() : _orderInfoCardTansfer(),
                 _passengerInfoCard(),
+                const SizedBox(height: 100,),
               ],
             ),
           )
@@ -167,6 +170,73 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
     );
   }
 
+  Widget _orderInfoCardTansfer() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(_timeInfo.startTime, style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),),
+                    Text(" ${Constant.stationIdMap[_order!.fromStationId]!.stationName}", style: const TextStyle(
+                        fontSize: 17),)
+                  ],
+                ),
+                const Expanded(child: SizedBox()),
+                Column(
+                  children: [
+                    Text('${_timeInfo.arriveTime}到达',
+                        style: const TextStyle(fontSize: 13, color: Colors.blue)),
+                    const ImageIcon(AssetImage('icons/arrow.png'), size: 26,
+                      color: Colors.blue,),
+                    Text(_order!.trainRouteId,
+                        style: const TextStyle(fontSize: 16)),
+                  ],
+                ),
+                const Expanded(child: SizedBox()),
+                Column(
+                  children: [
+                    Text(Constant.stationIdMap[_order!.toStationId]!.stationName,style: const TextStyle(fontSize: 16),),
+                    const SizedBox(height: 7,),
+                    Text('同站换乘\n${_getDurationString(_getDuration(_timeInfo.arriveTime, _timeInfoNext.startTime))}',
+                        style: const TextStyle(color: Colors.grey,fontSize: 13)),
+                  ],
+                ),
+                const Expanded(child: SizedBox()),
+                Column(
+                  children: [
+                    Text('${_timeInfoNext.startTime}出发',
+                        style: const TextStyle(fontSize: 13, color: Colors.blue)),
+                    const ImageIcon(AssetImage('icons/arrow.png'), size: 26,
+                      color: Colors.blue,),
+                    Text(_orderNext!.trainRouteId,
+                        style: const TextStyle(fontSize: 16)),
+                  ],
+                ),
+                const Expanded(child: SizedBox()),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(_timeInfoNext.arriveTime, style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),),
+                    Text("${Constant.stationIdMap[_orderNext!.toStationId]!.stationName} ", style: const TextStyle(
+                        fontSize: 17),)
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _passengerInfoCard(){
     return Column(
         children: _passengerList.map((p) =>  OrderPassengerCard(passenger: p)).toList(),
@@ -236,6 +306,14 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
       if(_res.isNotEmpty){
         //初始化order与订单剩余时间
         _order = _res[0];
+        if(_res.length > 1 && _res.length % 2 == 0){
+          _orderNext = _res[1];
+          if(_orderNext!.trainRouteId == _order!.trainRouteId){
+            _orderNext = null;
+          }
+        }else{
+          _orderNext = null;
+        }
         DateTime dateTime = DateTime.parse(_order!.orderTime);
         DateTime now = DateTime.now();
         // _countdownTime = 5 * 60 - now.difference(dateTime).inSeconds;
@@ -273,6 +351,23 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
         }else{
           Fluttertoast.showToast(msg: '初始化车次时间失败');
         }
+        if(_orderNext != null){
+          ResultEntity resultEntity = await
+          TrainRouteApi.getTrainRouteTimeInfo(_orderNext!.trainRouteId, _orderNext!.fromStationId, _orderNext!.toStationId);
+          if(resultEntity.result){
+            _timeInfoNext = resultEntity.data;
+            String duration = _timeInfoNext.durationInfo;
+            List<String> list = duration.split(":");
+            if(list.length == 2){
+              _timeInfoNext.durationInfo = "${list[0]}小时${list[1]}分钟";
+            }else if(list.length == 3){
+              _timeInfoNext.durationInfo = "${list[0]}天${list[1]}小时${list[2]}分钟";
+            }
+          }else{
+            Fluttertoast.showToast(msg: '初始化车次时间失败');
+          }
+        }
+
       }
     }else{
       Fluttertoast.showToast(msg: orderResult.message);
@@ -345,6 +440,20 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
       });
     }
     _timer = Timer.periodic(oneSec, callback);
+  }
+
+  int _getDuration(String first,String next) {
+    return 60 *
+          ((24 - int.parse(first.substring(0, 2)) + int.parse(next.substring(0, 2))) % 24)
+          + (int.parse(next.substring(3, 5)) - int.parse(first.substring(3, 5)));
+  }
+
+  String _getDurationString(int duration){
+    if(duration > 60){
+      return '${duration ~/ 60}时${duration % 60}分';
+    }else{
+      return '$duration分';
+    }
   }
 
   @override

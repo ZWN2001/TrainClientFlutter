@@ -479,12 +479,11 @@ class PassengerApi{
 class TicketAndOrderApi{
   ///订票
   static const String _urlPostBooking = "${Server.hostTicket}${Server.command}/booking";
+  static const String _urlPostBookingTansfer = "${Server.hostTicket}${Server.command}/bookingTansfer";
   ///退票
   static const String _urlPostRefund = "${Server.hostTicket}${Server.command}/refund";
   ///改签
   static const String _urlPostRebook = "${Server.hostTicket}${Server.command}/rebook";
-  ///取票
-  // static const String _urlPostGet = "${Server.hostTicket}${Server.command}/get";
   static const String _urlPostBookingCancel = "${Server.hostTicket}${Server.command}/bookingCancel";
   ///余票
   // static const String _urlGetTicketRemain = "${Server.hostTicket}${Server.query}/ticketRemain";
@@ -497,7 +496,8 @@ class TicketAndOrderApi{
   static const String _urlGetTicketSeatInfo = "${Server.hostTicket}${Server.query}/ticketSeatInfo";
   static const String _urlGetTicketToPayDetail = "${Server.hostTicket}${Server.query}/ticketToPayDetail";
 
-  static Future<ResultEntity> ticketBooking(Order order, List<String> passengerIds, List<int> seatSelects) async {
+  static Future<ResultEntity> ticketBooking(Order order,
+      List<String> passengerIds, List<int> seatSelects) async {
     try{
       Response response = await Http.post(_urlPostBooking,
           params: {'orderString' : jsonEncode(order),'passengerIdsString' : passengerIds.toString(),
@@ -523,7 +523,40 @@ class TicketAndOrderApi{
     }
   }
 
-  static Future<ResultEntity> ticketBookingCancel(String departureDate, String trainRouteId, List<String> passengetIds) async {
+  static Future<ResultEntity> ticketBookingTransfer(Order order1, Order order2,
+      List<String> passengerIds, List<int> seatSelects, List<int> seatSelectsNext) async {
+    try{
+      Response response = await Http.post(_urlPostBookingTansfer,
+          params: {'orderString1' : jsonEncode(order1),
+            'orderString2' : jsonEncode(order2),
+            'passengerIdsString' : passengerIds.toString(),
+            'seatLocationListString1':seatSelects.toString(),
+            'seatLocationListString2':seatSelectsNext.toString()
+          },
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        List list = data['data'];
+        List<OrderGeneral> result = list.map((e) => OrderGeneral.fromJson(e)).toList();
+        return ResultEntity.name( true, 0, "成功", result);
+      }
+    }catch(e){
+      debugPrint(e.toString());
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
+    }
+  }
+
+  static Future<ResultEntity> ticketBookingCancel(String departureDate,
+      String trainRouteId, List<String> passengetIds) async {
     try{
       Response response = await Http.post(_urlPostBookingCancel,
           params: {'departureDate' : departureDate, 'trainRouteId': trainRouteId,
