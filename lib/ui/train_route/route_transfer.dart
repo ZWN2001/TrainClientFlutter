@@ -6,9 +6,7 @@ import '../../api/api.dart';
 import '../../bean/bean.dart';
 import '../../constant.dart';
 import '../../util/date_util.dart';
-import '../../widget/cards.dart';
 import '../login.dart';
-import '../order/order_confirm.dart';
 import '../order/order_confirm_transfer.dart';
 
   class RouteTransferPage extends StatefulWidget {

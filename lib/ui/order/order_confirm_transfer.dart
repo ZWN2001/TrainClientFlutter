@@ -26,6 +26,8 @@ class OrderConfirmTransferState extends State<OrderConfirmTransferPage> {
   late TrainRouteTransfer _routeTransfer;
   int? _selectedTypeFirst;
   int? _selectedTypeNext;
+  TicketRouteTimeInfo _timeInfo = TicketRouteTimeInfo.fromJson({});
+  TicketRouteTimeInfo _timeInfoNext = TicketRouteTimeInfo.fromJson({});
   bool _isLoading = true;
   static final List<SeatSelectRow> _seatSelectRows = [];
   static final List<SeatSelectRow> _seatSelectRowsNext = [];
@@ -178,6 +180,7 @@ class OrderConfirmTransferState extends State<OrderConfirmTransferPage> {
               children: [
                 Text(_routeTransfer.trainRouteId1, style: const TextStyle(fontSize: 18)),
                 const ImageIcon(AssetImage('icons/arrow.png'),size: 26,color: Colors.blue,),
+                Text(_timeInfo.durationInfo,style: const TextStyle(color: Colors.blue),)
               ],
             ),
             const Expanded(child: SizedBox()),
@@ -204,7 +207,6 @@ class OrderConfirmTransferState extends State<OrderConfirmTransferPage> {
       ];
   }
 
-
   List<Widget> _routeInfoNext(){
     return [
         Row(
@@ -221,6 +223,7 @@ class OrderConfirmTransferState extends State<OrderConfirmTransferPage> {
               children: [
                 Text(_routeTransfer.trainRouteId2, style: const TextStyle(fontSize: 18)),
                 const ImageIcon(AssetImage('icons/arrow.png'),size: 26,color: Colors.blue,),
+                Text(_timeInfoNext.durationInfo,style: const TextStyle(color: Colors.blue),)
               ],
             ),
             const Expanded(child: SizedBox()),
@@ -418,9 +421,39 @@ class OrderConfirmTransferState extends State<OrderConfirmTransferPage> {
     }
 
     resultEntity = await TicketAndOrderApi.getTicketPrices(
-        _routeTransfer.trainRouteId1, _routeTransfer.transStationId, _routeTransfer.toStationId);
+        _routeTransfer.trainRouteId2, _routeTransfer.transStationId, _routeTransfer.toStationId);
     if(resultEntity.result){
       _pricesNext = resultEntity.data;
+    }
+
+    resultEntity = await
+    TrainRouteApi.getTrainRouteTimeInfo( _routeTransfer.trainRouteId1, _routeTransfer.fromStationId, _routeTransfer.transStationId);
+    if(resultEntity.result){
+      _timeInfo = resultEntity.data;
+      String duration = _timeInfo.durationInfo;
+      List<String> list = duration.split(":");
+      if(list.length == 2){
+        _timeInfo.durationInfo = "${list[0]}小时${list[1]}分钟";
+      }else if(list.length == 3){
+        _timeInfo.durationInfo = "${list[0]}天${list[1]}小时${list[2]}分钟";
+      }
+    }else{
+      Fluttertoast.showToast(msg: '初始化车次时间失败');
+    }
+
+    resultEntity = await
+    TrainRouteApi.getTrainRouteTimeInfo(_routeTransfer.trainRouteId2, _routeTransfer.transStationId, _routeTransfer.toStationId);
+    if(resultEntity.result){
+      _timeInfoNext = resultEntity.data;
+      String duration = _timeInfoNext.durationInfo;
+      List<String> list = duration.split(":");
+      if(list.length == 2){
+        _timeInfoNext.durationInfo = "${list[0]}小时${list[1]}分钟";
+      }else if(list.length == 3){
+        _timeInfoNext.durationInfo = "${list[0]}天${list[1]}小时${list[2]}分钟";
+      }
+    }else{
+      Fluttertoast.showToast(msg: '初始化车次时间失败');
     }
 
     setState((){
@@ -491,7 +524,7 @@ class OrderConfirmTransferState extends State<OrderConfirmTransferPage> {
 
   String getDurationString(int duration){
     if(duration > 60){
-      return '${duration % 60}时${duration ~/ 60}分';
+      return '${duration ~/ 60}时${duration % 60}分';
     }else{
       return '$duration分';
     }
