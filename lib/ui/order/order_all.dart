@@ -49,7 +49,15 @@ class OrderAllState extends State<OrderAllPage>{
     ResultEntity requestMap = await TicketAndOrderApi.getOrderAll();
     if (requestMap.result) {
       _list.clear();
-      _list.addAll(requestMap.data);
+      List<OrderGeneral> data = requestMap.data;
+      for(int i = 0; i < data.length - 1; i++){
+        if(data[i] == data[i+1]){
+          data[i].routeNo = 1;
+          data[i+1].routeNo = 2;
+        }
+      }
+      _list.addAll(data);
+
       _body = _list.isEmpty?_noTicketWidget():_ticketsWidget();
     }else{
       Fluttertoast.showToast( msg: requestMap.message);

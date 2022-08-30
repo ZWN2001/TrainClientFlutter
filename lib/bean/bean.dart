@@ -86,6 +86,8 @@ class OrderGeneral {
   late final String toStationId;
   late final String departureDate;
   late final String orderStatus;
+  ///0为直达，1为中转第一程，2为第二程
+  late int routeNo = 0;
 
   OrderGeneral.fromJson(jsonMap) {
     orderId = jsonMap['orderId'] ?? 'unKnown';
@@ -95,6 +97,16 @@ class OrderGeneral {
     departureDate = jsonMap['departureDate'] ?? 'unKnown';
     orderStatus = jsonMap['orderStatus'] ?? 'unKnown';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderGeneral &&
+          runtimeType == other.runtimeType &&
+          orderId == other.orderId;
+
+  @override
+  int get hashCode => orderId.hashCode;
 }
 
 class OrderStatus {

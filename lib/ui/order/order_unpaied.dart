@@ -384,9 +384,13 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
         allPassengerIdList.add(element.passengerId);
       }
       ResultEntity resultEntity = await TicketAndOrderApi.ticketBookingCancel(_order!.departureDate,_order!.trainRouteId,allPassengerIdList);
+      if(_orderNext != null){
+        resultEntity = await TicketAndOrderApi.ticketBookingCancel(_orderNext!.departureDate,_orderNext!.trainRouteId,allPassengerIdList);
+      }
       if(resultEntity.result){
         Fluttertoast.showToast(msg: '取消成功');
         _order = null;
+        _orderNext = null;
         Get.back();
       }else{
         Fluttertoast.showToast(msg: resultEntity.message);
@@ -397,7 +401,9 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
   Future<void> _orderPay() async {
     List<String> allPassengerIdList = [];
     for (var element in _passengerList) {
-      allPassengerIdList.add(element.passengerId);
+      if(!allPassengerIdList.contains(element.passengerId)){
+        allPassengerIdList.add(element.passengerId);
+      }
     }
     ResultEntity resultEntity = await PayApi.ticketPay(_order!.orderId, allPassengerIdList, 0);
     if(resultEntity.result){

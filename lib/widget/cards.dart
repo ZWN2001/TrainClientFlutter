@@ -631,14 +631,19 @@ class AllTicketCard extends StatelessWidget{
             Container(
                 color: getColor(orderGeneral.orderStatus),
                 child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+                    padding: const EdgeInsets.all(12),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text('订单号:  ${orderGeneral.orderId}',
                           style: const TextStyle(color: Colors.white),),
                         const SizedBox(width: 12,),
                         Text('订单状态:  ${orderGeneral.orderStatus}',
-                          style: const TextStyle(color: Colors.white),)
+                          style: const TextStyle(color: Colors.white),),
+                        const SizedBox(width: 12,),
+                        if(orderGeneral.routeNo != 0)
+                          Text('${orderGeneral.routeNo}程',
+                            style: const TextStyle(color: Colors.white),),
                       ],
                     )
                 ),
