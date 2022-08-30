@@ -478,6 +478,60 @@ class OrderPassengerCard extends StatelessWidget{
   }
 }
 
+class OrderRebookPassengerCard extends StatelessWidget{
+  const OrderRebookPassengerCard({Key? key, required this.passenger}) : super(key: key);
+  final PassengerRebookToPay passenger;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+        child: Card(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(passenger.passengerName,
+                        style: const TextStyle(fontSize: 18),),
+                      const SizedBox(width: 8,),
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blue, width: 1),
+                          borderRadius: BorderRadius.circular(3), // 圆角
+                        ),
+                        child: Padding(padding: const EdgeInsets.only(
+                            left: 4, right: 4, bottom: 2),
+                          child: Text(
+                            passenger.role == 'common' ? '成人票' : '学生票',
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.blue),),
+                        ),
+                      ),
+                      const Expanded(child: SizedBox()),
+                    ],
+                  ),
+                  const SizedBox(height: 8,),
+                  Row(children: [ Text('${Constant.seatIdToTypeMap[passenger.seatTypeId.toString()]}  原价￥${passenger.originalPrice}  ->  改签￥${passenger.price}',//TODO
+                    style: const TextStyle(color: Colors.deepOrange,fontSize: 16),),],),
+                  const SizedBox(height: 8,),
+                  Row(
+                    children: [
+                      const Text('中国居民身份证', style: TextStyle(color: Colors.grey,fontSize: 16),),
+                      const Expanded(child: SizedBox()),
+                      Padding(padding: const EdgeInsets.only(top: 4),
+                        child: Text(passenger.passengerId, style: const TextStyle(fontSize: 16),),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            )
+        )
+    );
+  }
+}
+
 class OrderPassengerWithSeatInfoCard extends StatelessWidget{
   const OrderPassengerWithSeatInfoCard({Key? key, required this.passenger, required this.carriageId, required this.seat}) : super(key: key);
   final PassengerToPay passenger;

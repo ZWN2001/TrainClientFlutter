@@ -234,7 +234,9 @@ class UserApi{
 
 class PayApi{
   static const String _urlGetPay = "${Server.hostPay}/pay";
-  static const String _urlGetOrderStatus = "${Server.hostTicket}${Server.query}/orderStatus";
+  static const String _urlGetPayRebook = "${Server.hostPay}/payRebook";
+  static const String _urlGetOrderPayStatus = "${Server.hostTicket}${Server.query}/orderPayStatus";
+  static const String _urlGetOrderRebookStatus = "${Server.hostTicket}${Server.query}/orderRebookStatus";
 
   static Future<ResultEntity> ticketPay(String orderId, List<String> passengerId, int payMethod) async {
     try{
@@ -261,9 +263,33 @@ class PayApi{
       return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
     }
   }
-  static Future<ResultEntity> getOrderStatus(String orderId) async {
+
+  static Future<ResultEntity> ticketPayRebook(String orderId) async {
     try{
-      Response response = await Http.get(_urlGetOrderStatus,
+      Response response = await Http.get(_urlGetPayRebook,
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        return ResultEntity.name( true, 0, "成功", data['data']);
+      }
+    }catch(e){
+      debugPrint(e.toString());
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
+    }
+  }
+
+  static Future<ResultEntity> getOrderPayStatus(String orderId) async {
+    try{
+      Response response = await Http.get(_urlGetOrderPayStatus,
           params: {'orderId' : orderId,},
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
       Map<String, dynamic> data = response.data;
@@ -284,6 +310,31 @@ class PayApi{
       return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
     }
   }
+
+  static Future<ResultEntity> getOrderRebookStatus(String orderId) async {
+    try{
+      Response response = await Http.get(_urlGetOrderRebookStatus,
+          params: {'orderId' : orderId,},
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        return ResultEntity.name( true, 0, "成功", data['data']);
+      }
+    }catch(e){
+      debugPrint(e.toString());
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
+    }
+  }
+
 }
 
 class DataApi{
@@ -493,9 +544,11 @@ class TicketAndOrderApi{
   static const String _urlGetSelfOrder = "${Server.hostTicket}${Server.query}/selfOrder";
   static const String _urlGetSelfPaiedOrder = "${Server.hostTicket}${Server.query}/selfPaiedOrder";
   static const String _urlGetOrderInfo = "${Server.hostTicket}${Server.query}/orderInfo";
-  static const String _urlGetTicketSeatInfo = "${Server.hostTicket}${Server.query}/ticketSeatInfo";
+  // static const String _urlGetTicketSeatInfo = "${Server.hostTicket}${Server.query}/ticketSeatInfo";
   static const String _urlGetTicketToPayDetail = "${Server.hostTicket}${Server.query}/ticketToPayDetail";
-
+  static const String _urlGetOrderById = "${Server.hostTicket}${Server.query}/orderById";
+  static const String _urlGetOrderToRebook = "${Server.hostTicket}${Server.query}/orderToRebook";//
+  static const String _urlPostRebookCancel = "${Server.hostTicket}${Server.command}/rebookCancel";
   static Future<ResultEntity> ticketBooking(Order order,
       List<String> passengerIds, List<int> seatSelects) async {
     try{
@@ -519,6 +572,57 @@ class TicketAndOrderApi{
         return ResultEntity.name( true, 0, "成功", result);
       }
     }catch(e){
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
+    }
+  }
+
+  static Future<ResultEntity> ticketRebook(RebookOrder order,
+      List<String> passengerIds, List<int> seatSelects) async {
+    try{
+      Response response = await Http.post(_urlPostRebook,
+          params: {'orderString' : jsonEncode(order),'passengerIdsString' : passengerIds.toString(),
+            'seatLocationListString':seatSelects.toString()},
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        // List list = data['data'];
+        // List<OrderGeneral> result =  list.map((e) => OrderGeneral.fromJson(e)).toList();
+        return ResultEntity.name( true, 0, "成功", null);
+      }
+    }catch(e){
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
+    }
+  }
+
+  static Future<ResultEntity> ticketRebookCancel(String orderId) async {
+    try{
+      Response response = await Http.post(_urlPostRebookCancel,
+          params: {'orderId' : orderId},
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        return ResultEntity.name( true, 0, "成功", null);
+      }
+    }catch(e){
+      print(e);
       return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
     }
   }
@@ -749,6 +853,55 @@ class TicketAndOrderApi{
         }
         List list = data['data'];
         List<TicketPrice> result =  list.map((e) => TicketPrice.fromJson(e)).toList();
+        return ResultEntity.name( true, 0, "成功", result);
+      }
+    }catch(e){
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
+    }
+  }
+
+  static Future<ResultEntity> getOrderById(String orderId) async {
+    try{
+      Response response = await Http.get(_urlGetOrderById,
+          params: {'userId' : UserApi.getUserId(), 'orderId' : orderId},
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        List list = data['data'];
+        List<Order> result =  list.map((e) => Order.fromJson(e)).toList();
+        return ResultEntity.name( true, 0, "成功", result);
+      }
+    }catch(e){
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
+    }
+  }
+
+  static Future<ResultEntity> getOrderToRebook() async {
+    try{
+      Response response = await Http.get(_urlGetOrderToRebook,
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        List list = data['data'];
+        List<RebookOrder> result =  list.map((e) => RebookOrder.fromJson(e)).toList();
         return ResultEntity.name( true, 0, "成功", result);
       }
     }catch(e){

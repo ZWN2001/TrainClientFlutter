@@ -9,6 +9,7 @@ import '../api/api.dart';
 import '../ui/login.dart';
 import '../ui/main_page.dart';
 import '../ui/order/order_paied.dart';
+import '../ui/order/order_rebook_confirm.dart';
 import '../ui/order/order_unpaied.dart';
 import '../ui/splash.dart';
 
@@ -26,6 +27,7 @@ class RouteTable {
     AddPassengerPage.routeName: (context) => const AddPassengerPage(),
     LoginPage.routeName: (context) => const LoginPage(),
     TimeTablePage.routeName: (context) => const TimeTablePage(),
+    OrderRebookConfirmPage.routeName: (context) => const OrderRebookConfirmPage(),
   };
 
 //  鉴权拦截表
@@ -35,6 +37,7 @@ class RouteTable {
     OrderAllPage.routeName: true,
     MyTicketPage.routeName: true,
     MyPassengerPage.routeName: true,
+    OrderRebookConfirmPage.routeName : true
   };
 
   static Route generateRoute(RouteSettings settings) {

@@ -1,38 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:train_client_flutter/ui/train_route/route_nonstop.dart';
-import 'package:train_client_flutter/ui/train_route/route_transfer.dart';
 
+import '../../bean/bean.dart';
 import '../../util/date_util.dart';
 
-class TrainRouteTabPage extends StatefulWidget{
+class RouteRebookPage extends StatefulWidget{
   final String title;
   final DateTime date;
+  final String orderId;
   final String fromStationId;
   final String toStationId;
+  final List<PassengerToPay> passengerList;
+  final String originalRTainRouteId;
 
-  const TrainRouteTabPage({
+  const RouteRebookPage({
     Key? key,
     required this.title,
     required this.date,
     required this.fromStationId,
-    required this.toStationId
+    required this.toStationId,
+    required this.passengerList,
+    required this.orderId,
+    required this.originalRTainRouteId
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _TrainRouteTabState();
+  State<StatefulWidget> createState() => _RouteRebookState();
 }
 
-class _TrainRouteTabState extends State<TrainRouteTabPage>{
+class _RouteRebookState extends State<RouteRebookPage>{
   late String title;
   late bool _canBeforeDay;
   late bool _canAfterDay;
   int currentIndex = 0;
   Widget? nostop;
-  Widget? transfer;
-
   late DateTime _date = DateTime.now();
   late String fromStationId;
   late String toStationId;
+
 
   @override
   void initState() {
@@ -43,10 +48,9 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
     toStationId = widget.toStationId;
     _changeDate(_date);
     nostop = RouteNoStopPage(date: _date, fromStationId: fromStationId,
-      toStationId: toStationId, isRebook: false,passengerList: const [],
-      orderId: '', originalRTainRouteId: '',);
-    transfer = RouteTransferPage(date: _date, fromStationId: fromStationId,
-        toStationId: toStationId);
+      toStationId: toStationId, isRebook: true,
+      passengerList: widget.passengerList,orderId: widget.orderId,
+      originalRTainRouteId: widget.originalRTainRouteId,);
   }
 
   @override
@@ -59,11 +63,11 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
               title: Text(title),
               centerTitle: true,
               elevation: 5,
-                leading: BackButton(onPressed: () {
-                  Navigator.pop(context);
-                }),
+              leading: BackButton(onPressed: () {
+                Navigator.pop(context);
+              }),
               bottom: PreferredSize(
-                  preferredSize: const Size.fromHeight(100),
+                  preferredSize: const Size.fromHeight(60),
                   child: Column(
                     children: [
                       Container(
@@ -76,24 +80,16 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
                                   onPressed: _canBeforeDay
                                       ? () {
                                     _changeDate(_date.subtract(const Duration(days: 1)));
-                                    if(currentIndex == 0){
-                                      nostop = RouteNoStopPage(
-                                          key:UniqueKey(),
+                                    nostop = RouteNoStopPage(
+                                        key:UniqueKey(),
                                         date: _date,
                                         fromStationId: fromStationId,
                                         toStationId: toStationId,
-                                        isRebook: false,
-                                        passengerList: const [],
-                                        orderId: '',
-                                        originalRTainRouteId: '',
-                                      );
-                                    }else{
-                                      transfer = RouteTransferPage(
-                                          key:UniqueKey(),
-                                          date: _date,
-                                          fromStationId: fromStationId,
-                                          toStationId: toStationId);
-                                    }
+                                      isRebook: true,
+                                      passengerList: widget.passengerList,
+                                      orderId: widget.orderId,
+                                      originalRTainRouteId: widget.originalRTainRouteId,
+                                    );
                                     setState((){});
                                   }
                                       : null,
@@ -115,24 +111,17 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
                                         lastDate: DateTime.now().add(const Duration(days: 10)));
                                     if (time != null) {
                                       _changeDate(time);
-                                      if(currentIndex == 0){
                                         nostop = RouteNoStopPage(
                                             key:UniqueKey(),
                                             date: _date,
                                             fromStationId: fromStationId,
                                             toStationId: toStationId,
-                                          isRebook: false,
-                                          passengerList: const [],
-                                          orderId: '',
-                                          originalRTainRouteId: '',
+                                          isRebook: true,
+                                          passengerList: widget.passengerList,
+                                          orderId: widget.orderId,
+                                          originalRTainRouteId: widget.originalRTainRouteId,
                                         );
-                                      }else{
-                                        transfer = RouteTransferPage(
-                                            key:UniqueKey(),
-                                            date: _date,
-                                            fromStationId: fromStationId,
-                                            toStationId: toStationId);
-                                      }
+
                                       setState((){});
                                     }
                                   },
@@ -162,24 +151,16 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
                                   onPressed: _canAfterDay
                                       ? () {
                                     _changeDate(_date.add(const Duration(days: 1)));
-                                    if(currentIndex == 0){
-                                      nostop = RouteNoStopPage(
-                                          key:UniqueKey(),
-                                          date: _date,
-                                          fromStationId: fromStationId,
-                                          toStationId: toStationId,
-                                        isRebook: false,
-                                        passengerList: const [],
-                                        orderId: '',
-                                        originalRTainRouteId: '',
-                                      );
-                                    }else{
-                                      transfer = RouteTransferPage(
-                                          key:UniqueKey(),
-                                          date: _date,
-                                          fromStationId: fromStationId,
-                                          toStationId: toStationId);
-                                    }
+                                    nostop = RouteNoStopPage(
+                                        key:UniqueKey(),
+                                        date: _date,
+                                        fromStationId: fromStationId,
+                                        toStationId: toStationId,
+                                      isRebook: true,
+                                      passengerList: widget.passengerList,
+                                      orderId: widget.orderId,
+                                      originalRTainRouteId: widget.originalRTainRouteId,
+                                    );
                                     setState((){});
                                   }
                                       : null,
@@ -191,39 +172,11 @@ class _TrainRouteTabState extends State<TrainRouteTabPage>{
                           ],
                         ),
                       ),
-                      Material(
-                        child: TabBar(
-                          //是否可以横向滚动
-                          isScrollable: false,
-                          //设置未选中时的字体颜色，tabs里面的字体样式有限级最高
-                          unselectedLabelColor: Colors.grey,
-                          //设置选中时的字体颜色，tabs里面的字体样式优先级最高
-                          labelColor: Colors.blue,
-                          //选中下划线的长度，label时跟文字内容长度一样，tab时跟一个Tab的长度一样
-                          indicatorSize: TabBarIndicatorSize.tab,
-                          tabs: [
-                            Container(
-                              alignment: Alignment.center,
-                              height: 46,
-                              child: const Text('直达'),
-                            ),
-                            Container(
-                              alignment: Alignment.center,
-                              height: 46,
-                              child: const Text('中转'),
-                            ),
-                          ],
-                          onTap: (int index){
-                            currentIndex = index;
-                            setState((){});
-                          },
-                        ),
-                      ),
                     ],
                   )
               ),
             ),
-            body: currentIndex == 0 ? nostop : transfer,
+            body: nostop,
           ),
         )
     );

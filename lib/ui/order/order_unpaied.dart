@@ -392,6 +392,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
         _order = null;
         _orderNext = null;
         Get.back();
+        Get.back();
       }else{
         Fluttertoast.showToast(msg: resultEntity.message);
       }
@@ -412,7 +413,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
          asyncFunction: () async {
            ResultEntity resultEntity;
            while (true) {
-             resultEntity = await PayApi.getOrderStatus(_order!.orderId);
+             resultEntity = await PayApi.getOrderPayStatus(_order!.orderId);
              if (resultEntity.result && resultEntity.data) {
                Fluttertoast.showToast(msg: '支付成功');
                Get.offAll(()=>const MainPage(targetIndex: 2,));

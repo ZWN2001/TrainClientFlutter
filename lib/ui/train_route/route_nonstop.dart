@@ -5,6 +5,8 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:train_client_flutter/api/api.dart';
 import 'package:train_client_flutter/constant.dart';
 import 'package:train_client_flutter/ui/order/order_confirm.dart';
+import 'package:train_client_flutter/ui/order/order_rebook_confirm.dart';
+import 'package:train_client_flutter/ui/order/order_rebook_submit.dart';
 import 'package:train_client_flutter/util/date_util.dart';
 
 import '../../bean/bean.dart';
@@ -15,12 +17,20 @@ class RouteNoStopPage extends StatefulWidget{
   final DateTime date;
   final String fromStationId;
   final String toStationId;
+  final bool isRebook;
+  final List<PassengerToPay> passengerList;
+  final String orderId;
+  final String originalRTainRouteId;
 
   const RouteNoStopPage({
     Key? key,
     required this.date,
     required this.fromStationId,
-    required this.toStationId
+    required this.toStationId,
+    required this.isRebook,
+    required this.passengerList,
+    required this.orderId,
+    required this.originalRTainRouteId
   }) : super(key: key);
 
   @override
@@ -51,7 +61,15 @@ class RouteNoStopState extends State<RouteNoStopPage>{
     return _trainRouteList.isEmpty ? const Center(child: Text('暂无车次'),)
         : ListView.builder(
       itemBuilder: (context, index) {
-        return _routeInfoCard(_trainRouteList[index]);
+        if(widget.isRebook){
+          if(_trainRouteList[index].trainRouteId == widget.originalRTainRouteId){
+            return const SizedBox();
+          }else{
+            return _routeInfoCard(_trainRouteList[index]);
+          }
+        }else{
+          return _routeInfoCard(_trainRouteList[index]);
+        }
       },
       itemCount: _trainRouteList.length,
     );
@@ -75,9 +93,16 @@ class RouteNoStopState extends State<RouteNoStopPage>{
     return GestureDetector(
       onTap: (){
         if(UserApi.isLogin){
-          Get.to(()=>OrderConfirmPage(
-            route: route,
-            departureDate: widget.date));
+          if(widget.isRebook){
+            Get.to(()=>
+              OrderRebookSubmitPage(route: route, departureDate: widget.date,
+                passengerList: widget.passengerList,orderId: widget.orderId,)
+            );
+          }else{
+            Get.to(()=>OrderConfirmPage(
+                route: route,
+                departureDate: widget.date));
+          }
         }else{
           Get.to(()=>const LoginPage());
         }

@@ -1,6 +1,3 @@
-
-import 'dart:typed_data';
-
 import 'package:azlistview/azlistview.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:lpinyin/lpinyin.dart';
@@ -79,6 +76,55 @@ class Order {
   };
 }
 
+@JsonSerializable()
+class RebookOrder {
+  late final String orderId;
+  late int userId;
+  late final String passengerId;
+  late final String departureDate;
+  late final String trainRouteId;
+  late final String fromStationId;
+  late final String toStationId;
+  late final int seatTypeId;
+  late final int seatBooking;
+  late final double originalPrice;
+  late final double price;
+  late final String createTime;
+
+  RebookOrder.name();
+
+  RebookOrder.fromJson(jsonMap){
+    orderId = jsonMap['orderId'] ?? 'unKnown';
+    passengerId = jsonMap['passengerId'] ?? 'unKnown';
+    departureDate = jsonMap['departureDate'] ?? 'unKnown';
+    trainRouteId = jsonMap['trainRouteId'] ?? 'unKnown';
+    fromStationId = jsonMap['fromStationId'] ?? 'unKnown';
+    toStationId = jsonMap['toStationId'] ?? 'unKnown';
+    seatTypeId = jsonMap['seatTypeId'] ?? 1;
+    seatBooking = jsonMap['seatBooking'] ?? 1;
+    originalPrice = jsonMap['originalPrice'] ?? 0;
+    price = jsonMap['price'] ?? 0.0;
+    createTime = jsonMap['createTime'] ?? DateTime.now();
+  }
+
+  Map<String, dynamic> toJson() => _$RebookOrderToJson(this);
+
+  Map<String, dynamic> _$RebookOrderToJson(RebookOrder instance) => <String, dynamic>{
+    'orderId': instance.orderId,
+    'userId': instance.userId,
+    'passengerId': instance.passengerId,
+    'departureDate': instance.departureDate,
+    'trainRouteId': instance.trainRouteId,
+    'fromStationId': instance.fromStationId,
+    'toStationId': instance.toStationId,
+    'seatTypeId': instance.seatTypeId,
+    'seatBooking': instance.seatBooking,
+    'originalPrice': instance.originalPrice,
+    'price': instance.price,
+    'createTime': instance.createTime,
+  };
+}
+
 class OrderGeneral {
   late final String orderId;
   late final String trainRouteId;
@@ -116,6 +162,7 @@ class OrderStatus {
   static const String PAIED = "已支付";
   static const String REFUNDED = "已退票";
   static const String REBOOK = "已改签";
+  static const String TO_REBOOK = "待改签";
 }
 
 class Passenger {
@@ -160,6 +207,26 @@ class PassengerToPay {
     role = jsonMap['role'] ?? 'unKnown';
     seatTypeId = jsonMap['seatTypeId'] ?? 1;
     price = jsonMap['price'] ?? 0.0;
+  }
+
+}
+
+///改签待支付的乘员信息
+class PassengerRebookToPay {
+  late final String passengerId;
+  late final String passengerName;
+  late final String role;
+  late int seatTypeId;
+  late double originalPrice;
+  late double price;
+
+  PassengerRebookToPay.fromPassengerToPay(PassengerToPay passengerToPay) {
+    passengerId = passengerToPay.passengerId;
+    passengerName = passengerToPay.passengerName;
+    role = passengerToPay.role;
+    seatTypeId = passengerToPay.seatTypeId;
+    price = passengerToPay.price;
+    originalPrice = 0;
   }
 
 }
