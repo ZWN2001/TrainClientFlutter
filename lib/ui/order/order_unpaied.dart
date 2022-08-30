@@ -316,14 +316,13 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
         }
         DateTime dateTime = DateTime.parse(_order!.orderTime);
         DateTime now = DateTime.now();
-        // _countdownTime = 5 * 60 - now.difference(dateTime).inSeconds;
-        // if(_countdownTime<0){
-        //   _order = null;
-        // _loading = false;
-        //   return;
-        // }
-        //TODO:暂时如此
-        _countdownTime = 5 * 60 ;
+        _countdownTime = 5 * 60 - now.difference(dateTime).inSeconds;
+        if(_countdownTime<0){
+          _order = null;
+        _loading = false;
+          return;
+        }
+        // _countdownTime = 5 * 60 ;
         _startCountdownTimer();
         //初始化各乘员
         for(Order o in _res){

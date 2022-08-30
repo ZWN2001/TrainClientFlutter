@@ -622,7 +622,6 @@ class TicketAndOrderApi{
         return ResultEntity.name( true, 0, "成功", null);
       }
     }catch(e){
-      print(e);
       return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
     }
   }

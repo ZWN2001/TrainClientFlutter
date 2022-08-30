@@ -5,7 +5,6 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:train_client_flutter/api/api.dart';
 import 'package:train_client_flutter/constant.dart';
 import 'package:train_client_flutter/ui/order/order_confirm.dart';
-import 'package:train_client_flutter/ui/order/order_rebook_confirm.dart';
 import 'package:train_client_flutter/ui/order/order_rebook_submit.dart';
 import 'package:train_client_flutter/util/date_util.dart';
 

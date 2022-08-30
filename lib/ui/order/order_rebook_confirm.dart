@@ -270,14 +270,13 @@ class _OrderRebookConfirmState extends State<OrderRebookConfirmPage>{
             }
             DateTime dateTime = DateTime.parse(_order!.orderTime);
             DateTime now = DateTime.now();
-            // _countdownTime = 5 * 60 - now.difference(dateTime).inSeconds;
-            // if(_countdownTime<0){
-            //   _order = null;
-            // _loading = false;
-            //   return;
-            // }
-            //TODO:暂时如此
-            _countdownTime = 5 * 600 ;
+            _countdownTime = 5 * 60 - now.difference(dateTime).inSeconds;
+            if(_countdownTime<0){
+              _order = null;
+            _loading = false;
+              return;
+            }
+            // _countdownTime = 5 * 600 ;
             _startCountdownTimer();
             //初始化车次发车与到站时间 & 历时
             ResultEntity resultEntity = await
@@ -377,20 +376,6 @@ class _OrderRebookConfirmState extends State<OrderRebookConfirmPage>{
     }
     _timer = Timer.periodic(oneSec, callback);
   }
-
-  // int _getDuration(String first,String next) {
-  //   return 60 *
-  //       ((24 - int.parse(first.substring(0, 2)) + int.parse(next.substring(0, 2))) % 24)
-  //       + (int.parse(next.substring(3, 5)) - int.parse(first.substring(3, 5)));
-  // }
-  //
-  // String _getDurationString(int duration){
-  //   if(duration > 60){
-  //     return '${duration ~/ 60}时${duration % 60}分';
-  //   }else{
-  //     return '$duration分';
-  //   }
-  // }
 
   @override
   void dispose() {
