@@ -31,6 +31,7 @@ class Constant {
       stationIdMap[element.stationId] = element;
       stationNameMap[element.stationName] = element;
     }
+    stationNameMap['未选择'] = Station.name(stationName: '未选择');
   }
 
   static void _initSeatTypeMap(List<SeatType> seatTypeList){
@@ -38,6 +39,11 @@ class Constant {
       seatIdToTypeMap[element.seatTypeId] = element.seatTypeName;
       seatTypeToIdMap[element.seatTypeName] = element.seatTypeId;
     }
+  }
+
+  static void initCatchedStationSelect(){
+    Store.set('from_station_name', '未选择');
+    Store.set('to_station_name', '未选择');
   }
 
   static List hotStationIdList = ['BJP','CCT','CDW','CQW','CSQ','HBB','HZH','SHH','TJP'];

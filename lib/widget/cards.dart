@@ -5,6 +5,7 @@ import 'package:train_client_flutter/constant.dart';
 import 'package:train_client_flutter/ui/order/order_detail.dart';
 import 'package:train_client_flutter/ui/order/order_unpaied.dart';
 import 'package:train_client_flutter/ui/passenger/passenger_edit.dart';
+import 'package:train_client_flutter/util/store.dart';
 import 'package:train_client_flutter/util/utils.dart';
 
 import '../bean/bean.dart';
@@ -19,10 +20,17 @@ class RouteSelectCard extends StatefulWidget{
 }
 
 class RouteSelectCardState extends State<RouteSelectCard>{
-   Station _fromStation = Station.name(stationName: '未选择');
-   Station _toStation = Station.name(stationName: '未选择');
+   late Station _fromStation;
+   late Station _toStation;
    DateTime _date = DateTime.now();
    double sideMargin = 12;
+
+   @override
+  void initState() {
+    super.initState();
+    _fromStation = Constant.stationNameMap[Store.getString('from_station_name')]!;
+    _toStation = Constant.stationNameMap[Store.getString('to_station_name')]!;
+  }
 
   @override
   Widget build(BuildContext context) {
