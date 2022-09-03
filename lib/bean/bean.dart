@@ -461,6 +461,16 @@ class TicketPrice {
 
 }
 
+class SeatInfo{
+  late int carriageId;
+  late int seat;
+
+  SeatInfo.fromJson(jsonMap){
+    carriageId = jsonMap['carriageId'] ?? 0;
+    seat = jsonMap['seat'] ?? 0;
+  }
+}
+
 
 //模版类仅用来标识
 class ResultEntity<T> {

@@ -15,7 +15,7 @@ Future<void> main() async {
 
 ///初始化启动服务
 Future<void> initialize() async {
-  Http.init(baseUrl: Server.baseHost, connectTimeout: 7500, receiveTimeout: 7500);
+  Http.init(baseUrl: Server.baseHost, connectTimeout: 25000, receiveTimeout: 25000);
   //并行初始化
   await Future.wait([
     Store.initialize(),

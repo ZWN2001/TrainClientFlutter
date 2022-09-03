@@ -576,7 +576,7 @@ class OrderPassengerWithSeatInfoCard extends StatelessWidget{
                         ),
                       ),
                       const Expanded(child: SizedBox()),
-                      Text('${Constant.seatIdToTypeMap[passenger.seatTypeId]}  ￥${passenger.price}',//TODO
+                      Text('${Constant.seatIdToTypeMap[passenger.seatTypeId.toString()]}  ￥${passenger.price}',//TODO
                         style: const TextStyle(color: Colors.deepOrange,fontSize: 18),)
                     ],
                   ),
@@ -595,7 +595,7 @@ class OrderPassengerWithSeatInfoCard extends StatelessWidget{
                     children: [
                       Text('车厢号：$carriageId', style: const TextStyle(fontSize: 16),),
                       const SizedBox(width: 16,),
-                      Text('座位编号：$carriageId', style: const TextStyle(fontSize: 16),),
+                      Text('座位编号：${carriageId ~/ 4 + 1}排${getLocation(carriageId % 4)}座', style: const TextStyle(fontSize: 16),),
                     ],
                   ),
                 ],
@@ -603,6 +603,18 @@ class OrderPassengerWithSeatInfoCard extends StatelessWidget{
             )
         )
     );
+  }
+
+  String getLocation(int i){
+    if(i == 1){
+      return 'A';
+    }else if(i == 2){
+      return 'B';
+    }else if(i == 3){
+      return 'C';
+    }else{
+      return 'D';
+    }
   }
 }
 

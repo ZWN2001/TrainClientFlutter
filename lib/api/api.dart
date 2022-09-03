@@ -545,7 +545,7 @@ class TicketAndOrderApi{
   static const String _urlGetSelfOrder = "${Server.hostTicket}${Server.query}/selfOrder";
   static const String _urlGetSelfPaiedOrder = "${Server.hostTicket}${Server.query}/selfPaiedOrder";
   static const String _urlGetOrderInfo = "${Server.hostTicket}${Server.query}/orderInfo";
-  // static const String _urlGetTicketSeatInfo = "${Server.hostTicket}${Server.query}/ticketSeatInfo";
+  static const String _urlGetTicketSeatInfo = "${Server.hostTicket}${Server.query}/ticketSeatInfo";
   static const String _urlGetTicketToPayDetail = "${Server.hostTicket}${Server.query}/ticketToPayDetail";
   static const String _urlGetOrderById = "${Server.hostTicket}${Server.query}/orderById";
   static const String _urlGetOrderToRebook = "${Server.hostTicket}${Server.query}/orderToRebook";//
@@ -903,6 +903,31 @@ class TicketAndOrderApi{
         }
         List list = data['data'];
         List<RebookOrder> result =  list.map((e) => RebookOrder.fromJson(e)).toList();
+        return ResultEntity.name( true, 0, "成功", result);
+      }
+    }catch(e){
+      return ResultEntity.name(false, -2, '获取失败,请检查网络或重试', null);
+    }
+  }
+
+  static Future<ResultEntity> getTicketSeatInfo(String orderId,List<String> pids) async {
+    try{
+      Response response = await Http.get(_urlGetTicketSeatInfo,
+          params: {'orderId' : orderId, 'passengerIds' : pids.toString()},
+          options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      Map<String, dynamic> data = response.data;
+      if (response.statusCode != 200) {
+        if (response.statusCode! >= 500) {
+          return ResultEntity.name(false, response.statusCode!, '服务器异常', null);
+        } else {
+          return ResultEntity.name(false,  response.statusCode!,  '失败,请稍后重试', null);
+        }
+      }else{
+        if(data['code'] != 200){
+          return ResultEntity.name(false, data['code'], data['message'], null);
+        }
+        List list = data['data'];
+        List<SeatInfo> result =  list.map((e) => SeatInfo.fromJson(e)).toList();
         return ResultEntity.name( true, 0, "成功", result);
       }
     }catch(e){

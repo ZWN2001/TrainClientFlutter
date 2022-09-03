@@ -27,6 +27,7 @@ class OrderDetailState extends State<OrderDetailPage>{
   final List<PassengerToPay> _passengerList = [];
   double _allPrice = 0;
   List<Order> _res = [];
+  List<SeatInfo> seatInfos = [];
   late Order? _order;
   Order? _orderNext;
   bool _loading = true;
@@ -75,11 +76,11 @@ class OrderDetailState extends State<OrderDetailPage>{
                   _statusRow(),
                   _tipsCard(),
                   const SizedBox(height: 8,),
-                  _orderNext == null? _orderInfoCard() : _orderInfoCardTansfer(),
-                  _ticketInfoCard(),
+                  _orderInfoCard(),
+                  _orderNext == null? _ticketInfoCard() : _ticketInfoCardTansfer(),
                   const SizedBox(height: 8,),
                   (_order!.orderStatus == OrderStatus.PAIED || _order!.orderStatus == OrderStatus.REBOOK) ?
-                  _passengerInfoCard():_passengerWithSeatInfoCard(),
+                  _passengerWithSeatInfoCard() : _passengerInfoCard(),
                 ],
               ),
             )
@@ -177,8 +178,17 @@ class OrderDetailState extends State<OrderDetailPage>{
   }
 
   Widget _passengerWithSeatInfoCard(){
+    List<Widget> c = [];
+    for(int index = 0; index < _passengerList.length; index++){
+      c.add(OrderPassengerWithSeatInfoCard(
+        passenger: _passengerList[index],
+        carriageId: seatInfos[index].carriageId,
+        seat: seatInfos[index].seat,));
+    }
     return Column(
-      children: _passengerList.map((p) =>  OrderPassengerWithSeatInfoCard(passenger: p,carriageId: carriageId,seat: seat,)).toList(),
+      children: [
+        ...c,
+      ],
     );
   }
 
@@ -204,7 +214,7 @@ class OrderDetailState extends State<OrderDetailPage>{
     );
   }
 
-  Widget _orderInfoCardTansfer() {
+  Widget _ticketInfoCardTansfer() {
     return Card(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
@@ -435,6 +445,17 @@ class OrderDetailState extends State<OrderDetailPage>{
             p.seatTypeId = o.seatTypeId;
             _passengerList.add(p);
             _allPrice += p.price;
+          }
+        }
+
+        if(_order?.orderStatus == OrderStatus.PAIED || _order?.orderStatus == OrderStatus.REBOOK){
+          List<String> pids = [];
+          for(PassengerToPay p in _passengerList){
+            pids.add(p.passengerId);
+          }
+          ResultEntity r = await TicketAndOrderApi.getTicketSeatInfo(_order!.orderId,pids);
+          if(r.result){
+            seatInfos = r.data;
           }
         }
         //初始化车次发车与到站时间 & 历时
