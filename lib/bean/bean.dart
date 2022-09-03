@@ -132,6 +132,7 @@ class OrderGeneral {
   late final String toStationId;
   late final String departureDate;
   late final String orderStatus;
+  late final String passengerId;
   ///0为直达，1为中转第一程，2为第二程
   late int routeNo = 0;
 
@@ -142,6 +143,7 @@ class OrderGeneral {
     toStationId = jsonMap['toStationId'] ?? 'unKnown';
     departureDate = jsonMap['departureDate'] ?? 'unKnown';
     orderStatus = jsonMap['orderStatus'] ?? 'unKnown';
+    passengerId = jsonMap['passengerId'] ?? 'unKnown';
   }
 
   @override
@@ -149,10 +151,11 @@ class OrderGeneral {
       identical(this, other) ||
       other is OrderGeneral &&
           runtimeType == other.runtimeType &&
-          orderId == other.orderId;
+          orderId == other.orderId &&
+          passengerId == other.passengerId;
 
   @override
-  int get hashCode => orderId.hashCode;
+  int get hashCode => orderId.hashCode ^ passengerId.hashCode;
 }
 
 class OrderStatus {

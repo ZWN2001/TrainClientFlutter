@@ -387,6 +387,7 @@ class PassengerApi{
     try{
       Response response = await Http.get(_urlGetQueryAll,
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
+      print(response);
       Map<String, dynamic> data = response.data;
       if (response.statusCode != 200) {
         if (response.statusCode! >= 500) {
@@ -807,10 +808,11 @@ class TicketAndOrderApi{
     }
   }
 
-  static Future<ResultEntity> getOrderInfo(String orderId) async {
+  static Future<ResultEntity> getOrderInfo(String orderId,String? passengerId) async {
     try{
       Response response = await Http.get(_urlGetOrderInfo,
-          params: {'userId' : UserApi.getUserId(), 'orderId' : orderId},
+          params: {'userId' : UserApi.getUserId(), 'orderId' : orderId,
+            'passengerId' : passengerId},
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
       Map<String, dynamic> data = response.data;
       if (response.statusCode != 200) {

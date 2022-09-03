@@ -12,8 +12,9 @@ import '../../widget/dialog.dart';
 import '../train_route/route_rebook.dart';
 
 class OrderDetailPage extends StatefulWidget{
-  const OrderDetailPage({Key? key, required this.orderId}) : super(key: key);
+  const OrderDetailPage({Key? key, required this.orderId, this.passengerId}) : super(key: key);
   final String orderId;
+  final String? passengerId;
   static const String routeName = '/order_detail';
 
   @override
@@ -411,7 +412,7 @@ class OrderDetailState extends State<OrderDetailPage>{
   }
 
   Future<void> _initOrder() async {
-    ResultEntity orderResult = await TicketAndOrderApi.getOrderInfo(widget.orderId);
+    ResultEntity orderResult = await TicketAndOrderApi.getOrderInfo(widget.orderId,widget.passengerId);
     if(orderResult.result){
       _res = orderResult.data;
       if(_res.isNotEmpty){

@@ -55,6 +55,9 @@ class OrderAllState extends State<OrderAllPage>{
           data[i].routeNo = 1;
           data[i+1].routeNo = 2;
         }
+        if(data[i].orderId == data[i+1].orderId && data[i].passengerId != data[i+1].passengerId){
+          data.remove(data[i]);
+        }
       }
       _list.addAll(data);
 

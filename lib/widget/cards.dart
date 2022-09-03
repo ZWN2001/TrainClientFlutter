@@ -132,6 +132,8 @@ class RouteSelectCardState extends State<RouteSelectCard>{
                           || _toStation.stationName == '未选择'){
                         Fluttertoast.showToast(msg: '请选择出发地及目的地');
                       }else{
+                        Store.set("from_station_name", _fromStation.stationName);
+                        Store.set("to_station_name", _toStation.stationName);
                         Get.to(()=>TrainRouteTabPage(
                           fromStationId: _fromStation.stationId,
                           toStationId: _toStation.stationId,
@@ -662,7 +664,9 @@ class TicketPaiedCard extends StatelessWidget{
                       child: ElevatedButton(
                         child: const Text('详细信息'),
                         onPressed: (){
-                          Get.to(()=>OrderDetailPage(orderId: orderGeneral.orderId));
+                          Get.to(()=>OrderDetailPage(
+                            orderId: orderGeneral.orderId,
+                          ));
                         },
                       ),
                   ),

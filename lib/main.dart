@@ -23,7 +23,7 @@ Future<void> initialize() async {
     Constant.initSeatInfo()
   ]);
   Constant.initCatchedStationSelect();
-  UserApi.initUserFromCache();
+  // UserApi.initUserFromCache();
 }
 
 class MyApp extends StatelessWidget {

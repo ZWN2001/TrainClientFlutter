@@ -51,15 +51,12 @@ class SelectPassengerState extends State<SelectPassengerPage>{
   }
 
   Widget _mainContent() {
-    if (_passengerList.isEmpty) {
-      return _noTicketWidget();
-    } else {
-      return Container(
-        color: Colors.white,
-        padding: const EdgeInsets.only(top: 8),
-        child: Column(
-          children: <Widget>[
-            Padding(padding: const EdgeInsets.fromLTRB(8, 0, 8, 10),
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.only(top: 8),
+      child: Column(
+        children: <Widget>[
+          Padding(padding: const EdgeInsets.fromLTRB(8, 0, 8, 10),
             child: ElevatedButton(
               style: ButtonStyle(backgroundColor: MaterialStateColor.resolveWith((states) => Colors.white)),
               child: Padding(
@@ -82,13 +79,12 @@ class SelectPassengerState extends State<SelectPassengerPage>{
                 }
               },
             ),),
-            Expanded(
-                child: _ticketsWidget(),
-            ),
-          ],
-        ),
-      );
-    }
+          Expanded(
+            child: _passengerList.isEmpty? _noTicketWidget(): _passengerWidget(),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _noTicketWidget(){
@@ -97,7 +93,7 @@ class SelectPassengerState extends State<SelectPassengerPage>{
     );
   }
 
-  Widget _ticketsWidget(){
+  Widget _passengerWidget(){
     return ListView.builder(
       itemBuilder: (context, index) {
         return _createGridViewItem(index ,passenger : _passengerList[index]);

@@ -49,7 +49,14 @@ class MyTicketState extends State<MyTicketPage>{
     ResultEntity requestMap = await TicketAndOrderApi.getMyTicket();
     if (requestMap.result) {
       _list.clear();
-      _list.addAll(requestMap.data);
+      List<OrderGeneral> data = requestMap.data;
+      for(int i = 0; i < data.length - 1; i++){
+        if(data[i].orderId == data[i+1].orderId && data[i].passengerId != data[i+1].passengerId){
+          data.remove(data[i]);
+        }
+      }
+      _list.addAll(data);
+
       _body = _list.isEmpty?_noTicketWidget():_ticketsWidget();
     }else{
       Fluttertoast.showToast( msg: requestMap.message);

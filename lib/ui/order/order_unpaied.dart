@@ -319,7 +319,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
         _countdownTime = 5 * 60 - now.difference(dateTime).inSeconds;
         if(_countdownTime<0){
           _order = null;
-        _loading = false;
+          setState((){_loading = false;});
           return;
         }
         // _countdownTime = 5 * 60 ;
@@ -366,7 +366,6 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
             Fluttertoast.showToast(msg: '初始化车次时间失败');
           }
         }
-
       }
     }else{
       Fluttertoast.showToast(msg: orderResult.message);
