@@ -407,10 +407,8 @@ class OrderDetailState extends State<OrderDetailPage>{
               Text('$_allPrice',style: const TextStyle(fontSize: 24,color: Colors.deepOrange),),
               const Expanded(child: SizedBox()),
               ElevatedButton(
+                onPressed: _refund,
                 child: const Text('退票'),
-                onPressed: (){
-
-                },
               ),
               const SizedBox(width: 18,),
             ],

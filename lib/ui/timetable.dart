@@ -181,10 +181,14 @@ class _TimeTableState extends State<TimeTablePage>{
 
   void _calculateDuration(List<TrainRouteAtom> list){
     for(int i = 1; i < list.length; i++){
-      list[i].duration = 60 * (int.parse(list[i].arriveTime.substring(0,2))
+      int j =  60 * (int.parse(list[i].arriveTime.substring(0,2))
           - int.parse(list[i-1].startTime.substring(0,2)))
           + (int.parse(list[i].arriveTime.substring(3,5))
-          - int.parse(list[i-1].startTime.substring(3,5)));
+              - int.parse(list[i-1].startTime.substring(3,5)));
+      if(j < 0){
+        j = 24 * 60 + j;
+      }
+      list[i].duration = j;
     }
   }
 

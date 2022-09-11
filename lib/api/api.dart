@@ -77,8 +77,8 @@ class Http{
 }
 
 class Server{
-  static const String baseHost = "http://10.0.2.2:8081";
-  // static const String baseHost = "http://192.168.0.5:8081";
+  // static const String baseHost = "http://10.0.2.2:8081";
+  static const String baseHost = "http://192.168.0.5:8081";
   static const String query = "/query";
   static const String command = "/command";
   static const String hostPay = "/alipay";

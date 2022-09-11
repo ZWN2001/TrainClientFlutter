@@ -595,7 +595,7 @@ class OrderPassengerWithSeatInfoCard extends StatelessWidget{
                     children: [
                       Text('车厢号：$carriageId', style: const TextStyle(fontSize: 16),),
                       const SizedBox(width: 16,),
-                      Text('座位编号：${carriageId ~/ 4 + 1}排${getLocation(carriageId % 4)}座', style: const TextStyle(fontSize: 16),),
+                      Text('座位编号：${(seat - 1) ~/ 4 + 1}排${getLocation(seat % 4)}座', style: const TextStyle(fontSize: 16),),
                     ],
                   ),
                 ],

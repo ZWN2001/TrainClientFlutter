@@ -207,7 +207,7 @@ class PassengerToPay {
   PassengerToPay.fromJson(jsonMap) {
     passengerId = jsonMap['passengerId'] ?? 'unKnown';
     passengerName = jsonMap['passengerName'] ?? 'unKnown';
-    role = jsonMap['role'] ?? 'unKnown';
+    role = jsonMap['prole'] ?? 'unKnown';
     seatTypeId = jsonMap['seatTypeId'] ?? 1;
     price = jsonMap['price'] ?? 0.0;
   }
