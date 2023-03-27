@@ -387,7 +387,6 @@ class PassengerApi{
     try{
       Response response = await Http.get(_urlGetQueryAll,
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
-      print(response);
       Map<String, dynamic> data = response.data;
       if (response.statusCode != 200) {
         if (response.statusCode! >= 500) {

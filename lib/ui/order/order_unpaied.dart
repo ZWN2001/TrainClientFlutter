@@ -286,7 +286,7 @@ class _OrderUnpaiedState extends State<OrderUnpaiedPage>{
                   child: Padding(
                     padding: const EdgeInsets.only(left: 12,right: 24),
                     child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.deepOrange),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrange),
                       onPressed: _orderPay,
                       child: const Text('立即支付'),
                     ),

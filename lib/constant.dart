@@ -14,9 +14,7 @@ class Constant {
 
   static Future<void> initStationInfo() async {
     allStationList = await DataApi.getAllStationList();
-    if(allStationList.isNotEmpty){
-      _initStationMap(allStationList);
-    }
+    _initStationMap(allStationList);
   }
 
   static Future<void> initSeatInfo() async {
