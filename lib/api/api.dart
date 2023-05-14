@@ -74,6 +74,38 @@ class Http{
     );
     return response;
   }
+
+  //put
+  static Future<Response<T>> put<T>(
+      String path, {
+        data,
+        Map<String, dynamic>? params,
+        Options? options,
+      }) async {
+    var response = await dio!.put<T>(
+      path,
+      data: data,
+      queryParameters: params,
+      options: options,
+    );
+    return response;
+  }
+
+  //delete
+  static Future<Response<T>> delete<T>(
+      String path, {
+        data,
+        Map<String, dynamic>? params,
+        Options? options,
+      }) async {
+    var response = await dio!.delete<T>(
+      path,
+      data: data,
+      queryParameters: params,
+      options: options,
+    );
+    return response;
+  }
 }
 
 class Server{
@@ -92,8 +124,8 @@ class Server{
 
 class UserApi{
   static const String _urlPostRegister = "${Server.hostUser}/register";
-  static const String _urlPostLogin = "${Server.hostUser}/login";
-  static const String _urlPostLogout = "${Server.hostUser}/logout";
+  static const String _urlPutLogin = "${Server.hostUser}/login";
+  static const String _urlPutLogout = "${Server.hostUser}/logout";
   // static const String _urlPostRefresh = "${Server.hostUser}/refresh";
   static const String _urlGetUserInfo = "${Server.hostUser}/userInfo";
 
@@ -117,7 +149,7 @@ class UserApi{
   static Future<ResultEntity> login(String userId, String pwd) async {
     String token;
     try{
-      Response response = await Http.post(_urlPostLogin, data: FormData.fromMap(
+      Response response = await Http.put(_urlPutLogin, data: FormData.fromMap(
           {'userId': userId, 'loginKey': pwd}));
       Map<String, dynamic> data = response.data;
       if(data['code'] != 200){
@@ -156,7 +188,7 @@ class UserApi{
 
   static Future<ResultEntity> logout() async {
     try{
-      Response response = await Http.post(_urlPostLogout, data: FormData.fromMap(
+      Response response = await Http.put(_urlPutLogout, data: FormData.fromMap(
           {'token': getToken()}),
           options: Options(headers: {'Token': 'Bearer:${getToken()}'}));
       Map<String, dynamic> data = response.data;
@@ -377,8 +409,8 @@ class DataApi{
 
 class PassengerApi{
   static const String _urlPostAdd = "${Server.command}${Server.hostPassenger}/add";
-  static const String _urlPostModify = "${Server.command}${Server.hostPassenger}/modify";
-  static const String _urlPostDelete = "${Server.command}${Server.hostPassenger}/delete";
+  static const String _urlPutModify = "${Server.command}${Server.hostPassenger}/modify";
+  static const String _urlDeleteDelete = "${Server.command}${Server.hostPassenger}/delete";
   static const String _urlGetQueryAll = "${Server.query}${Server.hostPassenger}/all";
   static const String _urlGetQuerySingle = "${Server.query}${Server.hostPassenger}/single";
   static const String _urlGetRandom = "${Server.command}${Server.hostPassenger}/random";
@@ -433,7 +465,7 @@ class PassengerApi{
 
   static Future<ResultEntity> modifyPassenger(Passenger passenger) async {
     try{
-      Response response = await Http.post( _urlPostModify,
+      Response response = await Http.put( _urlPutModify,
           params: {'passengerJSON' : jsonEncode(passenger)},
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
       Map<String, dynamic> data = response.data;
@@ -481,7 +513,7 @@ class PassengerApi{
 
   static Future<ResultEntity> deletePassenger(Passenger passenger) async {
     try{
-      Response response = await Http.post( _urlPostDelete,
+      Response response = await Http.delete( _urlDeleteDelete,
           params: {'passengerJSON' : jsonEncode(passenger)},
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
       Map<String, dynamic> data = response.data;
@@ -532,10 +564,10 @@ class TicketAndOrderApi{
   static const String _urlPostBooking = "${Server.command}${Server.hostTicket}/booking";
   static const String _urlPostBookingTansfer = "${Server.command}${Server.hostTicket}/bookingTansfer";
   ///退票
-  static const String _urlPostRefund = "${Server.command}${Server.hostTicket}/refund";
+  static const String _urlPutRefund = "${Server.command}${Server.hostTicket}/refund";
   ///改签
-  static const String _urlPostRebook = "${Server.command}${Server.hostTicket}/rebook";
-  static const String _urlPostBookingCancel = "${Server.command}${Server.hostTicket}/bookingCancel";
+  static const String _urlPutRebook = "${Server.command}${Server.hostTicket}/rebook";
+  static const String _urlPutBookingCancel = "${Server.command}${Server.hostTicket}/bookingCancel";
   ///余票
   // static const String _urlGetTicketRemain = "${Server.query}${Server.hostTicket}/ticketRemain";
   ///票价
@@ -548,7 +580,7 @@ class TicketAndOrderApi{
   static const String _urlGetTicketToPayDetail = "${Server.query}${Server.hostTicket}/ticketToPayDetail";
   static const String _urlGetOrderById = "${Server.query}${Server.hostTicket}/orderById";
   static const String _urlGetOrderToRebook = "${Server.query}${Server.hostTicket}/orderToRebook";//
-  static const String _urlPostRebookCancel = "${Server.command}${Server.hostTicket}/rebookCancel";
+  static const String _urlPutRebookCancel = "${Server.command}${Server.hostTicket}/rebookCancel";
   static Future<ResultEntity> ticketBooking(Order order,
       List<String> passengerIds, List<int> seatSelects) async {
     try{
@@ -579,7 +611,7 @@ class TicketAndOrderApi{
   static Future<ResultEntity> ticketRebook(RebookOrder order,
       List<String> passengerIds, List<int> seatSelects) async {
     try{
-      Response response = await Http.post(_urlPostRebook,
+      Response response = await Http.put(_urlPutRebook,
           params: {'orderString' : jsonEncode(order),'passengerIdsString' : passengerIds.toString(),
             'seatLocationListString':seatSelects.toString()},
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
@@ -605,7 +637,7 @@ class TicketAndOrderApi{
 
   static Future<ResultEntity> ticketRebookCancel(String orderId) async {
     try{
-      Response response = await Http.post(_urlPostRebookCancel,
+      Response response = await Http.put(_urlPutRebookCancel,
           params: {'orderId' : orderId},
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
       Map<String, dynamic> data = response.data;
@@ -661,7 +693,7 @@ class TicketAndOrderApi{
   static Future<ResultEntity> ticketBookingCancel(String departureDate,
       String trainRouteId, List<String> passengetIds) async {
     try{
-      Response response = await Http.post(_urlPostBookingCancel,
+      Response response = await Http.put(_urlPutBookingCancel,
           params: {'departureDate' : departureDate, 'trainRouteId': trainRouteId,
             'passengetIdString' : passengetIds.toString()},
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
@@ -686,7 +718,7 @@ class TicketAndOrderApi{
 
   static Future<ResultEntity> ticketRefund(String orderId) async {
     try{
-      Response response = await Http.post(_urlPostRefund,
+      Response response = await Http.put(_urlPutRefund,
           params: {'orderId' : orderId},
           options: Options(headers: {'Token': 'Bearer:${UserApi.getToken()}'}));
       Map<String, dynamic> data = response.data;
