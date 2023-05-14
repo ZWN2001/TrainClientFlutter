@@ -77,17 +77,17 @@ class Http{
 }
 
 class Server{
-  // static const String baseHost = "http://10.0.2.2:8081";
-  static const String baseHost = "http://192.168.0.5:8081";
+  static const String baseHost = "http://10.0.2.2:8081";
+  // static const String baseHost = "http://192.168.0.5:8081";
   static const String query = "/query";
   static const String command = "/command";
   static const String hostPay = "/alipay";
-  static const String hostPassenger = "/passenger";
-  static const String hostTicket = "/ticket";
-  static const String hostUser = "/user";
-  static const String hostTrainRoute = "/trainRoute";
-  static const String hostStation = "/station";
-  static const String hostSeatType = "/seatType";
+  static const String hostPassenger = "/passengers";
+  static const String hostTicket = "/tickets";
+  static const String hostUser = "/users";
+  static const String hostTrainRoute = "/trainRoutes";
+  static const String hostStation = "/stations";
+  static const String hostSeatType = "/seatTypes";
 }
 
 class UserApi{
@@ -95,7 +95,7 @@ class UserApi{
   static const String _urlPostLogin = "${Server.hostUser}/login";
   static const String _urlPostLogout = "${Server.hostUser}/logout";
   // static const String _urlPostRefresh = "${Server.hostUser}/refresh";
-  static const String _urlGetUserInfo = "${Server.hostUser}/getUserInfo";
+  static const String _urlGetUserInfo = "${Server.hostUser}/userInfo";
 
   static bool get isLogin => _curUser != null;
 
@@ -235,8 +235,8 @@ class UserApi{
 class PayApi{
   static const String _urlGetPay = "${Server.hostPay}/pay";
   static const String _urlGetPayRebook = "${Server.hostPay}/payRebook";
-  static const String _urlGetOrderPayStatus = "${Server.hostTicket}${Server.query}/orderPayStatus";
-  static const String _urlGetOrderRebookStatus = "${Server.hostTicket}${Server.query}/orderRebookStatus";
+  static const String _urlGetOrderPayStatus = "${Server.query}${Server.hostTicket}/orderPayStatus";
+  static const String _urlGetOrderRebookStatus = "${Server.query}${Server.hostTicket}/orderRebookStatus";
 
   static Future<ResultEntity> ticketPay(String orderId, List<String> passengerId, int payMethod) async {
     try{
@@ -338,8 +338,8 @@ class PayApi{
 }
 
 class DataApi{
-  static const String _urlGetAllStationDetail = "${Server.hostStation}${Server.query}/allStationDetail";
-  static const String _urlGetAllSeatType = "${Server.hostSeatType}${Server.query}/allSeatType";
+  static const String _urlGetAllStationDetail = "${Server.query}${Server.hostStation}/all";
+  static const String _urlGetAllSeatType = "${Server.query}${Server.hostSeatType}/all";
 
   static Future<List<SeatType>> getAllSeatMap() async {
     try{
@@ -376,12 +376,12 @@ class DataApi{
 }
 
 class PassengerApi{
-  static const String _urlPostAdd = "${Server.hostPassenger}${Server.command}/add";
-  static const String _urlPostModify = "${Server.hostPassenger}${Server.command}/modify";
-  static const String _urlPostDelete = "${Server.hostPassenger}${Server.command}/delete";
-  static const String _urlGetQueryAll = "${Server.hostPassenger}${Server.query}/all";
-  static const String _urlGetQuerySingle = "${Server.hostPassenger}${Server.query}/single";
-  static const String _urlGetRandom = "${Server.hostPassenger}${Server.command}/random";
+  static const String _urlPostAdd = "${Server.command}${Server.hostPassenger}/add";
+  static const String _urlPostModify = "${Server.command}${Server.hostPassenger}/modify";
+  static const String _urlPostDelete = "${Server.command}${Server.hostPassenger}/delete";
+  static const String _urlGetQueryAll = "${Server.query}${Server.hostPassenger}/all";
+  static const String _urlGetQuerySingle = "${Server.query}${Server.hostPassenger}/single";
+  static const String _urlGetRandom = "${Server.command}${Server.hostPassenger}/random";
 
   static Future<ResultEntity> getAllPassenger() async {
     try{
@@ -529,26 +529,26 @@ class PassengerApi{
 
 class TicketAndOrderApi{
   ///订票
-  static const String _urlPostBooking = "${Server.hostTicket}${Server.command}/booking";
-  static const String _urlPostBookingTansfer = "${Server.hostTicket}${Server.command}/bookingTansfer";
+  static const String _urlPostBooking = "${Server.command}${Server.hostTicket}/booking";
+  static const String _urlPostBookingTansfer = "${Server.command}${Server.hostTicket}/bookingTansfer";
   ///退票
-  static const String _urlPostRefund = "${Server.hostTicket}${Server.command}/refund";
+  static const String _urlPostRefund = "${Server.command}${Server.hostTicket}/refund";
   ///改签
-  static const String _urlPostRebook = "${Server.hostTicket}${Server.command}/rebook";
-  static const String _urlPostBookingCancel = "${Server.hostTicket}${Server.command}/bookingCancel";
+  static const String _urlPostRebook = "${Server.command}${Server.hostTicket}/rebook";
+  static const String _urlPostBookingCancel = "${Server.command}${Server.hostTicket}/bookingCancel";
   ///余票
-  // static const String _urlGetTicketRemain = "${Server.hostTicket}${Server.query}/ticketRemain";
+  // static const String _urlGetTicketRemain = "${Server.query}${Server.hostTicket}/ticketRemain";
   ///票价
-  static const String _urlGetTicketPrices = "${Server.hostTicket}${Server.query}/ticketPrices";
-  static const String _urlGetSelfTicket = "${Server.hostTicket}${Server.query}/selfTicket";
-  static const String _urlGetSelfOrder = "${Server.hostTicket}${Server.query}/selfOrder";
-  static const String _urlGetSelfPaiedOrder = "${Server.hostTicket}${Server.query}/selfPaiedOrder";
-  static const String _urlGetOrderInfo = "${Server.hostTicket}${Server.query}/orderInfo";
-  static const String _urlGetTicketSeatInfo = "${Server.hostTicket}${Server.query}/ticketSeatInfo";
-  static const String _urlGetTicketToPayDetail = "${Server.hostTicket}${Server.query}/ticketToPayDetail";
-  static const String _urlGetOrderById = "${Server.hostTicket}${Server.query}/orderById";
-  static const String _urlGetOrderToRebook = "${Server.hostTicket}${Server.query}/orderToRebook";//
-  static const String _urlPostRebookCancel = "${Server.hostTicket}${Server.command}/rebookCancel";
+  static const String _urlGetTicketPrices = "${Server.query}${Server.hostTicket}/ticketPrices";
+  static const String _urlGetSelfTicket = "${Server.query}${Server.hostTicket}/selfTicket";
+  static const String _urlGetSelfOrder = "${Server.query}${Server.hostTicket}/selfOrder";
+  static const String _urlGetSelfPaiedOrder = "${Server.query}${Server.hostTicket}/selfPaiedOrder";
+  static const String _urlGetOrderInfo = "${Server.query}${Server.hostTicket}/orderInfo";
+  static const String _urlGetTicketSeatInfo = "${Server.query}${Server.hostTicket}/ticketSeatInfo";
+  static const String _urlGetTicketToPayDetail = "${Server.query}${Server.hostTicket}/ticketToPayDetail";
+  static const String _urlGetOrderById = "${Server.query}${Server.hostTicket}/orderById";
+  static const String _urlGetOrderToRebook = "${Server.query}${Server.hostTicket}/orderToRebook";//
+  static const String _urlPostRebookCancel = "${Server.command}${Server.hostTicket}/rebookCancel";
   static Future<ResultEntity> ticketBooking(Order order,
       List<String> passengerIds, List<int> seatSelects) async {
     try{
@@ -936,10 +936,10 @@ class TicketAndOrderApi{
 }
 
 class TrainRouteApi{
-  static const String _urlGetQueryTrainRoute = "${Server.hostTrainRoute}${Server.query}/trainRoute";
-  static const String _urlGetQueryTrainRouteTransfer = "${Server.hostTrainRoute}${Server.query}/trainRouteTransfer";
-  static const String _urlGetQueryTrainRouteDetail = "${Server.hostTrainRoute}${Server.query}/trainRouteDetail";
-  static const String _urlGetQueryTicketRouteTimeInfo = "${Server.hostTrainRoute}${Server.query}/ticketRouteTimeInfo";
+  static const String _urlGetQueryTrainRoute = "${Server.query}${Server.hostTrainRoute}/direct";
+  static const String _urlGetQueryTrainRouteTransfer = "${Server.query}${Server.hostTrainRoute}/transfer";
+  static const String _urlGetQueryTrainRouteDetail = "${Server.query}${Server.hostTrainRoute}/detail";
+  static const String _urlGetQueryTicketRouteTimeInfo = "${Server.query}${Server.hostTrainRoute}/timeInfo";
 
   static Future<ResultEntity> getTrainRoute(String from, String to, String date) async {
     try {
