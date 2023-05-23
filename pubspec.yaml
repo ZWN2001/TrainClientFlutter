@@ -38,14 +38,14 @@ dependencies:
   dio: ^4.0.0
   webview_flutter: ^3.0.4
   shared_preferences: ^2.0.5
-  flutter_login: ^2.2.1
+  flutter_login: ^4.1.1
   get: ^4.3.8
   hive: ^2.1.0
   hive_flutter: ^1.1.0
-  font_awesome_flutter: ^9.2.0
+  font_awesome_flutter: ^10.4.0
   lpinyin: ^2.0.3
   azlistview: #latest version
-  material_floating_search_bar: ^0.3.7
+  material_floating_search_bar_2: ^0.5.0
   json_annotation: ^4.1.0
   timelines: ^0.1.0
   qr_flutter: ^4.0.0

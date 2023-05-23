@@ -28,7 +28,7 @@ class LoginPage extends StatelessWidget {
     }
   }
 
-  Future<String?> _registerUser(LoginData data) async {
+  Future<String?> _registerUser(SignupData data) async {
     User user = User.name(userId: data.name, pwd: data.password);
     ResultEntity requestMap = await UserApi.register(user);
     if (requestMap.result) {

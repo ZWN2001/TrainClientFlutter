@@ -572,7 +572,7 @@ class TicketAndOrderApi{
   // static const String _urlGetTicketRemain = "${Server.query}${Server.hostTicket}/ticketRemain";
   ///票价
   static const String _urlGetTicketPrices = "${Server.query}${Server.hostTicket}/ticketPrices";
-  static const String _urlGetSelfTicket = "${Server.query}${Server.hostTicket}/selfTicket";
+  static const String _urlGetSelfTicket = "${Server.query}${Server.hostTicket}/selfTickets";
   static const String _urlGetSelfOrder = "${Server.query}${Server.hostTicket}/selfOrder";
   static const String _urlGetSelfPaiedOrder = "${Server.query}${Server.hostTicket}/selfPaiedOrder";
   static const String _urlGetOrderInfo = "${Server.query}${Server.hostTicket}/orderInfo";
