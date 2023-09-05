@@ -2,15 +2,6 @@
 
 train_client_flutter
 
-## Getting Started
+对于课设的一些见解：https://www.zwn2001.space/posts/2023%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BE%E8%AE%BE%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+技术细节：https://www.zwn2001.space/posts/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BE%E8%AE%BE%E7%9A%84%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82/
